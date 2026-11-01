@@ -35,11 +35,13 @@
               "items": [
                 {
                   "type": "arrow",
-                  "direction": "down"
+                  "direction": "down",
+                  "style": "overhead"
                 },
                 {
                   "type": "arrow",
-                  "direction": "down"
+                  "direction": "down",
+                  "style": "overhead"
                 }
               ],
               "justify": "between"

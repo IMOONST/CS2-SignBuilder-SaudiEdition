@@ -28,7 +28,8 @@
             },
             {
               "type": "arrow",
-              "direction": "down"
+              "direction": "down",
+              "style": "overhead"
             }
           ]
         },
