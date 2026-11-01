@@ -95,6 +95,13 @@
 	</ItemGroup>
 
 	<!--Ship fonts, themes, the renderer and other static files next to the dll (and the test pages in test builds)-->
+	<!--The assembly version (shown on the Options page) is the ModVersion in PublishConfiguration.xml, so it is set in one place-->
+	<Target Name="VersionFromPublishConfiguration" BeforeTargets="GetAssemblyVersion">
+		<XmlPeek XmlInputPath="$(PublishConfigurationPath)" Query="/Publish/ModVersion/@Value">
+			<Output TaskParameter="Result" PropertyName="Version" />
+		</XmlPeek>
+	</Target>
+
 	<Target Name="DeployResources" AfterTargets="DeployWIP" Condition="'$(NeedBuild)'">
 		<ItemGroup>
 			<ResourceFilesToDeploy Include="Resources\**\*.*" />

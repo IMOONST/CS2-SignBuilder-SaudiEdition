@@ -10,8 +10,8 @@ namespace SignBuilder
 {
     /// <summary>Sign Builder's page in the game's Options.</summary>
     [FileLocation(nameof(SignBuilder))]
-    [SettingsUIGroupOrder(kKeysGroup, kMaintenanceGroup, kFoldersGroup)]
-    [SettingsUIShowGroupName(kKeysGroup, kMaintenanceGroup, kFoldersGroup)]
+    [SettingsUIGroupOrder(kKeysGroup, kMaintenanceGroup, kFoldersGroup, kAboutGroup)]
+    [SettingsUIShowGroupName(kKeysGroup, kMaintenanceGroup, kFoldersGroup, kAboutGroup)]
     [SettingsUIKeyboardAction(kToggleAction)]
     public class Setting : ModSetting
     {
@@ -19,6 +19,7 @@ namespace SignBuilder
         public const string kKeysGroup = "Keys";
         public const string kMaintenanceGroup = "Maintenance";
         public const string kFoldersGroup = "Folders";
+        public const string kAboutGroup = "About";
         public const string kToggleAction = "ToggleSignBuilder";
 
         public Setting(IMod mod) : base(mod)
@@ -53,6 +54,10 @@ namespace SignBuilder
             set => OpenFolder(Core.Themes.UserThemesDir);
         }
 
+        /// <summary>The installed Sign Builder version (the ModVersion in PublishConfiguration.xml).</summary>
+        [SettingsUISection(kSection, kAboutGroup)]
+        public string Version => typeof(Setting).Assembly.GetName().Version.ToString(3);
+
         public static void OpenFolder(string dir)
         {
             Directory.CreateDirectory(dir);
@@ -82,6 +87,7 @@ namespace SignBuilder
                 { m_Setting.GetOptionGroupLocaleID(Setting.kKeysGroup), "Key bindings" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.kMaintenanceGroup), "Maintenance" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.kFoldersGroup), "Folders" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.kAboutGroup), "About" },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.ToggleBinding)), "Open or close Sign Builder" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.ToggleBinding)), "Opens or closes Sign Builder, like its toolbar button." },
@@ -99,6 +105,9 @@ namespace SignBuilder
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenTemplatesFolder)), "Your saved sign templates, one JSON file each. Share them by copying the files." },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenThemesFolder)), "Open themes folder" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenThemesFolder)), "Sign themes (countries or styles), one folder each with theme.json, fonts, shields and templates." },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.Version)), "Version" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.Version)), "The installed version of Sign Builder." },
             };
         }
 
