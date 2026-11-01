@@ -2,16 +2,32 @@ import { Scrollable } from "cs2/ui";
 import { Dialog } from "./Dialog";
 import { openThemesFolder } from "./bindings";
 import { ReactNode, useEffect, useState } from "react";
-import { ArrowIcon, AlignIcon, ThemeShieldIcon } from "./Icons";
+import { ARROW_STYLES, ArrowIcon, AlignIcon, ThemeShieldIcon } from "./Icons";
 import { Choice, ColorBox, ColorRows, Field, NumberBox, Option, Select, Swatches, TextBox } from "./Controls";
 import { Design, Item, clone, duplicateItem, getItem, insertItem, kindOf, removeItem, updateItem } from "./designModel";
 import { PartsList } from "./PartsList";
 import { SignPreview } from "./SignPreview";
 import { Template, TemplateLibrary } from "./TemplateLibrary";
-import { Theme, baseParts, blankFor, convertDesign, themeOf } from "./themeModel";
+import { Theme, ThemeDef, baseParts, blankFor, convertDesign, themeOf } from "./themeModel";
 import styles from "./SignEditor.module.scss";
 
-const ARROWS = ["up-left", "up", "up-right", "left", "right", "down-left", "down", "down-right", "turn-left", "split-left", "split-right", "turn-right"];
+/** An arrow's style: lane arrows saved before there were styles have none. */
+const arrowStyleOf = (item: Item): string =>
+  item.style ?? (/^(turn-|slight-|split-|corner-|add-|fork$)/.test(item.direction ?? "") ? "lane" : "");
+/**
+ * The directions a style offers in a theme. Lane arrows are the ones the theme draws itself when it has its own set
+ * (no borrowed shapes in another country's style); otherwise the shared ones, but no lane-added arrow, which only
+ * some countries have.
+ */
+const directionsFor = (style: string, def?: ThemeDef): string[] => {
+  const all = (ARROW_STYLES[style] ?? ARROW_STYLES[""]).directions;
+  if (style !== "lane") return all;
+  const own = def?.laneArrows;
+  return all.filter((d) => {
+    const shape = d === "fork" ? "fork" : d.replace(/-(left|right)$/, "");
+    return shape === "up" || (own ? !!own[shape] : shape !== "add");
+  });
+};
 const ALIGN: Option[] = ["start", "center", "end"].map((a) => ({ value: a, icon: <AlignIcon align={a} />, title: a }));
 // Parts side by side in a row line up by their tops, middles or bottoms.
 const ROW_ALIGN: Option[] = [{ value: "start", label: "Top" }, { value: "center", label: "Middle" }, { value: "end", label: "Bottom" }];
@@ -152,18 +168,32 @@ function ItemProperties(props: { item: Item; onChange: (patch: Partial<Item>) =>
           {place}
         </>
       );
-    case "arrow":
+    case "arrow": {
+      const styleId = arrowStyleOf(item);
+      const arrowStyle = ARROW_STYLES[styleId] ?? ARROW_STYLES[""];
+      // An arrow already on the sign stays selectable even where the theme does not offer it.
+      const directions = directionsFor(styleId, def);
+      if (item.direction && !directions.includes(item.direction) && arrowStyle.directions.includes(item.direction)) directions.push(item.direction);
       return (
         <>
+          <Field label="Style">
+            <Choice options={Object.entries(ARROW_STYLES).map(([value, s]) => ({ value, label: s.label, title: s.title, icon: <ArrowIcon direction={value === "lane" ? "turn-left" : "down"} style={value} size={14} /> }))}
+              value={styleId} onChange={(style) => onChange({
+                style: style || undefined,
+                // Styles share few directions: keep the arrow's if the new style has it, otherwise its first.
+                direction: directionsFor(style, def).includes(item.direction ?? "") ? item.direction : directionsFor(style, def)[0],
+              })} />
+          </Field>
           <Field label="Direction">
-            <Choice options={ARROWS.map((a) => ({ value: a, icon: <ArrowIcon direction={a} />, title: a }))} perRow={6}
-              value={item.direction ?? "up"} onChange={(direction) => onChange({ direction })} />
+            <Choice options={directions.map((a) => ({ value: a, icon: <ArrowIcon direction={a} style={styleId} />, title: a }))}
+              perRow={arrowStyle.perRow} value={item.direction ?? "up"} onChange={(direction) => onChange({ direction })} />
           </Field>
           <Field label="Size"><NumberBox value={item.height ?? def?.defaults?.arrowHeight ?? 24} step={2} onChange={(height) => onChange({ height })} /></Field>
           <PartColorField item={item} theme={theme} onChange={onChange} />
           {place}
         </>
       );
+    }
     case "row":
       return (
         <>

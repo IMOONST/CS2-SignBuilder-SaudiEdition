@@ -16,6 +16,8 @@ export type ThemeDef = {
   /** Ready-made combinations of the basic parts that suit the theme's signs ("Add preset"). */
   presets?: { label: string; item: Item; insert?: "first" }[];
   laneWidth?: number;
+  /** The theme's own lane-use arrow shapes ("up", "turn", "slight", "split", "corner", "add", "fork"). */
+  laneArrows?: Record<string, string>;
 };
 export type Theme = { id: string; name: string; builtIn: boolean; base: string; def: ThemeDef };
 

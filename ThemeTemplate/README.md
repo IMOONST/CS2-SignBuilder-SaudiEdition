@@ -130,9 +130,43 @@ Each entry is one kind of plate. The key (`"M"`) is stored in signs, and `label`
 
 ### Arrow
 
-`arrow` is an SVG path, drawn pointing **down** in a 100 × 150 box (`M`, `L`, `H`, `V` and `Z` commands). It's
-rotated for the other directions. Leave it out for the default arrow. Curved lane arrows and diagrams are drawn
-by Sign Builder itself.
+`arrow` is an SVG path, drawn pointing **down** in a 100 × 150 box (`M`, `L`, `H`, `V`, `C` and `Z` commands, all
+absolute). It's rotated for the other directions. Leave it out for the default arrow.
+
+For arrows that differ by direction (as the U.S. ones do), give `arrows` instead:
+
+```json
+"arrows": {
+  "up": "…",        // pointing up
+  "left": "…",      // pointing left
+  "diagonal": "…"   // pointing up and to the right
+}
+```
+
+Each shape is as long as 150 units in the direction it points, centered on (50, 75). `down` and `right` can be
+given too; a missing one is the opposite one turned around. The diagonal is mirrored for the other corners, so it
+need not be at 45°; missing diagonals fall back to `arrow`, turned.
+
+Lane-use arrows (the **Lane** style) can be given as `laneArrows`, each pointing up and standing on the bottom of a
+box 150 tall, all at one scale, so they stand level in a row:
+
+```json
+"laneArrows": {
+  "up": "…",       // straight
+  "turn": "…",     // curving off to the left
+  "slight": "…",   // bearing off to the left
+  "split": "…",    // straight, with a branch curving left
+  "corner": "…",   // turning square to the left
+  "add": "…",      // a lane added on the left
+  "fork": "…"      // splitting both ways
+}
+```
+
+Right-hand versions are mirrored. Any you leave out use Sign Builder's own.
+
+`overheadArrows` replaces the **Overhead** style's arrows (the arrows over the lanes on overhead signs) with the
+theme's own, in the same form as `arrows` (`"down"` pointing down, and so on). Diagrams are drawn by Sign Builder
+itself.
 
 ### Presets
 
@@ -172,7 +206,7 @@ Each file in `templates/` is one sign: the same JSON the designer saves. The eas
 |---|---|
 | `text` | `text`, `height`, `font`, `color`, `tracking` |
 | `shield` | `network` (a key from `shields`), `number`, `height` |
-| `arrow` | `direction` (`up`, `down`, `left`, `right`, `up-left`… `turn-left`, `split-right`…), `height`, `color` |
+| `arrow` | `direction` (`up`, `down`, `left`, `right`, `up-left`…; lane arrows `turn-left`, `slight-left`, `split-right`, `corner-left`, `add-left`, `fork`…), `style` (`lane` for the straight lane arrow, `overhead` for the U.S. arrows over lanes), `height`, `color` |
 | `diagram` | `shape` (`exit-left`, `exit-right`, `fork`, `roundabout`), `lanes`, `exitLanes`, `exits`, `height` |
 | `led` (LED text) | `lines`, `height`, `color` |
 | `row`, `column` | `items`, `align`; rows also take `justify` (`between`, `even`) |

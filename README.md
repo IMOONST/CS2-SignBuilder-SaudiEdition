@@ -107,7 +107,7 @@ label, and `scale`/`offset`: em size and vertical offset per letter height, from
 no file and a `weight` uses a family the game ships, such as "Noto Sans JP"; `@us/fonts/…` borrows another
 theme's file),
 color schemes, route plates (`img` artwork, `ellipse`, colored `rect` plates with optional border and
-prefix such as "A " or "E ", or `plain` colored text), the arrow outline, `presets` (ready-made
+prefix such as "A " or "E ", or `plain` colored text), arrow shapes (`arrows`, `laneArrows`, `overheadArrows`), `presets` (ready-made
 combinations of the basic parts shown under **Add preset**, such as an EXIT ONLY panel) and a
 `templates/` folder. Built-in themes live in `SignBuilder/Resources/Themes`;
 players add theirs in `ModsData/SignBuilder/Themes/<id>`. A player folder with a built-in theme's id and

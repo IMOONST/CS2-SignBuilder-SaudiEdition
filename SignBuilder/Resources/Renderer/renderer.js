@@ -279,49 +279,126 @@
     // Shapes drawn pointing down in a 100 x 150 box, rotated for other directions.
     down: 0, up: 180, left: 90, right: -90, "down-left": 45, "down-right": -45, "up-left": 135, "up-right": -135,
   };
-  // Lane-use arrows drawn pointing up in a 100 x 150 box (filled outlines, so no stroke support is needed):
-  // a shaft that bends off to the left, and a straight arrow with a branch bending left. "-right" mirrors them.
-  var CURVED = {
+  // Lane-use arrows, pointing up and standing on the bottom of a box 150 tall (filled outlines, so no stroke support
+  // is needed): "turn" a shaft that curves off to the left, "slight" one that bears off to the left, "split" a straight arrow with a branch curving left,
+  // "corner" a shaft that turns square to the left, "add" a lane added on the left (two arrows, the left one joining
+  // from the shaft). "-right" mirrors them. "fork" splits both ways (no side). A theme's "laneArrows" replace these
+  // (and can give "up", the straight lane arrow of the "lane" style).
+  var LANE = {
     turn: "M54 150 V82 A24 24 0 0 0 30 58 V78 L0 46 L30 14 V34 A48 48 0 0 1 78 82 V150 Z",
     split: "M54 150 V128 A24 24 0 0 0 30 104 V124 L0 92 L30 60 V80 A48 48 0 0 1 54 86.4 V34 H34 L66 0 L98 34 H78 V150 Z",
+    // The MUTCD turn arrow.
+    corner: "M96.1 60.1 L33.3 60.1 L40.2 79 C40.5 79.7 40.6 80.5 40.6 81.2 C40.6 84.7 37.8 87.5 34.4 87.5 " +
+      "C33.1 87.5 31.9 87.1 30.9 86.4 L-31.3 43.8 L30.9 1.1 C31.9 0.4 33.1 0 34.4 0 " +
+      "C37.8 0 40.6 2.8 40.6 6.3 C40.6 7 40.5 7.8 40.2 8.5 L33.4 27.3 L127.3 27.3 " +
+      "C129.5 27.3 131.3 29 131.3 31.2 L131.3 150 L98.4 150 L98.4 62.4 C98.4 61.2 97.4 60.1 96.1 60.1 Z",
+    // The MUTCD slight turn arrow.
+    slight: "M42.1 83.6 L42.1 83.6 L29.4 104.3 C29.2 104.5 29.1 104.7 28.9 104.9 " +
+      "C27.6 106.2 25.5 106.2 24.2 104.9 C23.7 104.3 23.4 103.6 23.3 102.9 L17.9 51.4 " +
+      "C17.8 50.5 18.2 49.5 18.9 48.8 C19.6 48 20.6 47.7 21.5 47.8 L73 53.2 C73.7 53.3 74.4 53.6 75 54.1 " +
+      "C76.3 55.4 76.3 57.5 75 58.8 C74.8 59 74.6 59.1 74.4 59.3 L53.7 72 L79.3 95.4 " +
+      "C79.8 95.9 80.2 96.8 80.2 97.7 L82.2 150 L60 150 L61.7 105.9 C61.7 105.3 61.4 104.7 60.9 104.2 " +
+      "L42.1 83.6 Z",
+    // Sweden's lane-added arrow (no U.S. counterpart).
+    add: "M69.1 83.7 C68.2 82.6 67.3 81.5 66.3 80.5 L40.1 54.3 C34.2 48.4 30.9 40.4 30.9 32 L30.9 27 L46.6 27 " +
+      "L26.4 0 L6.1 27 L21.9 27 L21.9 32 C21.9 42.8 26.1 53.1 33.7 60.7 L59.9 86.8 " +
+      "C65.8 92.8 69.1 100.8 69.1 109.2 L69.1 150 L78.1 150 L78.1 27 L93.9 27 L73.6 0 L53.4 27 L69.1 27 " +
+      "L69.1 83.7 Z",
+    // The MUTCD diverging arrow.
+    fork: "M59.8 127 C59.8 104.5 70.5 66.2 110.5 42.8 L113.5 53.5 C113.6 54 113.9 54.6 114.3 55 " +
+      "C115.6 56.3 117.6 56.5 119.2 55.5 C119.9 55.1 120.3 54.5 120.6 53.7 L136.6 13.3 L92.8 13 " +
+      "C92.3 13 91.7 13.2 91.3 13.5 C90 14.1 89.2 15.4 89.2 16.8 C89.2 17.6 89.5 18.2 89.9 18.9 " +
+      "C89.9 19 90 19.1 90.1 19.2 C90.3 19.4 90.4 19.6 90.6 19.7 L100.4 27.4 C76.5 41 60.5 60.5 50 85.9 " +
+      "C39.5 60.5 23.5 41 -0.4 27.4 L9.4 19.7 C9.6 19.6 9.8 19.4 9.9 19.2 C10 19.1 10.1 19 10.1 18.9 " +
+      "C10.5 18.2 10.8 17.6 10.8 16.8 C10.8 15.4 10 14.1 8.7 13.5 C8.2 13.2 7.7 13 7.2 13 L-36.6 13.3 " +
+      "L-20.6 53.7 C-20.3 54.5 -19.8 55.1 -19.2 55.5 C-17.6 56.5 -15.6 56.3 -14.3 55 " +
+      "C-13.9 54.6 -13.6 54 -13.5 53.5 L-10.5 42.8 C29.5 66.2 40.2 104.5 40.2 127 L40.2 150 L59.8 150 " +
+      "L59.8 127 Z",
   };
 
-  // Corner points of a path made of absolute M/L/H/V commands (enough to find a rotated arrow's bounds).
+  // Straight arrow shapes by direction: "up", "down", "left" and "right" point that way, "diagonal" up-right. Each
+  // is as long as the arrow's height (150 units) in the direction it points, centered on (50, 75). A missing one
+  // is the opposite one turned around; failing that, the theme's arrows, then its single "arrow" turned. Each way
+  // is [shape, rotation, mirrored left-right, mirrored top-bottom]: diagonals are mirrored, not turned, so an arrow
+  // that is not at 45 degrees (Sweden's) leans the same way in every corner.
+  var ARROW_FALLBACK = {
+    up: [["up", 0], ["down", 180]], down: [["down", 0], ["up", 180]], left: [["left", 0], ["right", 180]], right: [["right", 0], ["left", 180]],
+    "up-right": [["diagonal", 0]], "down-right": [["diagonal", 0, false, true]], "down-left": [["diagonal", 0, true, true]], "up-left": [["diagonal", 0, true, false]],
+  };
+  // Other arrow sets an arrow can pick by its style ("lane" has only the theme's "laneArrows"). A theme can replace
+  // a style's set with its own ("overheadArrows"). Arrows without a style use the theme's.
+  var ARROW_STYLES = {
+    // The MUTCD arrows over the lanes on overhead guide signs.
+    overhead: {
+      down: "M152.2 40.9 C151.5 40.9 150.9 40.9 150.3 41.1 L72.1 61.4 L72.1 0 L27.7 0 L27.7 61.4 L-50.6 41.1 " +
+        "C-51.2 40.9 -51.8 40.9 -52.3 40.9 C-56.1 40.9 -59.1 43.9 -59.1 47.7 C-59.1 49.5 -58.4 51.3 -57 52.6 " +
+        "L-56.9 52.8 L50 150 L156.7 52.8 C158.2 51.4 159.1 49.5 159.1 47.7 C159.1 43.9 156 40.9 152.2 40.9 Z",
+      right: "M49.3 139.3 L122.8 79.7 C124.1 78.6 125 76.9 125 75 C125 73.1 124.1 71.5 122.8 70.3 L49.3 10.7 " +
+        "C48.3 9.9 46.9 9.4 45.5 9.4 C42.2 9.4 39.5 12.1 39.5 15.4 C39.5 15.9 39.6 16.3 39.7 16.8 L50 60 " +
+        "L-25 54.8 L-25 95.3 L50 90 L39.7 133.2 C39.6 133.7 39.5 134.1 39.5 134.6 " +
+        "C39.5 137.9 42.2 140.6 45.5 140.6 C46.9 140.6 48.3 140.1 49.3 139.3 Z",
+    },
+  };
+
+  function arrowShape(style, dir) {
+    var sets = [style, T.def.arrows];
+    var ways = ARROW_FALLBACK[dir] || ARROW_FALLBACK.down;
+    for (var i = 0; i < sets.length; i++) {
+      for (var j = 0; sets[i] && j < ways.length; j++) {
+        var w = ways[j];
+        if (sets[i][w[0]]) return { d: sets[i][w[0]], rot: w[1], sx: w[2] ? -1 : 1, sy: w[3] ? -1 : 1 };
+      }
+    }
+    return { d: T.def.arrow || DEFAULT_ARROW, rot: ARROWS[dir] || 0, sx: 1, sy: 1 };
+  }
+
+  // Corner and control points of a path made of absolute M/L/H/V/C commands (enough to find a rotated arrow's
+  // bounds; control points can only make them a little loose).
   function pathPoints(d) {
-    var pts = [], x = 0, y = 0, re = /([MLHVZ])([^MLHVZ]*)/gi, m;
+    var pts = [], x = 0, y = 0, re = /([MLHVCZ])([^MLHVCZ]*)/gi, m;
     while ((m = re.exec(d))) {
       var n = (m[2].match(/-?[\d.]+/g) || []).map(Number);
       var c = m[1].toUpperCase();
-      if (c === "M" || c === "L") { for (var i = 0; i + 1 < n.length; i += 2) { x = n[i]; y = n[i + 1]; pts.push([x, y]); } }
+      if (c === "M" || c === "L" || c === "C") { for (var i = 0; i + 1 < n.length; i += 2) { x = n[i]; y = n[i + 1]; pts.push([x, y]); } }
       else if (c === "H") { n.forEach(function (v) { x = v; pts.push([x, y]); }); }
       else if (c === "V") { n.forEach(function (v) { y = v; pts.push([x, y]); }); }
     }
     return pts.length ? pts : [[0, 0], [100, 150]];
   }
 
-  // Arrows are as tall as their height when pointing up or down; turned arrows keep the same shape size and
-  // get a box that fits them (so diagonal and sideways arrows are never clipped).
+  // Arrows are as long as their height in the direction they point, with a box that fits them (so diagonal and sideways arrows are never clipped).
   function renderArrow(item, ctx) {
     var h = item.height || DEFAULTS.arrowHeight;
     var dir = item.direction || "down";
     var ns = "http://www.w3.org/2000/svg";
     var svg = document.createElementNS(ns, "svg");
     var path = document.createElementNS(ns, "path");
-    var curved = /^(turn|split)-(left|right)$/.exec(dir);
+    var lane = dir === "fork" ? [dir, "fork", ""] : /^(turn|slight|split|corner|add)-(left|right)$/.exec(dir);
     var vb;
-    if (curved) {
-      path.setAttribute("d", CURVED[curved[1]]);
-      if (curved[2] === "right") path.setAttribute("transform", "translate(100 0) scale(-1 1)");
-      vb = [0, 0, 100, 150];
+    if (lane) {
+      var ld = (T.def.laneArrows || {})[lane[1]] || LANE[lane[1]];
+      var mirror = lane[2] === "right";
+      path.setAttribute("d", ld);
+      if (mirror) path.setAttribute("transform", "translate(100 0) scale(-1 1)");
+      if (/a/i.test(ld)) {
+        vb = [0, 0, 100, 150]; // arcs: the shape fills the box
+      } else {
+        // As wide as the shape, as tall as the box, so lane arrows of one size stand level in a row.
+        var lx0 = 1e9, lx1 = -1e9;
+        pathPoints(ld).forEach(function (p) { lx0 = Math.min(lx0, p[0]); lx1 = Math.max(lx1, p[0]); });
+        vb = mirror ? [100 - lx1, 0, lx1 - lx0, 150] : [lx0, 0, lx1 - lx0, 150];
+      }
     } else {
-      var d = T.def.arrow || DEFAULT_ARROW;
-      var rot = ARROWS[dir] || 0;
+      var set = item.style && (T.def[item.style + "Arrows"] || ARROW_STYLES[item.style]);
+      var shape = arrowShape(set, dir);
+      var d = shape.d, rot = shape.rot, sx = shape.sx, sy = shape.sy;
       path.setAttribute("d", d);
       if (rot) path.setAttribute("transform", "rotate(" + rot + " 50 75)");
+      else if (sx < 0 || sy < 0) path.setAttribute("transform", "translate(50 75) scale(" + sx + " " + sy + ") translate(-50 -75)");
       var r = rot * Math.PI / 180, cos = Math.cos(r), sin = Math.sin(r);
       var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
       pathPoints(d).forEach(function (p) {
-        var dx = p[0] - 50, dy = p[1] - 75;
+        var dx = (p[0] - 50) * sx, dy = (p[1] - 75) * sy;
         var X = 50 + dx * cos - dy * sin, Y = 75 + dx * sin + dy * cos;
         x0 = Math.min(x0, X); y0 = Math.min(y0, Y); x1 = Math.max(x1, X); y1 = Math.max(y1, Y);
       });
@@ -747,7 +824,8 @@
     },
     registerTheme: registerTheme,
     themes: THEMES,
-    arrows: Object.keys(ARROWS).concat(["turn-left", "turn-right", "split-left", "split-right"]),
+    arrows: Object.keys(ARROWS).concat(["turn-left", "turn-right", "split-left", "split-right", "corner-left", "corner-right", "slight-left", "slight-right", "add-left", "add-right", "fork"]),
+    arrowStyles: Object.keys(ARROW_STYLES),
   };
 
   // <glow>: draw only what is lit at night (LED lettering), laid out exactly like the sign itself.
