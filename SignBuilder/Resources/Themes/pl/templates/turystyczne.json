@@ -1,0 +1,19 @@
+{
+  "formatVersion": 1,
+  "theme": "pl",
+  "id": "turystyczne",
+  "name": "Tourist destination",
+  "scheme": "brown",
+  "align": "center",
+  "items": [
+    {
+      "type": "text",
+      "text": "Zamek Królewski"
+    },
+    {
+      "type": "arrow",
+      "direction": "right",
+      "height": 18
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "formatVersion": 1,
+  "theme": "pl",
+  "id": "objazd",
+  "name": "Detour",
+  "scheme": "yellow",
+  "align": "center",
+  "items": [
+    {
+      "type": "text",
+      "text": "OBJAZD"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "arrow",
+          "direction": "right",
+          "height": 18
+        },
+        {
+          "type": "text",
+          "text": "Gdańsk",
+          "height": 12
+        }
+      ],
+      "align": "center"
+    }
+  ]
+}

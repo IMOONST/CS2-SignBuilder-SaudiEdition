@@ -1,0 +1,47 @@
+{
+  "formatVersion": 1,
+  "theme": "pl",
+  "id": "krajowa",
+  "name": "Roadside signpost (E-2a)",
+  "scheme": "green",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "arrow",
+          "direction": "left"
+        },
+        {
+          "type": "shield",
+          "network": "DK",
+          "number": "7"
+        },
+        {
+          "type": "text",
+          "text": "Kraków"
+        }
+      ],
+      "align": "center"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "arrow",
+          "direction": "right"
+        },
+        {
+          "type": "shield",
+          "network": "DW",
+          "number": "780"
+        },
+        {
+          "type": "text",
+          "text": "Chrzanów"
+        }
+      ],
+      "align": "center"
+    }
+  ]
+}

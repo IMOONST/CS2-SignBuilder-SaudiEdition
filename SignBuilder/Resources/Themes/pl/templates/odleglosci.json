@@ -1,0 +1,65 @@
+{
+  "formatVersion": 1,
+  "theme": "pl",
+  "id": "odleglosci",
+  "name": "Distances (E-13)",
+  "scheme": "green",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "shield",
+          "network": "DK",
+          "number": "7"
+        },
+        {
+          "type": "text",
+          "text": "Radom"
+        },
+        {
+          "type": "text",
+          "text": "45 km",
+          "margin": {
+            "left": 14
+          }
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Kielce"
+        },
+        {
+          "type": "text",
+          "text": "120 km",
+          "margin": {
+            "left": 14
+          }
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Kraków"
+        },
+        {
+          "type": "text",
+          "text": "235 km",
+          "margin": {
+            "left": 14
+          }
+        }
+      ],
+      "justify": "between"
+    }
+  ]
+}

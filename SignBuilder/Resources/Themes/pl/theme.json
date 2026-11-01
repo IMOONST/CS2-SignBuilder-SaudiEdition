@@ -1,0 +1,204 @@
+{
+  "formatVersion": 1,
+  "id": "pl",
+  "name": "Poland",
+  "description": "Drogowskazy (E-1, E-2, E-13), blue on motorways, green elsewhere; Noto Sans (add Drogowskaz yourself)",
+  "units": "in",
+  "defaults": {
+    "font": "Noto Sans",
+    "textHeight": 15.5,
+    "shieldHeight": 17.0,
+    "arrowHeight": 23.5,
+    "border": 1.2,
+    "cornerRadius": 3.0,
+    "lineGap": 0.55,
+    "margin": 0.6,
+    "itemGap": 0.45,
+    "scheme": "green"
+  },
+  "fonts": [
+    {
+      "family": "Drogowskaz",
+      "file": "fonts/Drogowskaz.ttf",
+      "optional": true,
+      "label": "Drogowskaz (add the file yourself)",
+      "scale": 1.4,
+      "offset": 0.03
+    },
+    {
+      "family": "Noto Sans",
+      "label": "Noto Sans Bold",
+      "weight": "bold",
+      "scale": 1.4008,
+      "offset": -0.0434
+    }
+  ],
+  "schemes": {
+    "blue": {
+      "bg": "#0059a6",
+      "fg": "#ffffff",
+      "label": "Autostrada"
+    },
+    "green": {
+      "bg": "#00804a",
+      "fg": "#ffffff",
+      "label": "Droga ekspresowa / inne drogi"
+    },
+    "white": {
+      "bg": "#ffffff",
+      "fg": "#000000",
+      "label": "Lokalne / local"
+    },
+    "brown": {
+      "bg": "#6d3b1f",
+      "fg": "#ffffff",
+      "label": "Turystyczne"
+    },
+    "yellow": {
+      "bg": "#ffcc00",
+      "fg": "#000000",
+      "label": "Objazd / detour"
+    }
+  },
+  "shields": {
+    "A": {
+      "label": "Autostrada",
+      "shape": "rect",
+      "bg": "#d6001c",
+      "fg": "#ffffff",
+      "border": "#ffffff",
+      "num": 0.6,
+      "radius": 0.14,
+      "default": "2",
+      "prefix": "A"
+    },
+    "S": {
+      "label": "Droga ekspresowa",
+      "shape": "rect",
+      "bg": "#d6001c",
+      "fg": "#ffffff",
+      "border": "#ffffff",
+      "num": 0.6,
+      "radius": 0.14,
+      "default": "8",
+      "prefix": "S"
+    },
+    "DK": {
+      "label": "Droga krajowa",
+      "shape": "rect",
+      "bg": "#d6001c",
+      "fg": "#ffffff",
+      "border": "#ffffff",
+      "num": 0.6,
+      "radius": 0.14,
+      "default": "7"
+    },
+    "DW": {
+      "label": "Droga wojewódzka",
+      "shape": "rect",
+      "bg": "#ffcc00",
+      "fg": "#000000",
+      "border": "#000000",
+      "num": 0.6,
+      "radius": 0.14,
+      "default": "780"
+    },
+    "E": {
+      "label": "Trasa europejska",
+      "shape": "rect",
+      "bg": "#00804a",
+      "fg": "#ffffff",
+      "border": "#ffffff",
+      "num": 0.6,
+      "radius": 0.14,
+      "default": "30",
+      "prefix": "E"
+    },
+    "EXIT": {
+      "label": "Numer węzła (exit number)",
+      "shape": "rect",
+      "bg": "#ffffff",
+      "fg": "#000000",
+      "border": "#000000",
+      "num": 0.6,
+      "radius": 0.3,
+      "default": "12"
+    }
+  },
+  "arrow": "M42 0 H58 V100 H82 L50 150 L18 100 H42 Z",
+  "laneWidth": 157.48031496062993,
+  "presets": [
+    {
+      "label": "Exit number",
+      "item": {
+        "type": "shield",
+        "network": "EXIT",
+        "number": "12"
+      }
+    },
+    {
+      "label": "Distance",
+      "item": {
+        "type": "text",
+        "text": "45 km",
+        "height": 15.5
+      }
+    },
+    {
+      "label": "White chip",
+      "item": {
+        "type": "chip",
+        "scheme": "white",
+        "items": [
+          {
+            "type": "text",
+            "text": "Centrum",
+            "height": 12
+          }
+        ]
+      }
+    },
+    {
+      "label": "Green panel",
+      "item": {
+        "type": "panel",
+        "scheme": "green",
+        "align": "center",
+        "items": [
+          {
+            "type": "text",
+            "text": "Destination",
+            "height": 15.5
+          }
+        ]
+      }
+    },
+    {
+      "label": "Lane arrows",
+      "item": {
+        "type": "row",
+        "align": "center",
+        "justify": "even",
+        "items": [
+          {
+            "type": "arrow",
+            "direction": "turn-left",
+            "height": 29.375
+          },
+          {
+            "type": "arrow",
+            "direction": "up",
+            "style": "lane",
+            "height": 29.375
+          },
+          {
+            "type": "arrow",
+            "direction": "up",
+            "style": "lane",
+            "height": 29.375
+          }
+        ]
+      }
+    }
+  ]
+}

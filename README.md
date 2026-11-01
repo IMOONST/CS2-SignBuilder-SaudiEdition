@@ -3,7 +3,8 @@
 A Cities: Skylines II code mod for designing road signs in game and placing them standalone or on
 gantries. Signs come in themes (one per country or style): United States (MUTCD guide signs with
 Interstate, US and state shields, exit tabs and EXIT ONLY panels), Canada, Germany, United Kingdom,
-Nordic (Norway and Sweden), France, Netherlands, Italy, Switzerland, Russia, Japan, China and Australia.
+Nordic (Norway and Sweden), France, Netherlands, Italy, Switzerland, Poland, Russia, Japan, China and
+Australia.
 Players can add their own themes and templates as files, or publish them as mods.
 
 ## Using it

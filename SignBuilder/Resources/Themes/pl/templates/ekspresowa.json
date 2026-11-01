@@ -1,0 +1,49 @@
+{
+  "formatVersion": 1,
+  "theme": "pl",
+  "id": "ekspresowa",
+  "name": "Expressway signpost (E-2d)",
+  "scheme": "green",
+  "align": "center",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "shield",
+          "network": "S",
+          "number": "8"
+        },
+        {
+          "type": "shield",
+          "network": "E",
+          "number": "67"
+        },
+        {
+          "type": "text",
+          "text": "Wrocław"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "text": "Kalisz"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "arrow",
+          "direction": "up-right",
+          "height": 18
+        },
+        {
+          "type": "text",
+          "text": "Sieradz",
+          "height": 12
+        }
+      ],
+      "align": "center"
+    }
+  ]
+}

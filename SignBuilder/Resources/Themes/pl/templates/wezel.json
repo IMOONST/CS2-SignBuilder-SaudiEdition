@@ -1,0 +1,66 @@
+{
+  "formatVersion": 1,
+  "theme": "pl",
+  "id": "wezel",
+  "name": "Motorway pre-signpost (E-1a)",
+  "scheme": "blue",
+  "align": "center",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "shield",
+          "network": "EXIT",
+          "number": "12"
+        },
+        {
+          "type": "text",
+          "text": "Węzeł Konotopa",
+          "height": 12
+        }
+      ],
+      "align": "center"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "shield",
+          "network": "A",
+          "number": "2"
+        },
+        {
+          "type": "text",
+          "text": "Poznań"
+        }
+      ]
+    },
+    {
+      "type": "panel",
+      "scheme": "green",
+      "align": "center",
+      "items": [
+        {
+          "type": "row",
+          "items": [
+            {
+              "type": "shield",
+              "network": "DK",
+              "number": "92"
+            },
+            {
+              "type": "text",
+              "text": "Błonie"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "1000 m",
+          "height": 12
+        }
+      ]
+    }
+  ]
+}

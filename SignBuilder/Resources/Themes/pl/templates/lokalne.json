@@ -1,0 +1,37 @@
+{
+  "formatVersion": 1,
+  "theme": "pl",
+  "id": "lokalne",
+  "name": "Local destinations",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "arrow",
+          "direction": "left"
+        },
+        {
+          "type": "text",
+          "text": "Centrum"
+        }
+      ],
+      "align": "center"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "arrow",
+          "direction": "right"
+        },
+        {
+          "type": "text",
+          "text": "Dworzec PKP"
+        }
+      ],
+      "align": "center"
+    }
+  ]
+}

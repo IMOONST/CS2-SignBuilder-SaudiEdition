@@ -1,0 +1,45 @@
+{
+  "formatVersion": 1,
+  "theme": "pl",
+  "id": "autostrada",
+  "name": "Motorway signpost (E-2d)",
+  "scheme": "blue",
+  "align": "center",
+  "minLanes": 2,
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "shield",
+          "network": "A",
+          "number": "2"
+        },
+        {
+          "type": "text",
+          "text": "Warszawa"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "text": "Łódź"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "arrow",
+          "direction": "down",
+          "style": "overhead"
+        },
+        {
+          "type": "arrow",
+          "direction": "down",
+          "style": "overhead"
+        }
+      ],
+      "justify": "between"
+    }
+  ]
+}
