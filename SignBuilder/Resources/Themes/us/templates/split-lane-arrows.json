@@ -12,7 +12,7 @@
         {
           "type": "text",
           "text": "EXIT 27",
-          "height": 10,
+          "height": 15,
           "font": "RG2014E"
         }
       ]
@@ -34,7 +34,7 @@
               "type": "shield",
               "network": "I",
               "number": "494",
-              "height": 30
+              "height": 48
             }
           ]
         },
@@ -52,7 +52,7 @@
                   "type": "shield",
                   "network": "I",
                   "number": "94",
-                  "height": 30
+                  "height": 48
                 },
                 {
                   "type": "text",
@@ -64,7 +64,8 @@
             },
             {
               "type": "text",
-              "text": "St Cloud"
+              "text": "St Cloud",
+              "height": 20
             }
           ]
         }
@@ -76,35 +77,46 @@
       "type": "row",
       "items": [
         {
-          "type": "arrow",
-          "direction": "turn-left",
-          "height": 30
-        },
-        {
-          "type": "chip",
-          "scheme": "yellow",
+          "type": "row",
+          "align": "end",
           "items": [
             {
-              "type": "text",
-              "text": "50 MPH",
-              "height": 12,
-              "font": "RG2014D"
+              "type": "arrow",
+              "direction": "turn-left",
+              "style": "lane",
+              "height": 60
+            },
+            {
+              "type": "chip",
+              "scheme": "yellow",
+              "items": [
+                {
+                  "type": "text",
+                  "text": "50 MPH",
+                  "height": 15,
+                  "font": "RG2014D"
+                }
+              ],
+              "radius": 2
             }
-          ],
-          "radius": 2
+          ]
         },
         {
           "type": "arrow",
           "direction": "split-left",
-          "height": 30
+          "style": "lane",
+          "height": 60
         },
         {
           "type": "arrow",
           "direction": "up",
-          "height": 30
+          "style": "lane",
+          "height": 60
         }
       ],
-      "justify": "between"
+      "justify": "even",
+      "align": "end"
     }
-  ]
+  ],
+  "minLanes": 3
 }

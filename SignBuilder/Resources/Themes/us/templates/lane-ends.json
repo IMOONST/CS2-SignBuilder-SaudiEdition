@@ -1,0 +1,28 @@
+{
+  "formatVersion": 1,
+  "theme": "us",
+  "id": "lane-ends",
+  "name": "Lane ends (overhead)",
+  "scheme": "yellow",
+  "align": "center",
+  "items": [
+    {
+      "type": "text",
+      "text": "LANE ENDS",
+      "height": 12,
+      "font": "RG2014E"
+    },
+    {
+      "type": "text",
+      "text": "500 FEET",
+      "height": 12,
+      "font": "RG2014E"
+    },
+    {
+      "type": "arrow",
+      "direction": "down",
+      "style": "overhead",
+      "height": 30
+    }
+  ]
+}

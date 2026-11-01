@@ -34,11 +34,13 @@
         {
           "type": "arrow",
           "direction": "down",
+          "style": "overhead",
           "height": 24
         },
         {
           "type": "arrow",
           "direction": "down",
+          "style": "overhead",
           "height": 24
         }
       ],
