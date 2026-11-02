@@ -45,6 +45,12 @@ const DIAGRAM_SHAPES: Option[] = [
   { value: "exit-left", label: "Exit left" }, { value: "exit-right", label: "Exit right" },
   { value: "fork", label: "Fork" }, { value: "roundabout", label: "Roundabout" },
 ];
+// How many of an exit's lanes are through lanes too. Diagrams made before this setting draw every exit lane from
+// the through lanes (no value: neither button is on unless that is one lane).
+const SHARED_LANES: Option[] = [
+  { value: "0", label: "Exit only", title: "The exit lanes are extra lanes beside the through lanes, ending at the exit" },
+  { value: "1", label: "One shared", title: "The nearest exit lane is also a through lane (an option lane); any others are exit only" },
+];
 const ROUNDABOUT_EXITS: Option[] = ["left", "up-left", "up", "up-right", "right"].map((d) => ({ value: d, icon: <ArrowIcon direction={d} />, title: d }));
 // LED colors: amber (the default, no value), white, green, red.
 const LED_COLORS = [{ value: "", color: "#ffb000", title: "Amber" }, { value: "#f4f4f4", title: "White" }, { value: "#46ff74", title: "Green" }, { value: "#ff4031", title: "Red" }];
@@ -250,6 +256,12 @@ function ItemProperties(props: { item: Item; onChange: (patch: Partial<Item>) =>
               <div style={{ width: "12rem" }} />
               <Field label="Exit lanes"><NumberBox compact value={item.exitLanes ?? 1} min={1} max={4} onChange={(exitLanes) => onChange({ exitLanes })} /></Field>
             </div>
+          )}
+          {item.shape !== "roundabout" && item.shape !== "fork" && (
+            <Field label="Exit lanes from through lanes">
+              <Choice options={SHARED_LANES} value={item.sharedLanes != null ? String(item.sharedLanes) : (item.exitLanes ?? 1) === 1 ? "1" : ""}
+                onChange={(v) => onChange({ sharedLanes: Number(v) })} />
+            </Field>
           )}
           <Field label="Size"><NumberBox value={item.height ?? 50} step={2} onChange={(height) => onChange({ height })} /></Field>
           <PartColorField item={item} theme={theme} onChange={onChange} />

@@ -40,7 +40,7 @@ export function baseParts(theme?: Theme): { label: string; item: Item }[] {
     { label: "Text", item: { type: "text", text: "Destination", height: th } },
     { label: "Shield", item: { type: "shield", network: first, number: (d?.shields ?? {})[first]?.default ?? "1", height: d?.defaults?.shieldHeight } },
     { label: "Arrow", item: { type: "arrow", direction: "up", height: d?.defaults?.arrowHeight } },
-    { label: "Diagram", item: { type: "diagram", shape: "exit-left", lanes: 2, exitLanes: 1, height: Math.round((d?.defaults?.arrowHeight ?? 24) * 2.2) } },
+    { label: "Diagram", item: { type: "diagram", shape: "exit-left", lanes: 2, exitLanes: 1, sharedLanes: 1, height: Math.round((d?.defaults?.arrowHeight ?? 24) * 2.2) } },
     { label: "LED text", item: { type: "led", lines: ["ACCIDENT AHEAD"], height: small } },
     { label: "Divider", item: { type: "divider" } },
     { label: "Row", item: { type: "row", align: "center", items: [] } },

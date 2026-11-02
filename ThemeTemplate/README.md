@@ -147,6 +147,9 @@ Each shape is as long as 150 units in the direction it points, centered on (50, 
 given too; a missing one is the opposite one turned around. The diagonal is mirrored for the other corners, so it
 need not be at 45°; missing diagonals fall back to `arrow`, turned.
 
+`"diagramHead": "mutcd"` draws road diagrams with MUTCD arrowheads (rounded, swept back, as on US signs)
+instead of plain triangles.
+
 Lane-use arrows (the **Lane** style) can be given as `laneArrows`, each pointing up and standing on the bottom of a
 box 150 tall, all at one scale, so they stand level in a row:
 
