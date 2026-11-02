@@ -119,6 +119,9 @@ Each entry is one kind of plate. The key (`"M"`) is stored in signs, and `label`
 |---|---|
 | `shape` | `img` (artwork with the number drawn on top), `rect` (a colored plate sized to its text), `ellipse`, or `plain` (colored text only) |
 | `img` | Artwork file for `img` plates (SVG or PNG), relative to the theme folder |
+| `wideImg` | Optional artwork for three-character numbers on `img` plates (drawn `wide` × as wide) |
+| `onLight` | Settings that replace these on light backgrounds (white, yellow), e.g. `{ "img": "…", "wideImg": "…" }` for outlined artwork |
+| `onWide` | Settings that replace these for three-character numbers, e.g. `{ "num": 0.5, "top": 0.25 }` for a larger number |
 | `aspect` | Width ÷ height of `img` and `ellipse` plates |
 | `bg`, `fg`, `border`, `borderWidth` | Plate color, number color, optional border color and width (`borderWidth` × height) |
 | `num` | Number height × plate height |

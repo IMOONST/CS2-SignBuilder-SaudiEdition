@@ -217,17 +217,37 @@
     return svg;
   }
 
+  // Whether a background color is light (white, yellow...), so white artwork needs an outline to show on it.
+  function isLight(color) {
+    var m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(color || "");
+    if (!m) return false;
+    var hex = m[1].length === 3 ? m[1].replace(/./g, "$&$&") : m[1];
+    var c = [0, 2, 4].map(function (i) { return parseInt(hex.substr(i, 2), 16) / 255; });
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2] > 0.5;
+  }
+
   // Route plates come from the theme: "img" (artwork, number on top), "ellipse", "rect" (colored plate with an
-  // optional border) or "plain" (just colored text, e.g. UK primary route numbers).
+  // optional border) or "plain" (just colored text, e.g. UK primary route numbers). "onLight" replaces any of these
+  // settings on light backgrounds (e.g. outlined artwork for a white shield), "onWide" for three-character numbers
+  // (e.g. a larger number on a wide shield).
   function renderShield(item, ctx) {
     var shields = T.def.shields || {};
     var def = shields[item.network] || shields[Object.keys(shields)[0]] || { shape: "rect", bg: "#ffffff", fg: "#000000" };
+    var over = function (settings) {
+      var merged = {};
+      for (var k in def) merged[k] = def[k];
+      for (k in settings) merged[k] = settings[k];
+      def = merged;
+    };
+    if (def.onLight && isLight(ctx.bg)) over(def.onLight);
     var h = item.height || DEFAULTS.shieldHeight;
     var number = (def.prefix || "") + String(item.number != null ? item.number : "");
     var wide = (String(item.number || "").length >= 3 && def.wide) || 1;
+    if (wide > 1 && def.onWide) over(def.onWide);
     var font = (wide > 1 && def.wideFont) || def.font || ctx.font;
     var shape = def.shape || (def.img ? "img" : "rect");
-    var nh = h * (def.num || 0.6) * (wide > 1 && def.img ? 0.9 : 1);
+    // Three-character numbers are drawn smaller on artwork that has no wide version (it is stretched, not widened).
+    var nh = h * (def.num || 0.6) * (wide > 1 && def.img && !def.wideImg ? 0.9 : 1);
     if (shape === "rect" || shape === "plain") {
       // Plates size to their text: padding either side, like European route number plates.
       var padX = h * (def.padX != null ? def.padX : 0.25);
@@ -262,7 +282,8 @@
       }
     } else {
       var img = el("img", null, { width: px(w), height: px(h) });
-      img.src = T.base + def.img;
+      // "wideImg" is the artwork for three-character numbers (a wider shield), when the theme has one.
+      img.src = T.base + ((wide > 1 && def.wideImg) || def.img);
       box.appendChild(img);
     }
     var m = metrics(font);

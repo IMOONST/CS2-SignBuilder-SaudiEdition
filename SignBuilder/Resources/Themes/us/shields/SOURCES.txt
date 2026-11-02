@@ -1,2 +1,2 @@
-interstate.svg, us_route.svg: OpenStreetMap Americana shield icons (CC0 1.0)
-https://github.com/osm-americana/openstreetmap-americana/tree/main/icons
+interstate*.svg, us_route*.svg, local_route*.svg: exported from the MUTCD (FHWA Standard Highway Signs; U.S. government work, public domain).
+The *_wide versions are used for three-character numbers.
