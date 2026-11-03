@@ -134,6 +134,16 @@ namespace SignBuilder.Tests
                 yield return RunUITest();
                 yield break;
             }
+            if (m_Mode == "movesave")
+            {
+                yield return RunMoveItSave();
+                yield break;
+            }
+            if (m_Mode == "moveload")
+            {
+                yield return RunMoveItLoad();
+                yield break;
+            }
             if (m_Mode == "reload")
             {
                 yield return RunReload();
