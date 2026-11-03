@@ -15,9 +15,9 @@ using SignBuilder.Tools;
 namespace SignBuilder.Assemblies
 {
     /// <summary>
-    /// Deletes sign structures nobody uses: their generated mesh, face materials and textures (the shared steel
-    /// material stays) and their library entry. Safe for other cities: saves carry their structures' recipes and
-    /// rebuild anything missing on load.
+    /// Deletes sign structures nobody uses: their library entry now, their generated mesh, face materials and textures
+    /// (the shared steel material stays) when the game next starts. Safe for other cities: saves carry their
+    /// structures' recipes and rebuild anything missing on load.
     /// </summary>
     public static class AssemblyCleanup
     {
@@ -42,7 +42,12 @@ namespace SignBuilder.Assemblies
             Remove(records);
         }
 
-        /// <summary>Removes the records (and assets) among <paramref name="records"/> with no object in the world; returns how many.</summary>
+        /// <summary>
+        /// Removes the records among <paramref name="records"/> with no object in the world from the library; returns how
+        /// many. Their assets stay until the game restarts (<see cref="SweepOrphans"/> deletes them then, before any
+        /// prefab is registered): the game cannot unregister a prefab, so a city loaded in this session that has the
+        /// structure would get its prefab without a mesh (an error, and the sign invisible).
+        /// </summary>
         public static int Remove(IReadOnlyList<AssemblyRecord> records)
         {
             var world = World.DefaultGameObjectInjectionWorld;
@@ -62,26 +67,9 @@ namespace SignBuilder.Assemblies
                     if (name != null) used.Add(name);
                 }
             }
-            var db = SignBuilderRuntime.Database;
             var unused = records.Where(r => !used.Contains(r.PrefabName)).ToList();
-            // Face materials are shared between structures with identical faces: keep those another structure uses.
-            var gone = new HashSet<AssemblyRecord>(unused);
-            var shared = new HashSet<string>(AssemblyLibrary.All.Where(r => !gone.Contains(r)).SelectMany(r => r.SurfaceIds));
-            var count = 0;
-            foreach (var record in unused)
-            {
-                DeleteAsset<GeometryAsset>(db, record.GeometryId, null);
-                if (record.LodGeometryId != null) DeleteAsset<GeometryAsset>(db, record.LodGeometryId, null);
-                // Surface 0 is the shared steel; the rest are this structure's sign faces (with their textures).
-                foreach (var id in record.SurfaceIds.Skip(1).Distinct().Where(id => shared.Add(id))) DeleteAsset<SurfaceAsset>(db, id, s =>
-                {
-                    s.LoadProperties(false);
-                    foreach (var texture in s.textures.Values.Where(t => t != null)) Delete(texture);
-                });
-                AssemblyLibrary.Remove(record);
-                count++;
-            }
-            return count;
+            foreach (var record in unused) AssemblyLibrary.Remove(record);
+            return unused.Count;
         }
 
         /// <summary>
@@ -161,21 +149,6 @@ namespace SignBuilder.Assemblies
             if (string.IsNullOrEmpty(path)) return;
             if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
             if (System.IO.File.Exists(path + ".cid")) System.IO.File.Delete(path + ".cid");
-        }
-
-        private static void DeleteAsset<T>(ILocalAssetDatabase db, string id, System.Action<T> before) where T : IAssetData
-        {
-            if (string.IsNullOrEmpty(id)) return;
-            try
-            {
-                if (!AssetDatabase.global.TryGetAsset(Colossal.Hash128.Parse(id), out T asset)) return;
-                before?.Invoke(asset);
-                Delete(asset);
-            }
-            catch (System.Exception e)
-            {
-                Mod.log.Warn($"Cleanup: could not delete {typeof(T).Name} {id}: {e.Message}");
-            }
         }
     }
 }

@@ -32,7 +32,8 @@ namespace SignBuilder.Assemblies
         public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
         {
             writer.Write(kVersion);
-            var record = AssemblyLibrary.FromPrefabName(PrefabName.ToString()) ?? AssemblyRestoreSystem.Unresolved(PrefabName.ToString());
+            var name = PrefabName.ToString();
+            var record = AssemblyLibrary.FromPrefabName(name) ?? AssemblyLibrary.Retired(name) ?? AssemblyRestoreSystem.Unresolved(name);
             writer.Write(record == null ? "" : record.ToPortable().ToString(Formatting.None));
         }
 
@@ -81,8 +82,10 @@ namespace SignBuilder.Assemblies
                 {
                     if (!seen.Add(r.m_Prefab)) continue;
                     var name = PrefabNameOf(EntityManager, m_PrefabSystem, r.m_Prefab);
-                    // Assemblies that could not be rebuilt here keep their recipe, so re-saving never loses them.
-                    if (name != null && (AssemblyLibrary.FromPrefabName(name) != null || AssemblyRestoreSystem.Unresolved(name) != null)) names.Add(name);
+                    // Assemblies removed from the library this session, or that could not be rebuilt here, keep their
+                    // recipe, so re-saving never loses them.
+                    if (name != null && (AssemblyLibrary.FromPrefabName(name) != null || AssemblyLibrary.Retired(name) != null
+                        || AssemblyRestoreSystem.Unresolved(name) != null)) names.Add(name);
                 }
             }
             foreach (var name in names)

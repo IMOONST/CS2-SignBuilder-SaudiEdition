@@ -74,6 +74,7 @@ namespace SignBuilder.Assemblies
     public static class AssemblyLibrary
     {
         private static Dictionary<string, AssemblyRecord> s_Records;
+        private static readonly Dictionary<string, AssemblyRecord> s_Retired = new();
 
         private static string FilePath => Path.Combine(SignBuilderRuntime.DataDir, "assemblies.json");
 
@@ -94,6 +95,12 @@ namespace SignBuilder.Assemblies
 
         public static AssemblyRecord FromPrefabName(string prefabName) =>
             prefabName != null && prefabName.StartsWith("SignBuilder_A_") ? Get(prefabName.Substring("SignBuilder_A_".Length)) : null;
+
+        /// <summary>
+        /// A record removed from the library this session. Its prefab stays registered (and its assets on disk) until
+        /// the game restarts, so a city loaded meanwhile still shows the structure, and a save of it keeps its recipe.
+        /// </summary>
+        public static AssemblyRecord Retired(string prefabName) => prefabName != null && s_Retired.TryGetValue(prefabName, out var r) ? r : null;
 
         /// <summary>
         /// The face material another structure already has for a face with this key: identical faces share one
@@ -122,7 +129,9 @@ namespace SignBuilder.Assemblies
         public static void Remove(AssemblyRecord record)
         {
             Load();
-            if (s_Records.Remove(record.Id)) Save();
+            if (!s_Records.Remove(record.Id)) return;
+            s_Retired[record.PrefabName] = record;
+            Save();
         }
 
         private static void Load()
