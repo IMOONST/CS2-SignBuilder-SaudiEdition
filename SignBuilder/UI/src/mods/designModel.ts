@@ -155,7 +155,7 @@ export function describe(item: Item, labels?: Record<string, string>): string {
     case "chip": return "Chip";
     case "diagram": return `Diagram ${String(item.shape ?? "exit-left").replace("-", " ")}`;
     case "led": return `LED "${(item.lines ?? [])[0] ?? ""}"`;
-    case "panel": return "Panel";
+    case "panel": return item.side ? "Side panel" : "Panel";
     case "tab": return "Tab";
     case "arrow": return `Arrow ${String(item.direction ?? "up").replace("-", " ")}`;
     case "row": return "Row";
@@ -173,7 +173,7 @@ export function kindOf(item: Item, labels?: Record<string, string>): string {
     case "chip": return "Chip";
     case "diagram": return "Diagram";
     case "led": return "LED text";
-    case "panel": return "Panel";
+    case "panel": return item.side ? "Side panel" : "Panel";
     case "tab": return "Tab";
     case "arrow": return "Arrow";
     case "row": return "Row";

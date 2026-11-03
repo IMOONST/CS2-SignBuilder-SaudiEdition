@@ -613,9 +613,11 @@
   }
 
   // Tabs sit on top of the sign; panels are bands across its full width (at the top, between parts or at the
-  // bottom, like an EXIT ONLY panel). Both are top-level parts the sign lays out itself.
+  // bottom, like an EXIT ONLY panel), or with "side": "left" / "right" down its full height on that edge (the black
+  // HOV diamond panel). Both are top-level parts the sign lays out itself.
   function isTab(item) { return !!item && item.type === "tab"; }
   function isPanel(item) { return !!item && item.type === "panel"; }
+  function isSidePanel(item) { return isPanel(item) && (item.side === "left" || item.side === "right"); }
   function inBody(item) { return !isTab(item) && !isPanel(item); }
 
   // <only>: indices of <item>.items to draw (a stretch of the sign's body between panels); all when absent.
@@ -752,8 +754,8 @@
       e.style.borderTopRightRadius = px(corners.topRight === false ? 0 : innerRadius);
     }
     if (corners && corners.bottom) {
-      e.style.borderBottomLeftRadius = px(innerRadius);
-      e.style.borderBottomRightRadius = px(innerRadius);
+      e.style.borderBottomLeftRadius = px(corners.bottomLeft === false ? 0 : innerRadius);
+      e.style.borderBottomRightRadius = px(corners.bottomRight === false ? 0 : innerRadius);
     }
     var gap = item.gap != null ? item.gap : (spacingHeight(item) || h) * 0.75;
     var inner = renderContainer({ type: "row", items: item.items || [], gap: gap }, { font: ctx.font, fg: c.fg, bg: c.bg, led: ctx.led }, true, path);
@@ -782,6 +784,24 @@
     inner.appendChild(renderContainer({ type: "row", items: item.items || [], align: "center" }, { font: font, fg: c.fg, bg: c.bg, led: ctx.led }, true, path));
     box.appendChild(inner);
     return tag(box, path);
+  }
+
+  // A panel down one side of the sign, its full height: its parts stacked and centered in it. <round>: its outer
+  // corners { top, bottom } follow the border's inner edge (not under a tab).
+  function renderSidePanel(item, ctx, path, round, innerRadius) {
+    var c = boxColors(item, ctx);
+    var h = heightOf(item) || DEFAULTS.textHeight;
+    var pad = item.padding != null ? item.padding : h * 0.35;
+    var e = el("div", "sb-band", {
+      backgroundColor: c.bg, padding: px(pad), display: "flex", flexDirection: "column", justifyContent: "center",
+    });
+    if (!(item.items || []).length) e.style.minWidth = px(DEFAULTS.textHeight * 0.9);
+    var left = item.side === "left";
+    if (round.top) e.style[left ? "borderTopLeftRadius" : "borderTopRightRadius"] = px(innerRadius);
+    if (round.bottom) e.style[left ? "borderBottomLeftRadius" : "borderBottomRightRadius"] = px(innerRadius);
+    e.appendChild(renderContainer({ type: "column", items: item.items || [], align: item.align || "center" },
+      { font: ctx.font, fg: c.fg, bg: c.bg, led: ctx.led }, false, path));
+    return e;
   }
 
   // Minimum sign width for "at least N lanes", at the default 70% sign size less a little clearance: highway lanes
@@ -845,9 +865,26 @@
     if (sides.left.length) inner.style.borderTopLeftRadius = "0px";
     if (led) inner.style.backgroundColor = s.bg;
 
+    // Side panels run down the sign's edges; the rest of it goes between them.
+    var sideLeft = [], sideRight = [];
+    items.forEach(function (item, i) { if (isSidePanel(item)) (item.side === "left" ? sideLeft : sideRight).push(i); });
+    var body = inner;
+    if (sideLeft.length || sideRight.length) {
+      inner.style.flexDirection = "row";
+      body = el("div", "sb-stack", { flexGrow: "1" });
+    }
+    var sidePanel = function (i) {
+      var left = items[i].side === "left";
+      var round = { top: !(left ? sides.left : sides.right).length, bottom: true };
+      return tag(renderSidePanel(items[i], ctx, String(i), round, Math.max(innerRadius - border, 0)), String(i));
+    };
+    sideLeft.forEach(function (i) { inner.appendChild(sidePanel(i)); });
+    if (body !== inner) inner.appendChild(body);
+    sideRight.forEach(function (i) { inner.appendChild(sidePanel(i)); });
+
     // The body runs in stretches between panels; each stretch has the sign's margin around it.
     var drawn = [];
-    items.forEach(function (item, i) { if (!isTab(item)) drawn.push(i); });
+    items.forEach(function (item, i) { if (!isTab(item) && !isSidePanel(item)) drawn.push(i); });
     var stretch = [];
     var first = true;
     var flush = function () {
@@ -855,16 +892,21 @@
       var content = renderContainer({ type: "column", items: items, align: doc.align || "start" }, ctx, false, "", stretch);
       content.style.padding = px(margin);
       if (doc.height && first) content.style.minHeight = px(doc.height - border * 4 - margin * 2);
-      inner.appendChild(content);
+      body.appendChild(content);
       stretch = [];
       first = false;
     };
     drawn.forEach(function (i, k) {
       if (!isPanel(items[i])) { stretch.push(i); return; }
       flush();
-      var corners = { top: k === 0, bottom: k === drawn.length - 1, topLeft: !sides.left.length, topRight: !sides.right.length };
+      // Corners against a side panel are square.
+      var corners = {
+        top: k === 0, bottom: k === drawn.length - 1,
+        topLeft: !sides.left.length && !sideLeft.length, topRight: !sides.right.length && !sideRight.length,
+        bottomLeft: !sideLeft.length, bottomRight: !sideRight.length,
+      };
       // The panel sits inside the legend border, so its corners follow that border's inner edge.
-      inner.appendChild(tag(renderPanel(items[i], ctx, String(i), corners, Math.max(innerRadius - border, 0)), String(i)));
+      body.appendChild(tag(renderPanel(items[i], ctx, String(i), corners, Math.max(innerRadius - border, 0)), String(i)));
       first = false;
     });
     flush();

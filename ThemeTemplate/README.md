@@ -217,7 +217,7 @@ Each file in `templates/` is one sign: the same JSON the designer saves. The eas
 | `led` (LED text) | `lines`, `height`, `color` |
 | `row`, `column` | `items`, `align`; rows also take `justify` (`between`, `even`) |
 | `chip` | `items`, `scheme`, `border`, `span` (`full`), `align` |
-| `panel` (a band across the sign) | `items`, `scheme`, `align` |
+| `panel` (a band across the sign, or down one side with `side`) | `items`, `scheme`, `align`, `side` (`left` or `right`: the panel's full height on that edge, its parts stacked) |
 | `tab` (on top of the sign) | `items`, `align` (`left`, `center`, `right`), `scheme` |
 | `divider` | `color` |
 

@@ -53,6 +53,30 @@ const SHARED_LANES: Option[] = [
 ];
 const ROUNDABOUT_EXITS: Option[] = ["left", "up-left", "up", "up-right", "right"].map((d) => ({ value: d, icon: <ArrowIcon direction={d} />, title: d }));
 // LED colors: amber (the default, no value), white, green, red.
+/**
+ * A panel's or chip's colors: one of the theme's sign colors, or Custom (any background and legend color, stored as
+ * "background" / "foreground" and taking precedence over the scheme).
+ */
+const BoxColorField = (props: { label: string; item: Item; theme?: Theme; onChange: (patch: Partial<Item>) => void }) => {
+  const { item } = props;
+  const custom = !!item.background;
+  return (
+    <>
+      <Field label={props.label}>
+        <Swatches schemes={props.theme?.def?.schemes ?? {}} scheme={item.scheme ?? ""} custom={custom}
+          onScheme={(scheme) => props.onChange({ scheme, background: undefined, foreground: undefined })}
+          onCustom={() => props.onChange({ background: item.background ?? "#000000", foreground: item.foreground ?? "#ffffff" })} />
+      </Field>
+      {custom && (
+        <div className={styles.customColors}>
+          <Field label="Background"><ColorBox value={item.background} onChange={(background) => props.onChange({ background })} /></Field>
+          <Field label="Legend"><ColorBox value={item.foreground ?? "#ffffff"} onChange={(foreground) => props.onChange({ foreground })} /></Field>
+        </div>
+      )}
+    </>
+  );
+};
+
 const LED_COLORS = [{ value: "", color: "#ffb000", title: "Amber" }, { value: "#f4f4f4", title: "White" }, { value: "#46ff74", title: "Green" }, { value: "#ff4031", title: "Red" }];
 
 /** An LED color: one of the usual ones or any color. <value> undefined is the default amber. */
@@ -70,6 +94,12 @@ const LedColorField = (props: { label: string; value?: string; onChange: (color:
 };
 const CHIP_SPAN: Option[] = [{ value: "", label: "Fit" }, { value: "full", label: "Full width", title: "As wide as the column it is in" }];
 const TAB_SIDE: Option[] = [{ value: "left", label: "Left" }, { value: "center", label: "Center" }, { value: "right", label: "Right" }];
+// A panel across the sign (a band) or down one of its sides, its full height (e.g. the black HOV diamond panel).
+const PANEL_SIDE: Option[] = [
+  { value: "", label: "Across", title: "A band across the sign's full width" },
+  { value: "left", label: "Left side", title: "Down the sign's left edge, its full height" },
+  { value: "right", label: "Right side", title: "Down the sign's right edge, its full height" },
+];
 
 /**
  * Buttons laid out in rows by their label lengths (Gameface does not grow a wrapped flex row, so a second line would
@@ -218,7 +248,7 @@ function ItemProperties(props: { item: Item; onChange: (patch: Partial<Item>) =>
     case "chip":
       return (
         <>
-          <Field label="Chip color"><Choice options={schemes} perRow={6} value={item.scheme ?? ""} onChange={(scheme) => onChange({ scheme })} /></Field>
+          <BoxColorField label="Chip color" item={item} theme={theme} onChange={onChange} />
           <Field label="Border"><Choice options={[{ value: "no", label: "None" }, { value: "yes", label: "Legend color" }]} value={item.border ? "yes" : "no"}
             onChange={(v) => onChange({ border: v === "yes" ? true : undefined })} /></Field>
           <Field label="Width"><Choice options={CHIP_SPAN} value={item.span ?? ""} onChange={(span) => onChange({ span: span || undefined })} /></Field>
@@ -229,7 +259,8 @@ function ItemProperties(props: { item: Item; onChange: (patch: Partial<Item>) =>
     case "panel":
       return (
         <>
-          <Field label="Panel color"><Choice options={schemes} perRow={6} value={item.scheme ?? ""} onChange={(scheme) => onChange({ scheme })} /></Field>
+          <BoxColorField label="Panel color" item={item} theme={theme} onChange={onChange} />
+          <Field label="Position"><Choice options={PANEL_SIDE} value={item.side ?? ""} onChange={(side) => onChange({ side: side || undefined })} /></Field>
           <Field label="Align within the panel"><Choice options={ALIGN} value={item.align ?? "center"} onChange={(align) => onChange({ align })} /></Field>
         </>
       );
