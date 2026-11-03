@@ -134,6 +134,11 @@ namespace SignBuilder.Tests
                 yield return RunUITest();
                 yield break;
             }
+            if (m_Mode == "symbols-e2e")
+            {
+                yield return RunSymbolsE2E();
+                yield break;
+            }
             if (m_Mode == "movesave")
             {
                 yield return RunMoveItSave();
