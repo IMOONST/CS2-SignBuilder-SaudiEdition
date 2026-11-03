@@ -139,6 +139,16 @@ namespace SignBuilder.Tests
                 yield return RunSymbolsE2E();
                 yield break;
             }
+            if (m_Mode == "despawnsave")
+            {
+                yield return RunDespawnSave();
+                yield break;
+            }
+            if (m_Mode == "despawnload" || m_Mode == "despawnload2" || m_Mode == "despawnnoroads")
+            {
+                yield return RunDespawnLoad(m_Mode);
+                yield break;
+            }
             if (m_Mode == "movesave")
             {
                 yield return RunMoveItSave();
