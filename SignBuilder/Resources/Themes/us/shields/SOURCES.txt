@@ -1,2 +1,2 @@
-interstate*.svg, us_route*.svg, local_route*.svg: exported from the MUTCD (FHWA Standard Highway Signs; U.S. government work, public domain).
+interstate*.svg, business_loop.svg, business_spur.svg, us_route*.svg, local_route*.svg: exported from the MUTCD (FHWA Standard Highway Signs; U.S. government work, public domain).
 The *_wide versions are used for three-character numbers.

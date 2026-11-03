@@ -116,6 +116,32 @@
       "wide": 1.25,
       "default": "95"
     },
+    "IBL": {
+      "label": "Interstate Business Loop",
+      "shape": "img",
+      "img": "shields/business_loop.svg",
+      "aspect": 1.0,
+      "fg": "#ffffff",
+      "num": 0.36,
+      "top": 0.42,
+      "font": "RG2014D",
+      "wideFont": "RG2014C",
+      "wide": 1.25,
+      "default": "80"
+    },
+    "IBS": {
+      "label": "Interstate Business Spur",
+      "shape": "img",
+      "img": "shields/business_spur.svg",
+      "aspect": 1.0,
+      "fg": "#ffffff",
+      "num": 0.36,
+      "top": 0.42,
+      "font": "RG2014D",
+      "wideFont": "RG2014C",
+      "wide": 1.25,
+      "default": "80"
+    },
     "US": {
       "label": "US route",
       "shape": "img",
