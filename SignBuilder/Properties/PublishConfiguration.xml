@@ -55,15 +55,15 @@ included on GitHub)
 	<Screenshot Value="Properties/Screenshot5.png" />
 	<Screenshot Value="Properties/Screenshot6.png" />
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/sign-builder.1947897/" />
-	<ModVersion Value="1.0.2" />
+	<ModVersion Value="1.0.3" />
 	<GameVersion Value="1.6.*" />
 	<ChangeLog>
-Performance:
-- Fix large FPS drop in big cities once a sign with lights or LED lettering was placed. Switching sign lights at dusk no longer checks every object in the city.
+New:
+- The Sign Builder version is shown in Options.
 
-Changes:
-- LED lettering now stays lit day and night, like the game's neon signs. Sign lights still turn on at dusk.
-- Added optional keybinding for opening Sign Builder.
+Fixes:
+- Signs on bridges, elevated roads and embankments no longer fall to the ground (or into the water) below, as could happen after loading a city or when a road nearby changed, for example with Road Builder. Signs that already fell need to be placed again or raised with Move It.
+- After editing a sign or "Delete unused sign structures", loading another city that has that structure no longer shows an error with the sign missing, and saving it keeps the sign.
 	</ChangeLog>
 	<ExternalLink Type="github" Url="https://github.com/andyjsmith/CS2-SignBuilder" />
 	<AccessLevel Value="Public" />
