@@ -30,7 +30,7 @@ namespace SignBuilder
         [SettingsUISection(kSection, kKeysGroup)]
         public ProxyBinding ToggleBinding { get; set; }
 
-        /// <summary>Deletes sign structures not used in the open city (their meshes, materials and library entries).</summary>
+        /// <summary>Deletes sign structures not used in the open city (their library entries; meshes and materials at the next start).</summary>
         [SettingsUIButton]
         [SettingsUIConfirmation]
         [SettingsUISection(kSection, kMaintenanceGroup)]
@@ -90,7 +90,7 @@ namespace SignBuilder
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.CleanUpUnused)), "Delete unused sign structures" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.CleanUpUnused)),
-                    "Deletes the generated meshes and materials of sign structures that are not placed in the open city. " +
+                    "Deletes the generated meshes and materials of sign structures that are not placed in the open city (their files are removed the next time the game starts). " +
                     "Other cities still have their signs: they are rebuilt from the save when that city is loaded." },
                 { m_Setting.GetOptionWarningLocaleID(nameof(Setting.CleanUpUnused)),
                     "Delete every sign structure that is not used in this city? Other saved cities rebuild theirs when loaded." },

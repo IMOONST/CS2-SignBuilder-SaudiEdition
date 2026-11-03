@@ -15,8 +15,9 @@ namespace SignBuilder.Assemblies
     /// <summary>
     /// Keeps assembly prefabs alive across sessions: before any save is deserialized it re-registers
     /// every recorded assembly from its stored mesh/material asset ids (so saved instances resolve),
-    /// and once prefabs are initialized it clears the Overridable flag (a gantry always overlaps a
-    /// road, and Overridable props get hidden by roads).
+    /// and once prefabs are initialized it clears the Overridable and Brushable flags (a gantry always
+    /// overlaps a road, and Overridable props get hidden by roads; Brushable ones are dropped onto the
+    /// terrain whenever the ground under them is updated, sinking signs on raised roads and bridges).
     /// </summary>
     public partial class AssemblyBootstrapSystem : GameSystemBase
     {
@@ -75,7 +76,12 @@ namespace SignBuilder.Assemblies
             }
         }
 
-        /// <summary>Clears Overridable once the prefab is initialized; returns false if it is not yet.</summary>
+        /// <summary>
+        /// Clears Overridable and Brushable once the prefab is initialized; returns false if it is not yet. The game's
+        /// GroundHeightSystem moves every Overridable or Brushable object without an Elevation onto the terrain when
+        /// the ground around it is updated (a road changed nearby, as Road Builder does to its roads when a city loads):
+        /// a sign standing at road height on an embankment or bridge sank into the ground under it.
+        /// </summary>
         public static bool ClearOverridableNow(StaticObjectPrefab prefab)
         {
             if (prefab == null) return true;
@@ -85,7 +91,7 @@ namespace SignBuilder.Assemblies
             var entity = prefabSystem.GetEntity(prefab);
             if (entity == Entity.Null || !em.HasComponent<ObjectGeometryData>(entity)) return false;
             var data = em.GetComponentData<ObjectGeometryData>(entity);
-            data.m_Flags &= ~Game.Objects.GeometryFlags.Overridable;
+            data.m_Flags &= ~(Game.Objects.GeometryFlags.Overridable | Game.Objects.GeometryFlags.Brushable);
             em.SetComponentData(entity, data);
             return true;
         }
