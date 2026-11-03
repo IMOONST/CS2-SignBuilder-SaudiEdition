@@ -61,17 +61,22 @@
 
   function useTheme(doc) {
     if (doc && doc._theme) registerTheme(doc._theme, doc._themeBase);
+    if (doc && doc._libraries) for (var id in doc._libraries) registerLibrary(doc._libraries[id]);
     T = THEMES[(doc && doc.theme) || "us"] || THEMES.us || THEMES[Object.keys(THEMES)[0]] || { def: {}, base: "", fonts: {}, fontsLoaded: true };
     ensureFonts(T);
     DEFAULTS = {};
     for (var k in BASE_DEFAULTS) DEFAULTS[k] = BASE_DEFAULTS[k];
     var d = T.def.defaults || {};
     for (var j in d) DEFAULTS[j] = d[j];
+    // Designs made with Sign Builder 1.0 (format 1) keep its arrows: the theme's own "arrow" and the basic library.
+    legacy = ((doc && doc.formatVersion) || 1) < 2;
     // Designs are measured in the theme's units: inches, or millimeters for metric countries.
     ppu = ppi / (T.def.units === "mm" ? 25.4 : 1);
   }
 
   var ppu = 3;
+  // Set while drawing a design made with Sign Builder 1.0 (see useTheme).
+  var legacy = false;
   // Set while drawing a sign's glow (see hsRender).
   var glowOnly = false;
   var ppi = 3;
@@ -111,6 +116,7 @@
     switch (item.type) {
       case "text": return item.height || DEFAULTS.textHeight;
       case "shield": return item.height || DEFAULTS.shieldHeight;
+      case "symbol": return item.height || DEFAULTS.shieldHeight;
       case "arrow": return item.height || DEFAULTS.arrowHeight;
       case "diagram": return item.height || DEFAULTS.arrowHeight * 2.2;
       case "led": return (item.height || DEFAULTS.textHeight * 0.8) * Math.max(1, (item.lines || []).length) * 1.5;
@@ -296,81 +302,142 @@
     return box;
   }
 
+  // 1.0's arrow directions: the theme's single "arrow" (drawn pointing down) turned this far.
   var ARROWS = {
-    // Shapes drawn pointing down in a 100 x 150 box, rotated for other directions.
     down: 0, up: 180, left: 90, right: -90, "down-left": 45, "down-right": -45, "up-left": 135, "up-right": -135,
   };
-  // Lane-use arrows, pointing up and standing on the bottom of a box 150 tall (filled outlines, so no stroke support
-  // is needed): "turn" a shaft that curves off to the left, "slight" one that bears off to the left, "split" a straight arrow with a branch curving left,
-  // "corner" a shaft that turns square to the left, "add" a lane added on the left (two arrows, the left one joining
-  // from the shaft). "-right" mirrors them. "fork" splits both ways (no side). A theme's "laneArrows" replace these
-  // (and can give "up", the straight lane arrow of the "lane" style).
-  var LANE = {
-    turn: "M54 150 V82 A24 24 0 0 0 30 58 V78 L0 46 L30 14 V34 A48 48 0 0 1 78 82 V150 Z",
-    split: "M54 150 V128 A24 24 0 0 0 30 104 V124 L0 92 L30 60 V80 A48 48 0 0 1 54 86.4 V34 H34 L66 0 L98 34 H78 V150 Z",
-    // The MUTCD turn arrow.
-    corner: "M96.1 60.1 L33.3 60.1 L40.2 79 C40.5 79.7 40.6 80.5 40.6 81.2 C40.6 84.7 37.8 87.5 34.4 87.5 " +
-      "C33.1 87.5 31.9 87.1 30.9 86.4 L-31.3 43.8 L30.9 1.1 C31.9 0.4 33.1 0 34.4 0 " +
-      "C37.8 0 40.6 2.8 40.6 6.3 C40.6 7 40.5 7.8 40.2 8.5 L33.4 27.3 L127.3 27.3 " +
-      "C129.5 27.3 131.3 29 131.3 31.2 L131.3 150 L98.4 150 L98.4 62.4 C98.4 61.2 97.4 60.1 96.1 60.1 Z",
-    // The MUTCD slight turn arrow.
-    slight: "M42.1 83.6 L42.1 83.6 L29.4 104.3 C29.2 104.5 29.1 104.7 28.9 104.9 " +
-      "C27.6 106.2 25.5 106.2 24.2 104.9 C23.7 104.3 23.4 103.6 23.3 102.9 L17.9 51.4 " +
-      "C17.8 50.5 18.2 49.5 18.9 48.8 C19.6 48 20.6 47.7 21.5 47.8 L73 53.2 C73.7 53.3 74.4 53.6 75 54.1 " +
-      "C76.3 55.4 76.3 57.5 75 58.8 C74.8 59 74.6 59.1 74.4 59.3 L53.7 72 L79.3 95.4 " +
-      "C79.8 95.9 80.2 96.8 80.2 97.7 L82.2 150 L60 150 L61.7 105.9 C61.7 105.3 61.4 104.7 60.9 104.2 " +
-      "L42.1 83.6 Z",
-    // Sweden's lane-added arrow (no U.S. counterpart).
-    add: "M69.1 83.7 C68.2 82.6 67.3 81.5 66.3 80.5 L40.1 54.3 C34.2 48.4 30.9 40.4 30.9 32 L30.9 27 L46.6 27 " +
-      "L26.4 0 L6.1 27 L21.9 27 L21.9 32 C21.9 42.8 26.1 53.1 33.7 60.7 L59.9 86.8 " +
-      "C65.8 92.8 69.1 100.8 69.1 109.2 L69.1 150 L78.1 150 L78.1 27 L93.9 27 L73.6 0 L53.4 27 L69.1 27 " +
-      "L69.1 83.7 Z",
-    // The MUTCD diverging arrow.
-    fork: "M59.8 127 C59.8 104.5 70.5 66.2 110.5 42.8 L113.5 53.5 C113.6 54 113.9 54.6 114.3 55 " +
-      "C115.6 56.3 117.6 56.5 119.2 55.5 C119.9 55.1 120.3 54.5 120.6 53.7 L136.6 13.3 L92.8 13 " +
-      "C92.3 13 91.7 13.2 91.3 13.5 C90 14.1 89.2 15.4 89.2 16.8 C89.2 17.6 89.5 18.2 89.9 18.9 " +
-      "C89.9 19 90 19.1 90.1 19.2 C90.3 19.4 90.4 19.6 90.6 19.7 L100.4 27.4 C76.5 41 60.5 60.5 50 85.9 " +
-      "C39.5 60.5 23.5 41 -0.4 27.4 L9.4 19.7 C9.6 19.6 9.8 19.4 9.9 19.2 C10 19.1 10.1 19 10.1 18.9 " +
-      "C10.5 18.2 10.8 17.6 10.8 16.8 C10.8 15.4 10 14.1 8.7 13.5 C8.2 13.2 7.7 13 7.2 13 L-36.6 13.3 " +
-      "L-20.6 53.7 C-20.3 54.5 -19.8 55.1 -19.2 55.5 C-17.6 56.5 -15.6 56.3 -14.3 55 " +
-      "C-13.9 54.6 -13.6 54 -13.5 53.5 L-10.5 42.8 C29.5 66.2 40.2 104.5 40.2 127 L40.2 150 L59.8 150 " +
-      "L59.8 127 Z",
+  // Lane arrows saved before arrows had styles have none: these directions are lane arrows, everything else straight.
+  var LANE_DIRECTION = /^((turn|split|slight|corner|add)-(left|right)|fork)$/;
+  var VECTORS = {
+    up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0], "up-left": [-1, -1], "up-right": [1, -1], "down-left": [-1, 1], "down-right": [1, 1],
   };
 
-  // Straight arrow shapes by direction: "up", "down", "left" and "right" point that way, "diagonal" up-right. Each
-  // is as long as the arrow's height (150 units) in the direction it points, centered on (50, 75). A missing one
-  // is the opposite one turned around; failing that, the theme's arrows, then its single "arrow" turned. Each way
-  // is [shape, rotation, mirrored left-right, mirrored top-bottom]: diagonals are mirrored, not turned, so an arrow
-  // that is not at 45 degrees (Sweden's) leans the same way in every corner.
-  var ARROW_FALLBACK = {
-    up: [["up", 0], ["down", 180]], down: [["down", 0], ["up", 180]], left: [["left", 0], ["right", 180]], right: [["right", 0], ["left", 180]],
-    "up-right": [["diagonal", 0]], "down-right": [["diagonal", 0, false, true]], "down-left": [["diagonal", 0, true, true]], "up-left": [["diagonal", 0, true, false]],
-  };
-  // Other arrow sets an arrow can pick by its style ("lane" has only the theme's "laneArrows"). A theme can replace
-  // a style's set with its own ("overheadArrows"). Arrows without a style use the theme's.
-  var ARROW_STYLES = {
-    // The MUTCD arrows over the lanes on overhead guide signs.
-    overhead: {
-      down: "M152.2 40.9 C151.5 40.9 150.9 40.9 150.3 41.1 L72.1 61.4 L72.1 0 L27.7 0 L27.7 61.4 L-50.6 41.1 " +
-        "C-51.2 40.9 -51.8 40.9 -52.3 40.9 C-56.1 40.9 -59.1 43.9 -59.1 47.7 C-59.1 49.5 -58.4 51.3 -57 52.6 " +
-        "L-56.9 52.8 L50 150 L156.7 52.8 C158.2 51.4 159.1 49.5 159.1 47.7 C159.1 43.9 156 40.9 152.2 40.9 Z",
-      right: "M49.3 139.3 L122.8 79.7 C124.1 78.6 125 76.9 125 75 C125 73.1 124.1 71.5 122.8 70.3 L49.3 10.7 " +
-        "C48.3 9.9 46.9 9.4 45.5 9.4 C42.2 9.4 39.5 12.1 39.5 15.4 C39.5 15.9 39.6 16.3 39.7 16.8 L50 60 " +
-        "L-25 54.8 L-25 95.3 L50 90 L39.7 133.2 C39.6 133.7 39.5 134.1 39.5 134.6 " +
-        "C39.5 137.9 42.2 140.6 45.5 140.6 C46.9 140.6 48.3 140.1 49.3 139.3 Z",
-    },
-  };
+  // ---------------------------------------------------------------- symbol libraries
+  //
+  // Arrows, the road diagram arrowhead and symbols come from symbol libraries (Symbols/<id>/library.json), which
+  // themes list ("libraries": ["mutcd"], or "mutcd/overhead" for one arrow category); "basic" (1.0's arrows) comes
+  // last for every theme. An arrow can also borrow another library's ("library": "uk"). A library's arrows are grouped
+  // in categories (an arrow's "style": "" is "standard"); each shape says how it is drawn ("frame") and which other
+  // directions it gives:
+  //  - "straight": 150 units long in the direction it "points", centered on (50, 75); "rotate" lists the turns
+  //    (degrees clockwise) that give more directions, "mirror" ("x", "y" or "both") the mirror images (a diagonal that
+  //    is not at 45 degrees leans the same way in every corner);
+  //  - "standing": pointing up, standing on the bottom of a box 150 tall; with a "side" ("left" or "right") its
+  //    direction is "<name>-<side>" and "mirror": true gives the other side, without one it is the name alone.
+  var LIBS = {};
+  var libsVersion = 0;
 
-  function arrowShape(style, dir) {
-    var sets = [style, T.def.arrows];
-    var ways = ARROW_FALLBACK[dir] || ARROW_FALLBACK.down;
-    for (var i = 0; i < sets.length; i++) {
-      for (var j = 0; sets[i] && j < ways.length; j++) {
-        var w = ways[j];
-        if (sets[i][w[0]]) return { d: sets[i][w[0]], rot: w[1], sx: w[2] ? -1 : 1, sy: w[3] ? -1 : 1 };
-      }
+  function registerLibrary(lib) {
+    if (!lib || !lib.id) return;
+    var json = JSON.stringify(lib);
+    if (LIBS[lib.id] && LIBS[lib.id].json === json) return;
+    LIBS[lib.id] = { def: lib, json: json };
+    libsVersion++;
+  }
+
+  // The theme's libraries, most important first: [{ lib, only (one arrow category, or null) }]. A design made with 1.0
+  // has only the basic one (and the theme's own "arrow"); an arrow borrowing a library ("library") has that one.
+  function themeLibs(borrowed) {
+    var list = [];
+    (borrowed ? [borrowed] : legacy ? [] : T.def.libraries || []).forEach(function (entry) {
+      var parts = String(entry).split("/");
+      if (LIBS[parts[0]]) list.push({ lib: LIBS[parts[0]].def, only: parts[1] || null });
+    });
+    // A borrowed library's arrows are its own (missing directions fall back to 1.0's arrow).
+    if (!borrowed && LIBS.basic && !list.some(function (l) { return l.lib.id === "basic"; })) list.push({ lib: LIBS.basic.def, only: null });
+    return list;
+  }
+
+  function nameOf(v) {
+    var x = Math.round(v[0]), y = Math.round(v[1]);
+    for (var k in VECTORS) if (VECTORS[k][0] === x && VECTORS[k][1] === y) return k;
+    return null;
+  }
+
+  // The directions a shape gives: [{ dir, rot, sx, sy, mirror (standing arrows) }], the way it is drawn first.
+  function shapeDirections(key, shape) {
+    var out = [];
+    if (shape.frame === "straight") {
+      var v = VECTORS[shape.points];
+      if (!v) return out;
+      out.push({ dir: shape.points, rot: 0, sx: 1, sy: 1 });
+      (shape.rotate || []).forEach(function (deg) {
+        var r = deg * Math.PI / 180, cos = Math.cos(r), sin = Math.sin(r);
+        var dir = nameOf([v[0] * cos - v[1] * sin, v[0] * sin + v[1] * cos]);
+        if (dir) out.push({ dir: dir, rot: deg, sx: 1, sy: 1 });
+      });
+      var m = shape.mirror;
+      var flips = m === "both" ? [[-1, 1], [1, -1], [-1, -1]] : m === "x" ? [[-1, 1]] : m === "y" ? [[1, -1]] : [];
+      flips.forEach(function (f) {
+        var dir = nameOf([v[0] * f[0], v[1] * f[1]]);
+        if (dir) out.push({ dir: dir, rot: 0, sx: f[0], sy: f[1] });
+      });
+    } else if (shape.frame === "standing" && shape.side) {
+      out.push({ dir: key + "-" + shape.side, mirror: false });
+      if (shape.mirror) out.push({ dir: key + "-" + (shape.side === "left" ? "right" : "left"), mirror: true });
+    } else if (shape.frame === "standing") {
+      out.push({ dir: key, mirror: false });
     }
-    return { d: T.def.arrow || DEFAULT_ARROW, rot: ARROWS[dir] || 0, sx: 1, sy: 1 };
+    return out;
+  }
+
+  // The theme's arrow categories: [{ id, label, title, perRow, order, ways: { direction: { shape, ... } } }], in
+  // the order its libraries list them. Each direction comes from the most important library that has it: drawn that
+  // way if it can, else turned or mirrored. The theme's own "arrow" (1.0's single straight arrow) comes after its
+  // libraries, before the basic one.
+  function arrowCategories(borrowed) {
+    var cacheKey = borrowed ? "categoriesFrom:" + borrowed : legacy ? "categories1" : "categories2";
+    if (T[cacheKey] && T[cacheKey + "Version"] === libsVersion) return T[cacheKey];
+    var cats = [], byId = {};
+    var add = function (id, info, shapes) {
+      var c = byId[id];
+      if (!c) {
+        c = byId[id] = { id: id, label: info.label || id, title: info.title || "", perRow: info.perRow || 4, order: (info.order || []).slice(), ways: {} };
+        cats.push(c);
+      }
+      var keys = Object.keys(shapes || {});
+      var found = keys.map(function (k) { return shapeDirections(k, shapes[k]).map(function (w) { w.shape = shapes[k]; return w; }); });
+      // Shapes drawn pointing a way win over turned or mirrored ones (within one library).
+      [0, 1].forEach(function (pass) {
+        found.forEach(function (ws) {
+          ws.forEach(function (w, i) {
+            if ((i === 0) !== (pass === 0) || c.ways[w.dir]) return;
+            c.ways[w.dir] = w;
+            if (c.order.indexOf(w.dir) < 0) c.order.push(w.dir);
+          });
+        });
+      });
+    };
+    var own = function () {
+      if (T.def.arrow && !borrowed) add("standard", {}, { down: { frame: "straight", d: T.def.arrow, points: "down", rotate: [180, 90, -90, 45, -45, 135, -135] } });
+      own = function () {};
+    };
+    themeLibs(borrowed).forEach(function (l) {
+      if (l.lib.id === "basic") own();
+      var arrows = l.lib.arrows || {};
+      Object.keys(arrows).forEach(function (id) {
+        if (!l.only || l.only === id) add(id, arrows[id], arrows[id].shapes);
+      });
+    });
+    own();
+    T[cacheKey] = cats;
+    T[cacheKey + "Version"] = libsVersion;
+    return cats;
+  }
+
+  function category(id, borrowed) {
+    var cats = arrowCategories(borrowed);
+    for (var i = 0; i < cats.length; i++) if (cats[i].id === id) return cats[i];
+    return null;
+  }
+
+  // Where an arrow's shape comes from: its style's category (in the library it borrows from, if any), else the
+  // straight or lane arrows, else 1.0's arrow.
+  function arrowWay(style, dir, borrowed) {
+    var id = style || (LANE_DIRECTION.test(dir) ? "lane" : "standard");
+    var c = category(id, borrowed), s = category("standard", borrowed), l = category("lane", borrowed);
+    return (c && c.ways[dir]) || (s && s.ways[dir]) || (l && l.ways[dir]) ||
+      { shape: { frame: "straight", d: T.def.arrow || DEFAULT_ARROW, points: "down" }, rot: ARROWS[dir] || 0, sx: 1, sy: 1 };
   }
 
   // Corner and control points of a path made of absolute M/L/H/V/C commands (enough to find a rotated arrow's
@@ -387,35 +454,24 @@
     return pts.length ? pts : [[0, 0], [100, 150]];
   }
 
-  // Arrows are as long as their height in the direction they point, with a box that fits them (so diagonal and sideways arrows are never clipped).
-  function renderArrow(item, ctx) {
-    var h = item.height || DEFAULTS.arrowHeight;
-    var dir = item.direction || "down";
-    var ns = "http://www.w3.org/2000/svg";
-    var svg = document.createElementNS(ns, "svg");
-    var path = document.createElementNS(ns, "path");
-    var lane = dir === "fork" ? [dir, "fork", ""] : /^(turn|slight|split|corner|add)-(left|right)$/.exec(dir);
-    var vb;
-    if (lane) {
-      var ld = (T.def.laneArrows || {})[lane[1]] || LANE[lane[1]];
-      var mirror = lane[2] === "right";
-      path.setAttribute("d", ld);
-      if (mirror) path.setAttribute("transform", "translate(100 0) scale(-1 1)");
-      if (/a/i.test(ld)) {
+  // An arrow's outline, its transform and the box that fits it (in the shape's 150-unit space).
+  function arrowGeometry(style, dir, borrowed) {
+    var w = arrowWay(style, dir || "down", borrowed && LIBS[borrowed] ? borrowed : null);
+    var d = w.shape.d, transform = null, vb;
+    if (w.shape.frame === "standing") {
+      if (w.mirror) transform = "translate(100 0) scale(-1 1)";
+      if (/a/i.test(d)) {
         vb = [0, 0, 100, 150]; // arcs: the shape fills the box
       } else {
-        // As wide as the shape, as tall as the box, so lane arrows of one size stand level in a row.
+        // As wide as the shape, as tall as the box, so standing arrows of one size stand level in a row.
         var lx0 = 1e9, lx1 = -1e9;
-        pathPoints(ld).forEach(function (p) { lx0 = Math.min(lx0, p[0]); lx1 = Math.max(lx1, p[0]); });
-        vb = mirror ? [100 - lx1, 0, lx1 - lx0, 150] : [lx0, 0, lx1 - lx0, 150];
+        pathPoints(d).forEach(function (p) { lx0 = Math.min(lx0, p[0]); lx1 = Math.max(lx1, p[0]); });
+        vb = w.mirror ? [100 - lx1, 0, lx1 - lx0, 150] : [lx0, 0, lx1 - lx0, 150];
       }
     } else {
-      var set = item.style && (T.def[item.style + "Arrows"] || ARROW_STYLES[item.style]);
-      var shape = arrowShape(set, dir);
-      var d = shape.d, rot = shape.rot, sx = shape.sx, sy = shape.sy;
-      path.setAttribute("d", d);
-      if (rot) path.setAttribute("transform", "rotate(" + rot + " 50 75)");
-      else if (sx < 0 || sy < 0) path.setAttribute("transform", "translate(50 75) scale(" + sx + " " + sy + ") translate(-50 -75)");
+      var rot = w.rot, sx = w.sx, sy = w.sy;
+      if (rot) transform = "rotate(" + rot + " 50 75)";
+      else if (sx < 0 || sy < 0) transform = "translate(50 75) scale(" + sx + " " + sy + ") translate(-50 -75)";
       var r = rot * Math.PI / 180, cos = Math.cos(r), sin = Math.sin(r);
       var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
       pathPoints(d).forEach(function (p) {
@@ -425,12 +481,95 @@
       });
       vb = [x0, y0, x1 - x0, y1 - y0];
     }
+    return { d: d, transform: transform, viewBox: vb };
+  }
+
+  // Arrows are as long as their height in the direction they point, with a box that fits them (so diagonal and sideways arrows are never clipped).
+  function renderArrow(item, ctx) {
+    var h = item.height || DEFAULTS.arrowHeight;
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    var path = document.createElementNS(ns, "path");
+    var g = arrowGeometry(item.style, item.direction || "down", item.library);
+    var vb = g.viewBox;
+    path.setAttribute("d", g.d);
+    if (g.transform) path.setAttribute("transform", g.transform);
     var unit = h / 150;
     svg.setAttribute("viewBox", vb.join(" "));
     svg.setAttribute("width", String(vb[2] * unit * ppu));
     svg.setAttribute("height", String(vb[3] * unit * ppu));
     path.setAttribute("fill", item.color || ctx.fg);
     svg.appendChild(path);
+    return svg;
+  }
+
+  // ---------------------------------------------------------------- symbols
+
+  // A library symbol ("symbol": "<library>/<id>"): its view box and filled parts ("currentColor" is the legend color).
+  function symbolOf(ref) {
+    var parts = String(ref || "").split("/");
+    var lib = LIBS[parts[0]];
+    return (lib && lib.def.symbols && lib.def.symbols[parts.slice(1).join("/")]) || null;
+  }
+
+  // Box proportions, from the MUTCD's boxed symbols: border width, outer corner radius, and the square the symbol
+  // fits in, per unit of the box's size.
+  var SYMBOL_BOX = { border: 0.0209, radius: 0.0626, inner: 0.7084 };
+
+  function roundRect(x, y, w, h, r) {
+    return "M" + (x + r) + " " + y + "H" + (x + w - r) + "A" + r + " " + r + " 0 0 1 " + (x + w) + " " + (y + r) +
+      "V" + (y + h - r) + "A" + r + " " + r + " 0 0 1 " + (x + w - r) + " " + (y + h) +
+      "H" + (x + r) + "A" + r + " " + r + " 0 0 1 " + x + " " + (y + h - r) +
+      "V" + (y + r) + "A" + r + " " + r + " 0 0 1 " + (x + r) + " " + y + "Z";
+  }
+
+  // A symbol as tall as the part, or ("box": { ... }) centered in a square box that tall, with an optional
+  // "background" (none by default) and border ("border": false hides it; "borderColor", the legend color by default).
+  // A symbol whose library is missing leaves its space empty.
+  function renderSymbol(item, ctx) {
+    var h = item.height || DEFAULTS.shieldHeight;
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    var sym = symbolOf(item.symbol);
+    var color = item.color || ctx.fg;
+    var vb = sym && sym.viewBox && sym.viewBox.length === 4 ? sym.viewBox : [0, 0, 100, 100];
+    var drawParts = function (parent) {
+      ((sym && sym.parts) || []).forEach(function (p) {
+        var path = document.createElementNS(ns, "path");
+        path.setAttribute("d", p.d);
+        path.setAttribute("fill", p.fill === "currentColor" ? color : p.fill);
+        if (p.transform) path.setAttribute("transform", p.transform);
+        if (p.rule) path.setAttribute("fill-rule", p.rule);
+        parent.appendChild(path);
+      });
+    };
+    if (!item.box) {
+      var w = sym ? h * vb[2] / vb[3] : h;
+      svg.setAttribute("viewBox", vb.join(" "));
+      svg.setAttribute("width", String(w * ppu));
+      svg.setAttribute("height", String(h * ppu));
+      drawParts(svg);
+      return svg;
+    }
+    svg.setAttribute("viewBox", "0 0 " + h + " " + h);
+    svg.setAttribute("width", String(h * ppu));
+    svg.setAttribute("height", String(h * ppu));
+    var r = h * SYMBOL_BOX.radius, b = h * SYMBOL_BOX.border;
+    var shape = function (d, fill, rule) {
+      var e = document.createElementNS(ns, "path");
+      e.setAttribute("d", d);
+      e.setAttribute("fill", fill);
+      if (rule) e.setAttribute("fill-rule", rule);
+      svg.appendChild(e);
+    };
+    var box = item.box;
+    if (box.background) shape(roundRect(0, 0, h, h, r), box.background);
+    if (box.border !== false) shape(roundRect(0, 0, h, h, r) + roundRect(b, b, h - b * 2, h - b * 2, r - b), box.borderColor || color, "evenodd");
+    var k = h * SYMBOL_BOX.inner / Math.max(vb[2], vb[3]);
+    var g = document.createElementNS(ns, "g");
+    g.setAttribute("transform", "translate(" + (h / 2 - (vb[0] + vb[2] / 2) * k) + " " + (h / 2 - (vb[1] + vb[3] / 2) * k) + ") scale(" + k + ")");
+    drawParts(g);
+    svg.appendChild(g);
     return svg;
   }
 
@@ -454,12 +593,16 @@
       var b = [e[0] - d[0] * back, e[1] - d[1] * back];
       return [[b[0] + n[0] * half, b[1] + n[1] * half], [e[0] + d[0] * headLen, e[1] + d[1] * headLen], [b[0] - n[0] * half, b[1] - n[1] * half]];
     };
-    // Themes with "diagramHead": "mutcd" use the MUTCD arrowhead (as on the US theme's arrows): a rounded tip,
-    // rounded corners and a back edge swept slightly back from the shaft. Its outline as (back from the tip, across),
-    // per unit of half-width; the back edge meets a shaft <shaftHalf> wide at headBack().
-    var mutcd = T.def.diagramHead === "mutcd";
-    var HEAD = [[0, 0], [0.041, 0.075], [1.391, 0.987], [1.44, 1], [1.509, 0.972], [1.53, 0.91], [1.528, 0.889]];
-    var headBack = function (half, shaftHalf) { return (1.528 - (0.889 - shaftHalf / half) * 0.2407) * half; };
+    // A library's arrowhead (the first of the theme's libraries that has one; the MUTCD's: a rounded tip, rounded
+    // corners and a back edge swept slightly back from the shaft), else a plain triangle. Its outline as (back from
+    // the tip, across) per unit of half-width, ending where the back edge leaves the side; the back edge then runs at
+    // "backSlope" and meets a shaft <shaftHalf> wide at headBack().
+    var libHead = null;
+    themeLibs().forEach(function (l) { if (!libHead && !l.only && l.lib.diagramHead) libHead = l.lib.diagramHead; });
+    var mutcd = !!libHead;
+    var HEAD = mutcd ? libHead.outline : [];
+    var BACK = HEAD[HEAD.length - 1] || [0, 0], SLOPE = mutcd ? libHead.backSlope || 0 : 0;
+    var headBack = function (half, shaftHalf) { return (BACK[0] - (BACK[1] - shaftHalf / half) * SLOPE) * half; };
     // A MUTCD arrowhead pointing along <d> from a shaft that ends at <e>, its tip where the plain arrowhead's is (so
     // diagrams keep their size). A head longer than that reaches back over the shaft's end; a shorter one brings a
     // piece of shaft to meet it. Either way it ends one unit into the shaft, so no seam shows.
@@ -599,6 +742,7 @@
     switch (item.type) {
       case "text": return item.height || DEFAULTS.textHeight;
       case "shield": return Math.min((item.height || DEFAULTS.shieldHeight) * 0.45, DEFAULTS.textHeight);
+      case "symbol": return Math.min((item.height || DEFAULTS.shieldHeight) * 0.45, DEFAULTS.textHeight);
       case "arrow": return Math.min((item.height || DEFAULTS.arrowHeight) * 0.6, DEFAULTS.textHeight);
       case "row":
       case "column":
@@ -689,6 +833,7 @@
     switch (item && item.type) {
       case "text": e = renderText(item, ctx); break;
       case "shield": e = renderShield(item, ctx); break;
+      case "symbol": e = renderSymbol(item, ctx); break;
       case "arrow": e = renderArrow(item, ctx); break;
       case "row":
         e = renderContainer(item, ctx, true, path);
@@ -925,9 +1070,39 @@
       try { return renderSign(doc || {}); } finally { annotate = false; }
     },
     registerTheme: registerTheme,
+    registerLibrary: registerLibrary,
     themes: THEMES,
-    arrows: Object.keys(ARROWS).concat(["turn-left", "turn-right", "split-left", "split-right", "corner-left", "corner-right", "slight-left", "slight-right", "add-left", "add-right", "fork"]),
-    arrowStyles: Object.keys(ARROW_STYLES),
+    libraries: LIBS,
+    // The arrow styles a theme offers a design of <formatVersion> (the current one when absent), or those of the
+    // library <library> (an arrow borrowing it), for the editor: [{ id, label, title, perRow, directions, box }].
+    // <box> is a square that fits every direction of the style (so its icons share one scale).
+    arrowStyles: function (themeId, formatVersion, library) {
+      useTheme({ theme: themeId, formatVersion: formatVersion || 2 });
+      var borrowed = library && LIBS[library] ? library : null;
+      return arrowCategories(borrowed).map(function (c) {
+        var directions = c.order.filter(function (d) { return c.ways[d]; });
+        var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+        directions.forEach(function (d) {
+          var v = arrowGeometry(c.id === "standard" ? "" : c.id, d, borrowed).viewBox;
+          x0 = Math.min(x0, v[0]); y0 = Math.min(y0, v[1]); x1 = Math.max(x1, v[0] + v[2]); y1 = Math.max(y1, v[1] + v[3]);
+        });
+        var size = Math.max(x1 - x0, y1 - y0);
+        return {
+          id: c.id === "standard" ? "" : c.id, label: c.label, title: c.title, perRow: c.perRow, directions: directions,
+          box: [(x0 + x1) / 2 - size / 2, (y0 + y1) / 2 - size / 2, size, size],
+        };
+      });
+    },
+    // One arrow's outline in a theme (or borrowed from <library>): { d, transform, viewBox }.
+    arrowGeometry: function (themeId, style, direction, formatVersion, library) {
+      useTheme({ theme: themeId, formatVersion: formatVersion || 2 });
+      return arrowGeometry(style, direction, library);
+    },
+    // The theme's own symbol libraries (no arrow-only entries), most important first.
+    symbolLibraries: function (themeId) {
+      useTheme({ theme: themeId, formatVersion: 2 });
+      return themeLibs().filter(function (l) { return !l.only && l.lib.symbols; }).map(function (l) { return l.lib.id; });
+    },
   };
 
   // <glow>: draw only what is lit at night (LED lettering), laid out exactly like the sign itself.

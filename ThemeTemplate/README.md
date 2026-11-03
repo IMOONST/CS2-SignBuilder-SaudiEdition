@@ -5,7 +5,7 @@ A theme gives Sign Builder a country's (or your own) sign style:
 - fonts
 - sign colors
 - route plates (shields)
-- arrow shape
+- arrows and symbols (from symbol libraries, shared between themes)
 - spacing
 - ready-made parts (presets)
 - templates
@@ -46,7 +46,7 @@ Only `id`, `name` and `schemes` are required; everything else has defaults.
 
 ```jsonc
 {
-  "formatVersion": 1,              // the theme.json format; Sign Builder skips formats newer than it reads
+  "formatVersion": 2,              // the theme.json format; Sign Builder skips formats newer than it reads
   "id": "example",                 // unique id, stored in every sign made with the theme
   "name": "Exampleland",           // shown in the Theme list
   "description": "…",              // shown on hover
@@ -67,6 +67,7 @@ Only `id`, `name` and `schemes` are required; everything else has defaults.
   "fonts": [ … ],
   "schemes": { … },
   "shields": { … },
+  "libraries": ["mutcd"],          // symbol libraries for arrows, diagram arrowheads and symbols
   "arrow": "M32 0 H68 V88 H100 L50 150 L0 88 H32 Z",
   "exitTab": { "font": "…" },      // font for text in tabs (optional)
   "presets": [ … ]
@@ -131,48 +132,25 @@ Each entry is one kind of plate. The key (`"M"`) is stored in signs, and `label`
 | `radius`, `padX`, `minAspect` | Corner radius, side padding and minimum width ÷ height of `rect` plates (all × height) |
 | `default` | Number a new plate starts with |
 
-### Arrow
+### Arrows and symbols
 
-`arrow` is an SVG path, drawn pointing **down** in a 100 × 150 box (`M`, `L`, `H`, `V`, `C` and `Z` commands, all
-absolute). It's rotated for the other directions. Leave it out for the default arrow.
-
-For arrows that differ by direction (as the U.S. ones do), give `arrows` instead:
+Arrows, the arrowhead of road diagrams and symbols come from **symbol libraries** (see
+[Symbol libraries](#4-symbol-libraries)), which themes share. List the ones your theme uses, most important first:
 
 ```json
-"arrows": {
-  "up": "…",        // pointing up
-  "left": "…",      // pointing left
-  "diagonal": "…"   // pointing up and to the right
-}
+"libraries": ["mutcd"]
 ```
 
-Each shape is as long as 150 units in the direction it points, centered on (50, 75). `down` and `right` can be
-given too; a missing one is the opposite one turned around. The diagonal is mirrored for the other corners, so it
-need not be at 45°; missing diagonals fall back to `arrow`, turned.
+- `"mutcd/overhead"` takes only one arrow category from a library (France uses the U.S. overhead arrows that way).
+- Built-in libraries: `mutcd` (United States), `uk`, `china`, `sweden`, and `basic`.
+- `basic` holds Sign Builder 1.0's arrows. Every theme gets it last, so a theme without libraries still has arrows.
+- Players can still pick symbols and arrows from any other library in the designer.
 
-`"diagramHead": "mutcd"` draws road diagrams with MUTCD arrowheads (rounded, swept back, as on US signs)
-instead of plain triangles.
+`arrow` is a single SVG path, drawn pointing **down** in a 100 × 150 box (`M`, `L`, `H`, `V`, `C` and `Z` commands,
+all absolute), and turned for the other directions. It's Sign Builder 1.0's way of giving a theme its arrow:
 
-Lane-use arrows (the **Lane** style) can be given as `laneArrows`, each pointing up and standing on the bottom of a
-box 150 tall, all at one scale, so they stand level in a row:
-
-```json
-"laneArrows": {
-  "up": "…",       // straight
-  "turn": "…",     // curving off to the left
-  "slight": "…",   // bearing off to the left
-  "split": "…",    // straight, with a branch curving left
-  "corner": "…",   // turning square to the left
-  "add": "…",      // a lane added on the left
-  "fork": "…"      // splitting both ways
-}
-```
-
-Right-hand versions are mirrored. Any you leave out use Sign Builder's own.
-
-`overheadArrows` replaces the **Overhead** style's arrows (the arrows over the lanes on overhead signs) with the
-theme's own, in the same form as `arrows` (`"down"` pointing down, and so on). Diagrams are drawn by Sign Builder
-itself.
+- It draws the straight arrows of signs made with 1.0, so they keep their look.
+- In new signs it comes after the theme's libraries, so it's only used for directions they don't have.
 
 ### Presets
 
@@ -199,7 +177,7 @@ Each file in `templates/` is one sign: the same JSON the designer saves. The eas
 
 ```json
 {
-  "formatVersion": 1, "theme": "example", "id": "motorway-exit", "name": "Motorway exit", "scheme": "motorway", "align": "center",
+  "formatVersion": 2, "theme": "example", "id": "motorway-exit", "name": "Motorway exit", "scheme": "motorway", "align": "center",
   "items": [
     { "type": "tab", "align": "right", "items": [{ "type": "text", "text": "12", "height": 12 }] },
     { "type": "row", "items": [{ "type": "shield", "network": "M", "number": "1" }, { "type": "text", "text": "North" }] },
@@ -212,12 +190,13 @@ Each file in `templates/` is one sign: the same JSON the designer saves. The eas
 |---|---|
 | `text` | `text`, `height`, `font`, `color`, `tracking` |
 | `shield` | `network` (a key from `shields`), `number`, `height` |
-| `arrow` | `direction` (`up`, `down`, `left`, `right`, `up-left`…; lane arrows `turn-left`, `slight-left`, `split-right`, `corner-left`, `add-left`, `fork`…), `style` (`lane` for the straight lane arrow, `overhead` for the U.S. arrows over lanes), `height`, `color` |
-| `diagram` | `shape` (`exit-left`, `exit-right`, `fork`, `roundabout`), `lanes`, `exitLanes`, `exits`, `height` |
+| `arrow` | `direction` (`up`, `down-left`…, or a named one such as `turn-left`, `split-right`, `fork`), `style` (an arrow category of the theme's libraries: `lane`, `overhead`…; none for straight arrows), `library` (another library's arrows), `height`, `color` |
+| `symbol` | `symbol` (`"<library>/<id>"`), `height`, `color`, `box` (`{ "background", "border": false, "borderColor" }`: centered in a square box with rounded corners) |
+| `diagram` | `shape` (`exit-left`, `exit-right`, `fork`, `roundabout`), `lanes`, `exitLanes`, `sharedLanes` (`0` or `1`), `exits`, `height` |
 | `led` (LED text) | `lines`, `height`, `color` |
 | `row`, `column` | `items`, `align`; rows also take `justify` (`between`, `even`) |
-| `chip` | `items`, `scheme`, `border`, `span` (`full`), `align` |
-| `panel` (a band across the sign, or down one side with `side`) | `items`, `scheme`, `align`, `side` (`left` or `right`: the panel's full height on that edge, its parts stacked) |
+| `chip` | `items`, `scheme` (or `background` / `foreground`), `border`, `span` (`full`), `align` |
+| `panel` (a band across the sign, or down one side with `side`) | `items`, `scheme` (or `background` / `foreground`), `align`, `side` (`left` or `right`: the panel's full height on that edge, its parts stacked) |
 | `tab` (on top of the sign) | `items`, `align` (`left`, `center`, `right`), `scheme` |
 | `divider` | `color` |
 
@@ -229,7 +208,80 @@ alignment in a column). Sign-level fields are:
 - `board: "led"` for a message board;
 - `minLanes`, `laneKind` (`"local"`) or `minWidth`.
 
-## 4. Publishing on Paradox Mods
+A sign's `formatVersion` is the design format it was made with, and it never changes on its own. Signs made with
+Sign Builder 1.0 (format 1) keep 1.0's arrows; the designer offers to switch them to the current ones. Give new
+templates `"formatVersion": 2`.
+
+## 4. Symbol libraries
+
+A symbol library is a folder with a `library.json` and the SVG files of its symbols. Put one in
+`ModsData/SignBuilder/Symbols/<id>` to try it, or in a `SignBuilderSymbols` folder of your mod to publish it. A library
+with the id of an existing one replaces it (the log says so), so pick a unique id.
+
+```jsonc
+{
+  "formatVersion": 1,
+  "id": "example",                    // stored in signs that use it: never change it once published
+  "name": "Exampleland",              // shown in the designer's library lists
+  "description": "…",
+  "legend": ["#ffffff"],              // fills in the SVGs that take the sign's legend color (the rest keep theirs)
+  "arrows": {
+    "standard": {                     // a category: "standard" is the straight arrows (no "style"); others are styles
+      "label": "Standard", "title": "…", "perRow": 4,
+      "order": ["up-left", "up", "up-right", "left", "right", "down-left", "down", "down-right"],
+      "shapes": {
+        "up":       { "frame": "straight", "d": "…", "points": "up", "rotate": [180] },
+        "left":     { "frame": "straight", "d": "…", "points": "left", "rotate": [180] },
+        "diagonal": { "frame": "straight", "d": "…", "points": "up-right", "mirror": "both" }
+      }
+    },
+    "lane": {
+      "label": "Lane", "perRow": 6,
+      "shapes": {
+        "up":   { "frame": "straight", "d": "…", "points": "up" },
+        "turn": { "frame": "standing", "d": "…", "side": "left", "mirror": true },
+        "fork": { "frame": "standing", "d": "…" }
+      }
+    }
+  },
+  "diagramHead": { "outline": [[0, 0], …], "backSlope": 0.24 },
+  "symbols": {
+    "snowflake": { "name": "Snowflake", "category": "Road conditions", "number": "…", "file": "symbols/snowflake.svg" }
+  }
+}
+```
+
+**Arrow shapes** are SVG paths with absolute commands (`M`, `L`, `H`, `V`, `C`, `Z`; `A` too for standing arrows),
+drawn one way. Their `frame` says how:
+
+- `"straight"`: 150 units long in the direction it `points`, centered on (50, 75).
+  - `rotate`: turns (degrees clockwise) that give more directions, e.g. `[180]` makes `up` give `down` too.
+  - `mirror` (`"x"`, `"y"` or `"both"`): mirror images. A diagonal is mirrored rather than turned, so it need not be
+    at 45°.
+- `"standing"`: pointing up, standing on the bottom of a box 150 tall, so arrows of one size stand level in a row.
+  - With a `side` (`"left"` or `"right"`), its direction is `<name>-<side>`, such as `turn-left`.
+  - `"mirror": true` gives the other side.
+  - Without a side, its direction is its name, such as `fork`.
+
+A direction comes from the first library in the theme's list that has it, drawn that way if a shape is, otherwise
+turned or mirrored.
+
+**Symbols** are SVG files exported from a sign manual: paths, rectangles, circles, ellipses and polygons, with their
+groups' transforms.
+
+- Export each symbol on its own, without a box: the designer draws boxes itself.
+- Fills listed in `legend` (the library's, or a symbol's own `"legend"`) take the sign's legend color, as text does.
+  Other colors stay as drawn.
+- `category` groups symbols in the designer's picker. `number` (the manual's sign number) is searchable.
+
+**Changing a published library:** signs store shape and symbol ids and are redrawn from the library whenever they're
+rebuilt (on another PC, or after "Delete unused sign structures").
+
+- Never reuse an id for a different shape.
+- Correcting a shape is fine while its size stays within about 5%.
+- Anything bigger gets a new id, so placed signs don't change.
+
+## 5. Publishing on Paradox Mods
 
 A theme pack is a small mod. Sign Builder looks for a `SignBuilderThemes` folder in every installed mod,
 subscribed or local, so players just subscribe to your pack.

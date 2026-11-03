@@ -133,3 +133,25 @@
    height (no fallback inside var(): Gameface drops the whole declaration then). 56rem + toolbar = just above it. */
 .dockBottom { position: absolute; left: 0; right: 0; top: auto; width: auto; height: auto; bottom: calc(var(--toolbarHeight) + 56rem); justify-content: flex-end; }
 .choiceRows .palette { flex-wrap: nowrap; }
+/* --- symbol part: its button and the picker dialog --- */
+.symbolButton { display: flex; flex-direction: row; align-items: center; padding: 4rem 8rem; border-radius: 3rem; background-color: rgba(255, 255, 255, 0.1); }
+.symbolButton:hover { background-color: rgba(255, 255, 255, 0.22); }
+.symbolButtonText { margin-left: 8rem; font-size: 13rem; color: #fff; }
+.symbolButtonLib { color: rgba(255, 255, 255, 0.6); }
+.symbolDialog { width: 650rem; }
+.symbolTop { display: flex; flex-direction: row; align-items: center; padding: 10rem 14rem 4rem 14rem; }
+.symbolSearch { flex: 1; margin-right: 10rem; }
+.symbolLibrary { width: 220rem; }
+.symbolRecent { display: flex; flex-direction: row; padding: 4rem 14rem; border-bottom: 1rem solid rgba(255, 255, 255, 0.12); }
+.symbolBody { display: flex; flex-direction: row; padding: 8rem 14rem 14rem 14rem; }
+.symbolCategories { display: flex; flex-direction: column; width: 150rem; margin-right: 10rem; }
+.symbolGrid { flex: 1; height: 330rem; }
+.symbolCells { display: flex; flex-direction: row; }
+.symbolCell, .symbolCellOn { display: flex; align-items: center; justify-content: center; width: 46rem; height: 46rem; margin: 0 4rem 4rem 0; border-radius: 4rem; background-color: rgba(0, 107, 69, 0.85); }
+.symbolCell:hover { background-color: rgba(0, 140, 90, 0.95); }
+.symbolCellOn { background-color: rgba(80, 160, 255, 0.6); }
+.symbolEmpty { padding: 10rem 0; font-size: 13rem; color: rgba(255, 255, 255, 0.7); }
+/* A sign made with 1.0, which keeps its arrows until the player switches it to the new ones. */
+.legacyNote { display: flex; flex-direction: row; align-items: center; margin-bottom: 6rem; padding: 4rem 8rem; border-radius: 4rem; background-color: rgba(255, 200, 0, 0.15); }
+.legacyNoteText { flex: 1; font-size: 13rem; color: rgba(255, 255, 255, 0.9); margin-right: 8rem; }
+.legacyNote .chip { margin: 0; }

@@ -9,13 +9,29 @@ namespace SignBuilder.Core
     public static class Formats
     {
         public const string Key = "formatVersion";
-        public const int Design = 1;
-        public const int Theme = 1;
+        /// <summary>
+        /// 2: arrows (and road diagram arrowheads) come from the theme's symbol libraries. A design keeps the version it
+        /// was made with, so signs made with 1.0 keep 1.0's arrows wherever they are drawn again.
+        /// </summary>
+        public const int Design = 2;
+        /// <summary>2: arrows come from symbol libraries ("symbols"); 1.0 skips such themes rather than draw them wrong.</summary>
+        public const int Theme = 2;
+        public const int Library = 1;
 
-        /// <summary>Stamps the current design format on <paramref name="design"/> (being stored), and returns it.</summary>
+        /// <summary>
+        /// Stamps the format on <paramref name="design"/> (being stored), and returns it: the one it was made with, or
+        /// the current one for a new design.
+        /// </summary>
         public static JObject StampDesign(JObject design)
         {
-            if (design != null) design[Key] = Design;
+            if (design != null && design[Key] == null) design[Key] = Design;
+            return design;
+        }
+
+        /// <summary>A stored design with its format written out (one without is the first format), and returns it.</summary>
+        public static JObject Versioned(JObject design)
+        {
+            if (design != null && design[Key] == null) design[Key] = 1;
             return design;
         }
 
@@ -23,10 +39,13 @@ namespace SignBuilder.Core
         /// Checks a design read from <paramref name="source"/>: false (logged) if it is from a newer Sign Builder than this
         /// one. A design without a version is the first format.
         /// </summary>
-        public static bool ReadDesign(JObject design, string source) => Read(design, Design, "design", source);
+        public static bool ReadDesign(JObject design, string source) => Read(Versioned(design), Design, "design", source);
 
         /// <summary>Checks a theme.json read from <paramref name="source"/>, as <see cref="ReadDesign"/>.</summary>
         public static bool ReadTheme(JObject theme, string source) => Read(theme, Theme, "theme", source);
+
+        /// <summary>Checks a symbol library's library.json, as <see cref="ReadDesign"/>.</summary>
+        public static bool ReadLibrary(JObject library, string source) => Read(library, Library, "symbol library", source);
 
         private static bool Read(JObject json, int current, string what, string source)
         {

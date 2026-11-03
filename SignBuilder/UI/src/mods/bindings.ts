@@ -9,6 +9,8 @@ export const editorOpen$ = bindValue<boolean>(group, "editorOpen", false);
 export const templates$ = bindValue<string>(group, "templates", "[]");
 /** JSON array of { id, name, builtIn, base, def }: the sign themes (countries / styles). */
 export const themes$ = bindValue<string>(group, "themes", "[]");
+/** JSON { id: library }: the symbol libraries (arrows, diagram arrowheads, symbols) themes draw from. */
+export const libraries$ = bindValue<string>(group, "libraries", "{}");
 /** JSON { designs, kind: "posts" | "gantry" | "new", nonce } pushed when a placed structure is opened for editing. */
 export const editingDesign$ = bindValue<string>(group, "editingDesign", "");
 /** Status line from the tool. */

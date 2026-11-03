@@ -1,8 +1,9 @@
 {
-  "formatVersion": 1,
+  "formatVersion": 2,
   "id": "fr",
   "name": "France",
   "description": "Autoroute (blue), main roads (green), local (white); Caractères stand-in",
+  "libraries": ["mutcd/overhead"],
   "units": "in",
   "defaults": {
     "textHeight": 15.5,

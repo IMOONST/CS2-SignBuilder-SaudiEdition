@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Design } from "./designModel";
+import { SymbolLibrary } from "./themeModel";
 
 // The same renderer that bakes in-world textures, loaded into the game's UI page so the preview is
 // pixel-identical to the sign that gets placed. Served from the mod folder by SignFaceBaker's host.
@@ -10,17 +11,38 @@ declare global {
     SignRenderer?: {
       render: (doc: Design, ppi: number, options?: { annotate?: boolean }) => HTMLElement;
       registerTheme: (def: any, base: string) => void;
+      registerLibrary: (lib: SymbolLibrary) => void;
+      arrowStyles: (themeId: string, formatVersion?: number, library?: string) => ArrowStyle[];
+      arrowGeometry: (themeId: string, style: string | undefined, direction: string, formatVersion?: number, library?: string) => { d: string; transform: string | null; viewBox: number[] };
+      symbolLibraries: (themeId: string) => string[];
     };
   }
 }
 
+/** An arrow style a theme offers (from its symbol libraries): its directions, and a square box that fits them all. */
+export type ArrowStyle = { id: string; label: string; title: string; perRow: number; directions: string[]; box: number[] };
+
 let loading: Promise<void> | null = null;
 let themes: { def: any; base: string }[] = [];
+let libraries: Record<string, SymbolLibrary> = {};
 
 /** Makes the themes (fonts, colors, plates) known to the renderer; previews re-render with them. */
 export function registerThemes(list: { def: any; base: string }[]) {
   themes = list;
   if (window.SignRenderer) themes.forEach((t) => window.SignRenderer!.registerTheme(t.def, t.base));
+}
+
+/** Makes the symbol libraries (arrows, symbols) known to the renderer. */
+export function registerLibraries(list: Record<string, SymbolLibrary>) {
+  libraries = list;
+  if (window.SignRenderer) Object.values(libraries).forEach((l) => window.SignRenderer!.registerLibrary(l));
+}
+
+/** The renderer, once loaded (it draws the theme's arrows for the editor's buttons too); null until then. */
+export function useRenderer() {
+  const [ready, setReady] = useState(!!window.SignRenderer);
+  useEffect(() => { if (!ready) loadRenderer().then(() => setReady(true)); }, []);
+  return ready ? window.SignRenderer! : null;
 }
 
 function loadRenderer(): Promise<void> {
@@ -34,6 +56,7 @@ function loadRenderer(): Promise<void> {
     const script = document.createElement("script");
     script.src = RENDERER_BASE + "renderer.js";
     script.onload = () => {
+      Object.values(libraries).forEach((l) => window.SignRenderer!.registerLibrary(l));
       themes.forEach((t) => window.SignRenderer!.registerTheme(t.def, t.base));
       resolve();
     };

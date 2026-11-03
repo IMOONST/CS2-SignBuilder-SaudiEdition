@@ -27,6 +27,7 @@ namespace SignBuilder.Systems
         private ValueBinding<bool> m_EditorOpen;
         private ValueBinding<string> m_Templates;
         private ValueBinding<string> m_Themes;
+        private ValueBinding<string> m_Libraries;
         private ValueBinding<string> m_EditingDesign;
         private ValueBinding<string> m_ToolStatus;
         private ValueBinding<string> m_ToolMode;
@@ -52,6 +53,7 @@ namespace SignBuilder.Systems
             AddBinding(m_EditorOpen = new ValueBinding<bool>(Group, "editorOpen", false));
             AddBinding(m_Templates = new ValueBinding<string>(Group, "templates", "[]"));
             AddBinding(m_Themes = new ValueBinding<string>(Group, "themes", "[]"));
+            AddBinding(m_Libraries = new ValueBinding<string>(Group, "libraries", "{}"));
             AddBinding(m_EditingDesign = new ValueBinding<string>(Group, "editingDesign", ""));
             AddBinding(m_ToolStatus = new ValueBinding<string>(Group, "toolStatus", ""));
             AddBinding(m_ToolMode = new ValueBinding<string>(Group, "toolMode", "off"));
@@ -148,11 +150,13 @@ namespace SignBuilder.Systems
             }
         }
 
-        /// <summary>Re-reads themes and templates from disk (players may have added files).</summary>
+        /// <summary>Re-reads themes, symbol libraries and templates from disk (players may have added files).</summary>
         public void RefreshLibrary()
         {
             Themes.Reload();
+            SymbolLibraries.Reload();
             m_Themes.Update(Themes.Json());
+            m_Libraries.Update(SymbolLibraries.Json());
             m_Templates.Update(LoadTemplates());
         }
 
@@ -163,7 +167,7 @@ namespace SignBuilder.Systems
             // A fresh object each time so the React effect fires even for the same structure.
             m_EditingDesign.Update(new JObject
             {
-                ["designs"] = new JArray(record.Designs), ["kind"] = kind, ["lights"] = lights, ["nonce"] = Guid.NewGuid().ToString("N"),
+                ["designs"] = new JArray(record.Designs.Select(d => Formats.Versioned((JObject)d.DeepClone()))), ["kind"] = kind, ["lights"] = lights, ["nonce"] = Guid.NewGuid().ToString("N"),
             }.ToString(Formatting.None));
         }
 

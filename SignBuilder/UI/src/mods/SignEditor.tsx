@@ -3,12 +3,12 @@ import { BackConsumer } from "cs2/input";
 import { useEffect, useMemo, useState } from "react";
 import { Arrange } from "./Arrange";
 import {
-  arrange, arrangeInfo$, cancelTool, editingDesign$, editorOpen$, replacing$, savePosts, setEditorOpen, startGantry, startPosts, templates$, themes$, toolMode$, toolStatus$,
+  arrange, arrangeInfo$, cancelTool, editingDesign$, editorOpen$, replacing$, savePosts, setEditorOpen, startGantry, startPosts, templates$, themes$, libraries$, toolMode$, toolStatus$,
 } from "./bindings";
 import { Choice, Confirm, Field } from "./Controls";
 import { Designer, DesignerAction } from "./Designer";
-import { registerThemes } from "./SignPreview";
-import { Theme, blankFor, themeOf } from "./themeModel";
+import { registerLibraries, registerThemes } from "./SignPreview";
+import { SymbolLibrary, Theme, blankFor, themeOf } from "./themeModel";
 import { Design, clone } from "./designModel";
 import { PlacementBar } from "./PlacementBar";
 import { Template } from "./TemplateLibrary";
@@ -42,6 +42,10 @@ export const SignEditor = () => {
   const templates: Template[] = useMemo(() => { try { return JSON.parse(templatesJson); } catch { return []; } }, [templatesJson]);
   const themesJson = useValue(themes$);
   const themes: Theme[] = useMemo(() => { try { return JSON.parse(themesJson); } catch { return []; } }, [themesJson]);
+  const librariesJson = useValue(libraries$);
+  const libraries: Record<string, SymbolLibrary> = useMemo(() => { try { return JSON.parse(librariesJson); } catch { return {}; } }, [librariesJson]);
+  // Libraries first: a theme's arrows come from them.
+  useEffect(() => registerLibraries(libraries), [libraries]);
   useEffect(() => registerThemes(themes), [themes]);
 
   const [design, setDesign] = useState<Design>(blankFor());
@@ -157,7 +161,7 @@ export const SignEditor = () => {
   const escape = () => (dirty || inGantry ? requestClose() : guard(true, "Close the Sign Builder?", close, "Close"));
   return withBack(
     <Designer design={design} setDesign={setDesign} onTemplateSaved={settle}
-      onLoad={(d, then) => guard(dirty, "Load this? Your changes to the current sign will be lost.", () => { load(d); then(); })} templates={templates} themes={themes}
+      onLoad={(d, then) => guard(dirty, "Load this? Your changes to the current sign will be lost.", () => { load(d); then(); })} templates={templates} themes={themes} libraries={libraries}
       title={title} actions={actions} onClose={requestClose} overlay={overlay}
       extra={editingPosts ? (
         <Field label="Lights">

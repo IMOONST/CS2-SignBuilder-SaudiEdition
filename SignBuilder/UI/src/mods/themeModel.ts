@@ -16,10 +16,22 @@ export type ThemeDef = {
   /** Ready-made combinations of the basic parts that suit the theme's signs ("Add preset"). */
   presets?: { label: string; item: Item; insert?: "first" }[];
   laneWidth?: number;
-  /** The theme's own lane-use arrow shapes ("up", "turn", "slight", "split", "corner", "add", "fork"). */
-  laneArrows?: Record<string, string>;
+  /** The symbol libraries the theme draws its arrows and symbols from ("mutcd", or "mutcd/overhead" for one arrow category). */
+  libraries?: string[];
 };
 export type Theme = { id: string; name: string; builtIn: boolean; base: string; def: ThemeDef };
+
+/** A symbol from a library, read from its SVG: drawn in its view box; "currentColor" parts take the legend color. */
+export type LibrarySymbol = {
+  name: string; category?: string; number?: string; viewBox: number[];
+  parts: { d: string; fill: string; transform?: string; rule?: string }[];
+};
+/** A symbol library (Resources/Symbols/<id>/library.json): arrows by category, a diagram arrowhead, symbols. */
+export type SymbolLibrary = {
+  id: string; name: string; description?: string; legend?: string[]; arrows?: Record<string, any>; symbols?: Record<string, LibrarySymbol>;
+};
+/** The design format new signs get (C# Formats.Design). */
+export const DESIGN_FORMAT = 2;
 
 export const themeOf = (themes: Theme[], design: Design): Theme | undefined =>
   themes.find((t) => t.id === (design.theme ?? "us")) ?? themes.find((t) => t.id === "us") ?? themes[0];
@@ -40,6 +52,7 @@ export function baseParts(theme?: Theme): { label: string; item: Item }[] {
     { label: "Text", item: { type: "text", text: "Destination", height: th } },
     { label: "Shield", item: { type: "shield", network: first, number: (d?.shields ?? {})[first]?.default ?? "1", height: d?.defaults?.shieldHeight } },
     { label: "Arrow", item: { type: "arrow", direction: "up", height: d?.defaults?.arrowHeight } },
+    { label: "Symbol", item: { type: "symbol", height: d?.defaults?.shieldHeight } },
     { label: "Diagram", item: { type: "diagram", shape: "exit-left", lanes: 2, exitLanes: 1, sharedLanes: 1, height: Math.round((d?.defaults?.arrowHeight ?? 24) * 2.2) } },
     { label: "LED text", item: { type: "led", lines: ["ACCIDENT AHEAD"], height: small } },
     { label: "Divider", item: { type: "divider" } },
@@ -55,6 +68,7 @@ export function baseParts(theme?: Theme): { label: string; item: Item }[] {
 export function blankFor(theme?: Theme): Design {
   const d = theme?.def;
   return {
+    formatVersion: DESIGN_FORMAT,
     theme: theme?.id ?? "us",
     scheme: d?.defaults?.scheme ?? "green",
     items: [{ type: "text", text: "Destination", height: d?.defaults?.textHeight ?? 16 }],

@@ -59,7 +59,7 @@ namespace SignBuilder.Core
             s_Themes = new Dictionary<string, ThemeInfo>();
             Load(BuiltInDir, true, $"coui://signbuilder/Themes/");
             // Mod themes before the player's own, so a local folder can override a published theme while editing it.
-            s_ModHosts = ModThemeFolders().Select((dir, i) => (host: $"signbuildermod{i}", dir)).ToList();
+            s_ModHosts = ModFolders(ModFolder).Select((dir, i) => (host: $"signbuildermod{i}", dir)).ToList();
             foreach (var (host, dir) in s_ModHosts) Load(dir, false, $"coui://{host}/", ModName(dir));
             Load(UserThemesDir, false, $"coui://{DataHost}/Themes/");
             foreach (var theme in s_Themes.Values) BorrowFonts(theme);
@@ -108,8 +108,8 @@ namespace SignBuilder.Core
             }
         }
 
-        /// <summary>SignBuilderThemes folders of installed mods: subscribed Paradox Mods and local mods.</summary>
-        private static IEnumerable<string> ModThemeFolders()
+        /// <summary>Folders named <paramref name="name"/> in installed mods: subscribed Paradox Mods and local mods.</summary>
+        public static IEnumerable<string> ModFolders(string name)
         {
             var userRoot = UnityEngine.Application.persistentDataPath;
             foreach (var mods in new[] { Path.Combine(userRoot, ".cache", "Mods", "pdx_mods"), Path.Combine(userRoot, "Mods") })
@@ -119,8 +119,8 @@ namespace SignBuilder.Core
                 try { dirs = Directory.GetDirectories(mods); } catch { continue; }
                 foreach (var mod in dirs.OrderBy(d => d))
                 {
-                    var themes = Path.Combine(mod, ModFolder);
-                    if (Directory.Exists(themes)) yield return themes;
+                    var folder = Path.Combine(mod, name);
+                    if (Directory.Exists(folder)) yield return folder;
                 }
             }
         }
@@ -179,17 +179,20 @@ namespace SignBuilder.Core
             }
         }
 
-        /// <summary>The design with its theme attached ("_theme", "_themeBase"), as the renderer needs it to bake.</summary>
+        /// <summary>
+        /// The design with its theme and the symbol libraries it draws from attached ("_theme", "_themeBase",
+        /// "_libraries"), as the renderer needs it to bake.
+        /// </summary>
         public static JObject ForRender(JObject design)
         {
-            var copy = (JObject)design.DeepClone();
-            // The format version changes nothing drawn (and must not make stored designs rebake).
-            copy.Remove(Formats.Key);
+            // The format version picks the arrows: a design made with 1.0 keeps 1.0's.
+            var copy = Formats.Versioned((JObject)design.DeepClone());
             var theme = Get((string)design["theme"]);
             if (theme == null) return copy;
             copy["theme"] = theme.Id;
             copy["_theme"] = theme.Def;
             copy["_themeBase"] = theme.BaseUrl;
+            copy["_libraries"] = SymbolLibraries.ForDesign(design, theme.Def);
             return copy;
         }
 

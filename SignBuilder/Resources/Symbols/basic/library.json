@@ -1,0 +1,80 @@
+{
+  "formatVersion": 1,
+  "id": "basic",
+  "name": "Basic",
+  "description": "The arrows of Sign Builder 1.0: every theme's fallback",
+  "arrows": {
+    "standard": {
+      "label": "Standard",
+      "title": "Straight arrows",
+      "order": [
+        "up-left",
+        "up",
+        "up-right",
+        "left",
+        "right",
+        "down-left",
+        "down",
+        "down-right",
+        "bend-left",
+        "hook-left",
+        "hook-right",
+        "bend-right"
+      ],
+      "perRow": 4,
+      "shapes": {
+        "down": {
+          "frame": "straight",
+          "d": "M32 0 H68 V88 H100 L50 150 L0 88 H32 Z",
+          "points": "down",
+          "rotate": [
+            180,
+            90,
+            -90,
+            45,
+            -45,
+            135,
+            -135
+          ]
+        }
+      }
+    },
+    "lane": {
+      "label": "Lane",
+      "title": "Lane-use arrows",
+      "order": [
+        "corner-left",
+        "turn-left",
+        "slight-left",
+        "slight-right",
+        "turn-right",
+        "corner-right",
+        "add-left",
+        "split-left",
+        "up",
+        "fork",
+        "split-right",
+        "add-right"
+      ],
+      "perRow": 6,
+      "shapes": {
+        "up": {
+          "frame": "standing",
+          "d": "M54 150 V34 H34 L66 0 L98 34 H78 V150 Z"
+        },
+        "turn": {
+          "frame": "standing",
+          "d": "M54 150 V82 A24 24 0 0 0 30 58 V78 L0 46 L30 14 V34 A48 48 0 0 1 78 82 V150 Z",
+          "side": "left",
+          "mirror": true
+        },
+        "split": {
+          "frame": "standing",
+          "d": "M54 150 V128 A24 24 0 0 0 30 104 V124 L0 92 L30 60 V80 A48 48 0 0 1 54 86.4 V34 H34 L66 0 L98 34 H78 V150 Z",
+          "side": "left",
+          "mirror": true
+        }
+      }
+    }
+  }
+}

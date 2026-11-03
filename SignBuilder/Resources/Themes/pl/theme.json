@@ -1,8 +1,9 @@
 {
-  "formatVersion": 1,
+  "formatVersion": 2,
   "id": "pl",
   "name": "Poland",
   "description": "Drogowskazy (E-1, E-2, E-13), blue on motorways, green elsewhere; Noto Sans (add Drogowskaz yourself)",
+  "libraries": ["mutcd/overhead"],
   "units": "in",
   "defaults": {
     "font": "Noto Sans",

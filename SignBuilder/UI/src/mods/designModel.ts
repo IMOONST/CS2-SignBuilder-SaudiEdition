@@ -4,6 +4,8 @@
 export type Item = { type: string; [key: string]: any };
 export type Design = {
   id?: string;
+  /** The design format it was made with: 1 (Sign Builder 1.0) keeps 1.0's arrows; 2 draws them from the theme's libraries. */
+  formatVersion?: number;
   name?: string;
   scheme?: string;
   align?: string;
@@ -152,6 +154,7 @@ export function describe(item: Item, labels?: Record<string, string>): string {
   switch (item.type) {
     case "text": return `"${item.text}"`;
     case "shield": return `Shield "${item.number ?? ""}"`;
+    case "symbol": return item.symbol ? `Symbol ${String(item.symbol).split("/").pop()!.replace(/-/g, " ")}` : "Symbol";
     case "chip": return "Chip";
     case "diagram": return `Diagram ${String(item.shape ?? "exit-left").replace("-", " ")}`;
     case "led": return `LED "${(item.lines ?? [])[0] ?? ""}"`;
@@ -170,6 +173,7 @@ export function kindOf(item: Item, labels?: Record<string, string>): string {
   switch (item.type) {
     case "text": return "Text";
     case "shield": return "Shield";
+    case "symbol": return "Symbol";
     case "chip": return "Chip";
     case "diagram": return "Diagram";
     case "led": return "LED text";
