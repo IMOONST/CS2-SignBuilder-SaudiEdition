@@ -4,22 +4,6 @@ An extended edition of [Sign Builder](https://github.com/andyjsmith/CS2-SignBuil
 
 [العربية](#بناء-اللوحات-النسخة-السعودية)
 
-## Screenshots · الصور
-
-<p align="center">
-  <a href="SignBuilder/Properties/SA-Screenshot1.png"><img src="SignBuilder/Properties/SA-Screenshot1.png" width="100%" alt="Screenshot 1"></a>
-  <a href="SignBuilder/Properties/SA-Screenshot2.png"><img src="SignBuilder/Properties/SA-Screenshot2.png" width="49%" alt="Screenshot 2"></a>
-  <a href="SignBuilder/Properties/SA-Screenshot3.png"><img src="SignBuilder/Properties/SA-Screenshot3.png" width="49%" alt="Screenshot 3"></a>
-  <a href="SignBuilder/Properties/SA-Screenshot4.png"><img src="SignBuilder/Properties/SA-Screenshot4.png" width="49%" alt="Screenshot 4"></a>
-  <a href="SignBuilder/Properties/SA-Screenshot5.png"><img src="SignBuilder/Properties/SA-Screenshot5.png" width="49%" alt="Screenshot 5"></a>
-  <a href="SignBuilder/Properties/SA-Screenshot6.png"><img src="SignBuilder/Properties/SA-Screenshot6.png" width="49%" alt="Screenshot 6"></a>
-  <a href="SignBuilder/Properties/SA-Screenshot7.png"><img src="SignBuilder/Properties/SA-Screenshot7.png" width="49%" alt="Screenshot 7"></a>
-  <a href="SignBuilder/Properties/SA-Screenshot8.png"><img src="SignBuilder/Properties/SA-Screenshot8.png" width="49%" alt="Screenshot 8"></a>
-  <a href="SignBuilder/Properties/SA-Screenshot9.png"><img src="SignBuilder/Properties/SA-Screenshot9.png" width="49%" alt="Screenshot 9"></a>
-  <a href="SignBuilder/Properties/SA-Screenshot10.png"><img src="SignBuilder/Properties/SA-Screenshot10.png" width="49%" alt="Screenshot 10"></a>
-  <a href="SignBuilder/Properties/SA-Screenshot11.png"><img src="SignBuilder/Properties/SA-Screenshot11.png" width="49%" alt="Screenshot 11"></a>
-</p>
-
 ## What's new compared to the original
 **New tools**
 - Sign manager: every sign in the city in one searchable list (jump to it, delete it).
