@@ -181,6 +181,11 @@ Options page: interface language, keys, and cleanup of unused sign structures.
 	<Screenshot Value="Properties/SA-Screenshot4.png" />
 	<Screenshot Value="Properties/SA-Screenshot5.png" />
 	<Screenshot Value="Properties/SA-Screenshot6.png" />
+	<Screenshot Value="Properties/SA-Screenshot7.png" />
+	<Screenshot Value="Properties/SA-Screenshot8.png" />
+	<Screenshot Value="Properties/SA-Screenshot9.png" />
+	<Screenshot Value="Properties/SA-Screenshot10.png" />
+	<Screenshot Value="Properties/SA-Screenshot11.png" />
 	<Tag Value="Code Mod" />
 	<ExternalLink Type="github" Url="https://github.com/IMOONST/CS2-SignBuilder-SaudiEdition" />
 	<ModVersion Value="1.0.0" />
