@@ -88,6 +88,10 @@ Options page: interface language, keys, and cleanup of unused sign structures.
 - Arabic fonts Cairo, Tajawal and Amiri: SIL Open Font License (OFL).
 - Pictograms from Material Design Icons (Apache 2.0), the camel from game-icons.net (CC BY 3.0), and Temaki and Maki (CC0). Details in CREDITS.txt inside the mod.
 
+## Support
+
+**Enjoying the mod?** It's free and always will be. If you'd like to say thanks, you can [buy me a coffee on PayPal](https://paypal.me/MeshaalFayez) ☕ — a star on GitHub or a rating here means just as much.
+
 ---
 
 # بناء اللوحات: النسخة السعودية
@@ -171,6 +175,10 @@ Options page: interface language, keys, and cleanup of unused sign structures.
 - المود الأصلي: **Sign Builder** من تطوير **Andy Smith**، https://github.com/andyjsmith/CS2-SignBuilder، برخصة MIT. شكراً جزيلاً له على هذا العمل الرائع.
 - الخطوط العربية Cairo و Tajawal و Amiri برخصة SIL Open Font License (OFL).
 - رموز من Material Design Icons (Apache 2.0)، ورمز الجمل من game-icons.net (CC BY 3.0)، ورموز من Temaki و Maki (CC0). التفاصيل في ملف CREDITS.txt داخل المود.
+
+## الدعم
+
+**عجبك المود؟** مجاني وبيبقى مجاني. وإذا حاب تقول شكراً، تقدر [تدعمني بقهوة على PayPal](https://paypal.me/MeshaalFayez) ☕، ونجمة على GitHub أو تقييم هنا يفرق معي بنفس القدر.
 	</LongDescription>
 	<!--New thumbnail made for this edition (1024x1024). The original is kept as Thumbnail-original.png (not published).-->
 	<Thumbnail Value="Properties/Thumbnail.png" />
@@ -188,6 +196,7 @@ Options page: interface language, keys, and cleanup of unused sign structures.
 	<Screenshot Value="Properties/SA-Screenshot10.png" />
 	<Tag Value="Code Mod" />
 	<ExternalLink Type="github" Url="https://github.com/IMOONST/CS2-SignBuilder-SaudiEdition" />
+	<ExternalLink Type="paypal" Url="https://paypal.me/MeshaalFayez" />
 	<ModVersion Value="1.0.0" />
 	<GameVersion Value="1.6.*" />
 	<ChangeLog>
