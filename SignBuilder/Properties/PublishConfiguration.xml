@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Publish>
-	<!--No ModId: this is a NEW mod. Paradox Mods assigns the id on the first publish (PublishNewMod) and the toolchain
-	writes it here. Never put the original Sign Builder id (165726) back: it would try to overwrite Andy Smith's mod.-->
+	<!--This edition's own id, assigned on its first publish (2026-11-08). Never put the original Sign Builder id (165726)
+	here: it would try to overwrite Andy Smith's mod.-->
+	<ModId Value="166808" />
 	<DisplayName Value="Sign Builder: Saudi Edition" />
 	<ShortDescription Value="Extended Sign Builder: new tools (sign manager, road pick, live Your Speed signs, weather LED glow), reworked Arabic text, and a Saudi theme with 130+ templates." />
 	<LongDescription>
