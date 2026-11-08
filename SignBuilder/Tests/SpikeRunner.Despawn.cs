@@ -14,28 +14,28 @@ using Game.SceneFlow;
 using Game.UI;
 using Game.UI.Menu;
 using Newtonsoft.Json.Linq;
-using SignBuilder.Assemblies;
-using SignBuilder.Core;
-using SignBuilder.Tools;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Core;
+using SignBuilderSA.Tools;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace SignBuilder.Tests
+namespace SignBuilderSA.Tests
 {
     internal sealed partial class SpikeRunner
     {
-        private const string kDespawnSave = "SignBuilder_Despawn";
-        private const string kDespawnResave = "SignBuilder_Despawn2";
+        private const string kDespawnSave = "SignBuilderSA_Despawn";
+        private const string kDespawnResave = "SignBuilderSA_Despawn2";
         private static string DespawnSignsFile => Path.Combine(SignBuilderRuntime.DataDir, "despawn_signs.txt");
 
         /// <summary>
         /// Mode "despawnsave": "a few of my signs despawn whenever I first load in". Places a plain gantry, a lit
         /// roadside sign, an LED gantry, a roadside sign that is then edited (Save in place) and a gantry that is then
-        /// deleted and cleaned up (as "Delete unused sign structures" does), saves "SignBuilder_Despawn" before the edit
+        /// deleted and cleaned up (as "Delete unused sign structures" does), saves "SignBuilderSA_Despawn" before the edit
         /// and the cleanup, and does not save after them, as a player who quits without saving. Then loads that save
-        /// again in the same session and saves it as "SignBuilder_Despawn2". Modes "despawnload" and "despawnload2" (a
+        /// again in the same session and saves it as "SignBuilderSA_Despawn2". Modes "despawnload" and "despawnload2" (a
         /// fresh boot into either save) watch every sign for a minute.
         /// </summary>
         private IEnumerator RunDespawnSave()
@@ -141,7 +141,7 @@ namespace SignBuilder.Tests
         private IEnumerator DespawnSaveAs(string name, string key)
         {
             var menu = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<MenuUISystem>();
-            var preview = ScreenCaptureHelper.CreateRenderTarget("SignBuilder-Despawn", 680, 383);
+            var preview = ScreenCaptureHelper.CreateRenderTarget("SignBuilderSA-Despawn", 680, 383);
             ScreenCaptureHelper.CaptureScreenshot(Camera.main, preview, new MenuHelpers.SaveGamePreviewSettings());
             var task = GameManager.instance.Save(name, menu.GetSaveInfo(autoSave: false), AssetDatabase.user, preview);
             while (!task.IsCompleted) yield return null;
@@ -224,7 +224,7 @@ namespace SignBuilder.Tests
             using var entities = query.ToEntityArray(Allocator.Temp);
             var prefabs = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabSystem>();
             return entities.Where(e => math.distance(em.GetComponentData<Game.Objects.Transform>(e).m_Position, position) < 1f)
-                .Where(e => (AssemblySaveSystem.PrefabNameOf(em, prefabs, em.GetComponentData<PrefabRef>(e).m_Prefab) ?? "").StartsWith("SignBuilder_A_"))
+                .Where(e => (AssemblySaveSystem.PrefabNameOf(em, prefabs, em.GetComponentData<PrefabRef>(e).m_Prefab) ?? "").StartsWith("SignBuilderSA_A_"))
                 .ToList();
         }
 

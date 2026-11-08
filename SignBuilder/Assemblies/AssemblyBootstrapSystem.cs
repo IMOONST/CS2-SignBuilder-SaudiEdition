@@ -6,11 +6,11 @@ using Game;
 using Game.Prefabs;
 using Unity.Entities;
 using Unity.Mathematics;
-using SignBuilder.Core;
-using SignBuilder.Geometry;
-using SignBuilder.Tools;
+using SignBuilderSA.Core;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Assemblies
+namespace SignBuilderSA.Assemblies
 {
     /// <summary>
     /// Keeps assembly prefabs alive across sessions: before any save is deserialized it re-registers
@@ -61,7 +61,10 @@ namespace SignBuilder.Assemblies
                 {
                     lod = (lodGeometry, record.LodIndexCount, record.LodVertexCount);
                 }
-                TrackNewPrefab(prefabs.Register(record.PrefabName, geometry, surfaces.ToArray(), bounds, record.IndexCount, record.VertexCount, lod, record.LightSpots, record.GlowMeshes));
+                var prefab = prefabs.Register(record.PrefabName, geometry, surfaces.ToArray(), bounds, record.IndexCount, record.VertexCount, lod, record.LightSpots, record.GlowMeshes);
+                TrackNewPrefab(prefab);
+                // Speed feedback structures (both states) are swapped as traffic passes them.
+                if (SpeedFeedback.IsFeedback(record.Designs)) Systems.SpeedFeedbackSystem.TrackPrefab(prefab);
                 ok++;
             }
             Mod.log.Info($"Registered {ok} sign assemblies before load ({missing} with missing assets)");

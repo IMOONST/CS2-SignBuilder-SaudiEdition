@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
-using SignBuilder.Core;
-using SignBuilder.Geometry;
-using SignBuilder.Tools;
+using SignBuilderSA.Core;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Assemblies
+namespace SignBuilderSA.Assemblies
 {
     /// <summary>Where one sign sits on its structure.</summary>
     public sealed class SignSlot

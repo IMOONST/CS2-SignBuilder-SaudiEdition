@@ -1,3 +1,4 @@
+import { t, isArabic, localized } from "./l10n";
 // Helpers for editing sign designs (see Resources/Renderer/renderer.js for the format).
 // Items are addressed by dotted paths into nested "items" arrays: "2" or "0.1".
 
@@ -14,23 +15,24 @@ export type Design = {
 };
 
 /** Gantry structure types and spans (C# LayoutOptions.Type / Span). */
-export const STRUCTURES = [
-  { id: "doubleTruss", label: "Double truss" },
-  { id: "singleTruss", label: "Single truss" },
-  { id: "curved", label: "Curved tube" },
-  { id: "straight", label: "Straight tube" },
-];
-export const SPANS = [
-  { id: "span", label: "Span", hint: "Posts on both sides; click roads alongside in the world to span them too" },
-  { id: "cantilever", label: "Cantilever", hint: "One post beside the road, an arm over the lanes" },
-];
+export const STRUCTURES = localized(() => [
+  { id: "doubleTruss", label: t("Double truss") },
+  { id: "singleTruss", label: t("Single truss") },
+  { id: "curved", label: t("Curved tube") },
+  { id: "straight", label: t("Straight tube") },
+]);
+export const SPANS = localized(() => [
+  { id: "span", label: t("Span"), hint: t("Posts on both sides; click roads alongside in the world to span them too") },
+  { id: "cantilever", label: t("Cantilever"), hint: t("One post beside the road, an arm over the lanes") },
+]);
 /** Summary for a support id such as "curved/cantilever/left" or "ground". */
 export function supportLabel(id: string): string {
-  if (id === "ground") return "Roadside posts";
+  if (id === "ground") return t("Roadside posts");
   const [type, span, side] = id.split("/");
-  const t = STRUCTURES.find((x) => x.id === type)?.label ?? type;
-  const s = SPANS.find((x) => x.id === span)?.label.toLowerCase() ?? span ?? "";
-  return `${t}, ${s}${side === "left" ? " (left side)" : ""}`;
+  const name = STRUCTURES().find((x) => x.id === type)?.label ?? type;
+  const label = SPANS().find((x) => x.id === span)?.label;
+  const s = (label && (isArabic() ? label : label.toLowerCase())) ?? span ?? "";
+  return `${name}${isArabic() ? "، " : ", "}${s}${side === "left" ? " " + t("(left side)") : ""}`;
 }
 
 export function clone<T>(value: T): T {
@@ -153,17 +155,17 @@ export function moveTo(design: Design, from: string, target: string, position: D
 export function describe(item: Item, labels?: Record<string, string>): string {
   switch (item.type) {
     case "text": return `"${item.text}"`;
-    case "shield": return `Shield "${item.number ?? ""}"`;
-    case "symbol": return item.symbol ? `Symbol ${String(item.symbol).split("/").pop()!.replace(/-/g, " ")}` : "Symbol";
-    case "chip": return "Chip";
-    case "diagram": return `Diagram ${String(item.shape ?? "exit-left").replace("-", " ")}`;
-    case "led": return `LED "${(item.lines ?? [])[0] ?? ""}"`;
-    case "panel": return item.side ? "Side panel" : "Panel";
-    case "tab": return "Tab";
-    case "arrow": return `Arrow ${String(item.direction ?? "up").replace("-", " ")}`;
-    case "row": return "Row";
-    case "column": return "Column";
-    case "divider": return "Divider";
+    case "shield": return `${t("Shield")} "${item.number ?? ""}"`;
+    case "symbol": return item.symbol ? `${t("Symbol")} ${String(item.symbol).split("/").pop()!.replace(/-/g, " ")}` : t("Symbol");
+    case "chip": return t("Chip");
+    case "diagram": return `${t("Diagram")} ${t(String(item.shape ?? "exit-left")).replace(/-/g, " ")}`;
+    case "led": return `${t("LED")} "${(item.lines ?? [])[0] ?? ""}"`;
+    case "panel": return item.side ? t("Side panel") : t("Panel");
+    case "tab": return t("Tab");
+    case "arrow": return `${t("Arrow")} ${t(String(item.direction ?? "up")).replace(/-/g, " ")}`;
+    case "row": return t("Row");
+    case "column": return t("Column");
+    case "divider": return t("Divider");
     default: return item.type;
   }
 }
@@ -171,18 +173,18 @@ export function describe(item: Item, labels?: Record<string, string>): string {
 /** What kind of part this is, as the heading over its settings. */
 export function kindOf(item: Item, labels?: Record<string, string>): string {
   switch (item.type) {
-    case "text": return "Text";
-    case "shield": return "Shield";
-    case "symbol": return "Symbol";
-    case "chip": return "Chip";
-    case "diagram": return "Diagram";
-    case "led": return "LED text";
-    case "panel": return item.side ? "Side panel" : "Panel";
-    case "tab": return "Tab";
-    case "arrow": return "Arrow";
-    case "row": return "Row";
-    case "column": return "Column";
-    case "divider": return "Divider";
+    case "text": return t("Text");
+    case "shield": return t("Shield");
+    case "symbol": return t("Symbol");
+    case "chip": return t("Chip");
+    case "diagram": return t("Diagram");
+    case "led": return t("LED text");
+    case "panel": return item.side ? t("Side panel") : t("Panel");
+    case "tab": return t("Tab");
+    case "arrow": return t("Arrow");
+    case "row": return t("Row");
+    case "column": return t("Column");
+    case "divider": return t("Divider");
     default: return item.type;
   }
 }

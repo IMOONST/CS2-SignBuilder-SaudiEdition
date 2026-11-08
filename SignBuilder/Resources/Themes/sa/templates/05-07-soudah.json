@@ -1,0 +1,31 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "soudah",
+  "name": "سياحية: متنزه السودة",
+  "scheme": "brown",
+  "support": "ground",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "متنزه السودة",
+          "height": 13
+        },
+        {
+          "type": "text",
+          "text": "Al Soudah Park",
+          "height": 10.7
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "text": "8 كم",
+      "height": 12
+    }
+  ]
+}

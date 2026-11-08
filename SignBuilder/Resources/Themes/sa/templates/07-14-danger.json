@@ -1,0 +1,24 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "danger",
+  "name": "تحذيرية: خطر",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/warn-general",
+      "height": 66
+    },
+    {
+      "type": "text",
+      "text": "خطر",
+      "height": 11
+    },
+    {
+      "type": "text",
+      "text": "DANGER",
+      "height": 9
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "route-confirm",
+  "name": "إرشادية: تأكيد الطريق",
+  "scheme": "green",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "shield",
+          "network": "SAR",
+          "number": "40",
+          "height": 22
+        },
+        {
+          "type": "column",
+          "align": "center",
+          "items": [
+            {
+              "type": "text",
+              "text": "طريق الرياض - الدمام",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "Riyadh - Dammam Hwy",
+              "height": 9.8
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

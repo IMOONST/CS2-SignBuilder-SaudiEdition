@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "mall",
+  "name": "داخل المدن: مركز تجاري",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "مركز تجاري",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "Shopping Mall",
+              "height": 9.8
+            }
+          ]
+        },
+        {
+          "type": "arrow",
+          "direction": "right"
+        }
+      ]
+    }
+  ]
+}

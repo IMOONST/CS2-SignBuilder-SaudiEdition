@@ -1,0 +1,25 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "end-works",
+  "name": "أعمال طرق: نهاية الأعمال",
+  "scheme": "orange",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "نهاية أعمال الطرق",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "END OF ROAD WORKS",
+          "height": 9.8
+        }
+      ]
+    }
+  ]
+}

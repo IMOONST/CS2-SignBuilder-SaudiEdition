@@ -1,0 +1,41 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "hospital",
+  "name": "داخل المدن: المستشفى",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/hospital",
+          "height": 20,
+          "box": {}
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "مستشفى الملك فيصل التخصصي",
+              "height": 11
+            },
+            {
+              "type": "text",
+              "text": "King Faisal Specialist Hosp.",
+              "height": 9
+            }
+          ]
+        },
+        {
+          "type": "arrow",
+          "direction": "right"
+        }
+      ]
+    }
+  ]
+}

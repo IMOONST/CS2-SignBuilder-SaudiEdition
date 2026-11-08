@@ -1,0 +1,41 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "works-ahead",
+  "name": "أعمال طرق: أعمال طرق أمامك",
+  "scheme": "orange",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/warn-works",
+          "height": 26
+        },
+        {
+          "type": "column",
+          "align": "center",
+          "items": [
+            {
+              "type": "text",
+              "text": "أعمال طرق أمامك",
+              "height": 13
+            },
+            {
+              "type": "text",
+              "text": "ROAD WORKS AHEAD",
+              "height": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "text": "500 م",
+      "height": 12
+    }
+  ]
+}

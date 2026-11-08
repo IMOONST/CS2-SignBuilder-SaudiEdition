@@ -1,0 +1,104 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "next-exits",
+  "name": "إرشادية: المخارج التالية",
+  "scheme": "green",
+  "support": "ground",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "المخارج التالية",
+          "height": 13
+        },
+        {
+          "type": "text",
+          "text": "Next Exits",
+          "height": 10.7
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "EXIT 7",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "2 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "مخرج 7",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "EXIT 8",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "5 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "مخرج 8",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "EXIT 9",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "9 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "مخرج 9",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    }
+  ]
+}

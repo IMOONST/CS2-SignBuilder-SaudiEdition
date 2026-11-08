@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "red-sea",
+  "name": "سياحية: البحر الأحمر",
+  "scheme": "brown",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "كورنيش جدة",
+              "height": 13
+            },
+            {
+              "type": "text",
+              "text": "Jeddah Corniche",
+              "height": 10.7
+            }
+          ]
+        },
+        {
+          "type": "arrow",
+          "direction": "up"
+        }
+      ]
+    }
+  ]
+}

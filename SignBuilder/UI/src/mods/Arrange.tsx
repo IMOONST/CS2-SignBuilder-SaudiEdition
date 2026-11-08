@@ -1,3 +1,4 @@
+import { t } from "./l10n";
 import { useValue } from "cs2/api";
 import { Dialog } from "./Dialog";
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
@@ -52,7 +53,7 @@ export const Arrange = (props: {
 
   if (!info) {
     return (
-      <Dialog dock="bottom" title="Gantry" className={styles.arrange} onClose={() => props.onClose(true)}>
+      <Dialog dock="bottom" title={t("Gantry")} className={styles.arrange} onClose={() => props.onClose(true)}>
         <div className={styles.compactBody}><div className={styles.status}>{status || "Preparing..."}</div></div>
       </Dialog>
     );
@@ -114,45 +115,45 @@ export const Arrange = (props: {
   const ready = info.total > 0 && !info.busy && !signs.some((s) => !s.ready);
 
   return (
-    <Dialog dock="bottom" title={info.replacing ? "Edit gantry" : "Gantry"} className={styles.arrange} onClose={() => props.onClose(unsaved)}
+    <Dialog dock="bottom" title={info.replacing ? t("Edit gantry") : t("Gantry")} className={styles.arrange} onClose={() => props.onClose(unsaved)}
       header={
         <>
-          <div className={ready ? styles.primaryButton : styles.primaryButtonOff} onClick={() => ready && arrange({ op: "build" })}>{info.replacing ? "Save" : "Build"}</div>
-          <div className={styles.chip} style={{ alignSelf: "center" }} onClick={() => arrange({ op: "auto" })}>Auto arrange</div>
-          <div className={styles.chip} style={{ alignSelf: "center" }} title="Click another spot on a road to move the gantry there" onClick={() => arrange({ op: "repick" })}>Move gantry</div>
-          <div className={styles.chip} style={{ alignSelf: "center" }} onClick={() => props.onCancel(unsaved)}>Cancel</div>
-          <Label>Showing</Label>
+          <div className={ready ? styles.primaryButton : styles.primaryButtonOff} onClick={() => ready && arrange({ op: "build" })}>{info.replacing ? t("Save") : t("Build")}</div>
+          <div className={styles.chip} style={{ alignSelf: "center" }} onClick={() => arrange({ op: "auto" })}>{t("Auto arrange")}</div>
+          <div className={styles.chip} style={{ alignSelf: "center" }} title={t("Click another spot on a road to move the gantry there")} onClick={() => arrange({ op: "repick" })}>{t("Move gantry")}</div>
+          <div className={styles.chip} style={{ alignSelf: "center" }} onClick={() => props.onCancel(unsaved)}>{t("Cancel")}</div>
+          <Label>{t("Showing")}</Label>
           <Choice options={[
-            { value: "front", label: "Front" },
-            { value: "back", label: "Back", title: "Signs on the other face of the structure, for traffic the other way" },
+            { value: "front", label: t("Front") },
+            { value: "back", label: t("Back"), title: t("Signs on the other face of the structure, for traffic the other way") },
           ]} value={info.view} onChange={(value) => { arrange({ op: "view", value }); setSelected(-1); }} />
-          <Label>Lights</Label>
-          <Choice options={[{ value: "off", label: "Off" }, { value: "on", label: "On", title: "Light fixtures below each sign, lit at night" }]}
+          <Label>{t("Lights")}</Label>
+          <Choice options={[{ value: "off", label: t("Off") }, { value: "on", label: t("On"), title: t("Light fixtures below each sign, lit at night") }]}
             value={info.lights ? "on" : "off"} onChange={(v) => arrange({ op: "lights", value: v === "on" })} />
-          <Label>Sign size</Label>
+          <Label>{t("Sign size")}</Label>
           <NumberBox compact value={Math.round(info.scale * 100)} step={5} min={50} max={170} unit="%" onChange={(v) => set("scale", v)} />
           {status && <div className={styles.status} style={{ marginLeft: "12rem" }}>{status}</div>}
         </>
       }>
       <div className={styles.arrangeBody}>
         <div className={styles.barRow}>
-          <div className={styles.barLabel}>Structure</div>
-          <Choice options={STRUCTURES.map((s) => ({ value: s.id, label: s.label }))} value={info.type} onChange={(value) => arrange({ op: "type", value })} />
-          <Label>Type</Label>
-          <Choice options={SPANS.map((s) => ({ value: s.id, label: s.label, title: s.hint }))} value={info.span} onChange={(value) => arrange({ op: "span", value })} />
+          <div className={styles.barLabel}>{t("Structure")}</div>
+          <Choice options={STRUCTURES().map((s) => ({ value: s.id, label: s.label }))} value={info.type} onChange={(value) => arrange({ op: "type", value })} />
+          <Label>{t("Type")}</Label>
+          <Choice options={SPANS().map((s) => ({ value: s.id, label: s.label, title: s.hint }))} value={info.span} onChange={(value) => arrange({ op: "span", value })} />
           {info.span === "cantilever" && (
-            <Choice options={[{ value: "left", label: "Post left" }, { value: "right", label: "Post right" }]} value={info.side}
+            <Choice options={[{ value: "left", label: t("Post left") }, { value: "right", label: t("Post right") }]} value={info.side}
               onChange={(value) => arrange({ op: "side", value })} />
           )}
           {!info.free && (
-            <div className={styles.chip} style={{ alignSelf: "center", marginLeft: "12rem" }} title="Face the signs the other way"
-              onClick={() => arrange({ op: "swap" })}>Swap directions</div>
+            <div className={styles.chip} style={{ alignSelf: "center", marginLeft: "12rem" }} title={t("Face the signs the other way")}
+              onClick={() => arrange({ op: "swap" })}>{t("Swap directions")}</div>
           )}
-          <Label>Height</Label>
+          <Label>{t("Height")}</Label>
           <NumberBox compact value={info.lift} step={0.25} min={-5.3} max={12} unit=" m" onChange={(v) => set("lift", v)} />
           {!info.free && (
             <>
-              <Label>From road</Label>
+              <Label>{t("From road")}</Label>
               <NumberBox compact value={info.gap ?? 2} step={0.25} min={-2} max={30} unit=" m" onChange={(v) => set("gap", v)} />
             </>
           )}
@@ -160,11 +161,11 @@ export const Arrange = (props: {
         {info.free && (
         <div className={styles.barRow}>
             <>
-              <Label>Rotate</Label>
+              <Label>{t("Rotate")}</Label>
               <NumberBox compact value={Math.round(info.angle)} step={15} min={-360} max={720} unit="°" onChange={(v) => set("angle", v)} />
-              <Label>Base</Label>
+              <Label>{t("Base")}</Label>
               <NumberBox compact value={info.elevation} step={0.25} min={-5} max={40} unit=" m" onChange={(v) => set("elevation", v)} />
-              <Label>Road width</Label>
+              <Label>{t("Road width")}</Label>
               <NumberBox compact value={info.width} step={1} min={4} max={60} unit=" m" onChange={(v) => set("width", v)} />
             </>
         </div>
@@ -184,7 +185,7 @@ export const Arrange = (props: {
             return (
               <div key={k} className={k === dragLane && snapping ? styles.laneOn : l[1] ? styles.lane : styles.laneOther}
                 style={{ left: px(l[0]) - 18 + "px", top: roadY + 3 + "px" }}
-                title={l[1] ? "A lane this side's signs face" : "Traffic the other way"}>
+                title={l[1] ? t("A lane this side's signs face") : t("Traffic the other way")}>
                 <ArrowIcon direction={l[1] ? "up" : "down"} size={10} color={k === dragLane && snapping ? "#ffd400" : "rgba(255,255,255,0.8)"} />
                 {faced >= 0 && <span style={{ marginLeft: "2px" }}>{`${faced + 1}`}</span>}
               </div>
@@ -203,24 +204,24 @@ export const Arrange = (props: {
           ))}
         </div>
         <div className={styles.barRow}>
-          <div className={styles.chip} style={{ alignSelf: "center", marginRight: "14rem" }} onClick={props.onAddSign}>Add sign</div>
+          <div className={styles.chip} style={{ alignSelf: "center", marginRight: "14rem" }} onClick={props.onAddSign}>{t("Add sign")}</div>
           {signs.length > 0 && (
           <>
-            <div className={styles.barLabel}>Nudge</div>
-            <Step title="Left (Shift: more, Ctrl: less)" onClick={(e) => arrange({ op: "nudge", index: signs[sel].index, value: -stepOf(e) })}><ArrowIcon direction="left" size={12} /></Step>
-            <Step title="Right (Shift: more, Ctrl: less)" onClick={(e) => arrange({ op: "nudge", index: signs[sel].index, value: stepOf(e) })}><ArrowIcon direction="right" size={12} /></Step>
-            <Step title="Up (Shift: more, Ctrl: less)" onClick={(e) => arrange({ op: "raiseSign", index: signs[sel].index, value: stepOf(e) })}><ArrowIcon direction="up" size={12} /></Step>
-            <Step title="Down (Shift: more, Ctrl: less)" onClick={(e) => arrange({ op: "raiseSign", index: signs[sel].index, value: -stepOf(e) })}><ArrowIcon direction="down" size={12} /></Step>
-            <div className={styles.chip} style={{ marginLeft: "12rem" }} onClick={() => props.onEditSign(signs[sel].index, signs[sel].design)}>Edit sign</div>
-            <div className={styles.chip} onClick={() => arrange({ op: "duplicateSign", index: signs[sel].index })}>Duplicate</div>
-            <div className={styles.chip} onClick={() => { arrange({ op: "removeSign", index: signs[sel].index }); setSelected(0); }}>Remove</div>
+            <div className={styles.barLabel}>{t("Nudge")}</div>
+            <Step title={t("Left (Shift: more, Ctrl: less)")} onClick={(e) => arrange({ op: "nudge", index: signs[sel].index, value: -stepOf(e) })}><ArrowIcon direction="left" size={12} /></Step>
+            <Step title={t("Right (Shift: more, Ctrl: less)")} onClick={(e) => arrange({ op: "nudge", index: signs[sel].index, value: stepOf(e) })}><ArrowIcon direction="right" size={12} /></Step>
+            <Step title={t("Up (Shift: more, Ctrl: less)")} onClick={(e) => arrange({ op: "raiseSign", index: signs[sel].index, value: stepOf(e) })}><ArrowIcon direction="up" size={12} /></Step>
+            <Step title={t("Down (Shift: more, Ctrl: less)")} onClick={(e) => arrange({ op: "raiseSign", index: signs[sel].index, value: -stepOf(e) })}><ArrowIcon direction="down" size={12} /></Step>
+            <div className={styles.chip} style={{ marginLeft: "12rem" }} onClick={() => props.onEditSign(signs[sel].index, signs[sel].design)}>{t("Edit sign")}</div>
+            <div className={styles.chip} onClick={() => arrange({ op: "duplicateSign", index: signs[sel].index })}>{t("Duplicate")}</div>
+            <div className={styles.chip} onClick={() => { arrange({ op: "removeSign", index: signs[sel].index }); setSelected(0); }}>{t("Remove")}</div>
           </>
           )}
           {info.span !== "cantilever" && (
             <>
               {/* Pushes the hint to the right end (Gameface has no auto margins). */}
               <div style={{ flexGrow: 1 }} />
-              <div className={styles.hint}>Click a road to add it to the gantry's span, or click it again to remove it.</div>
+              <div className={styles.hint}>{t("Click a road to add it to the gantry's span, or click it again to remove it.")}</div>
             </>
           )}
         </div>

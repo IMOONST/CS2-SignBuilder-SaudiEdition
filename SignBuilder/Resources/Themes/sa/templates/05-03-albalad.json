@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "albalad",
+  "name": "سياحية: جدة التاريخية",
+  "scheme": "brown",
+  "arabicFont": "Amiri",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "جدة التاريخية - البلد",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "Historic Jeddah - Al Balad",
+              "height": 9.8
+            }
+          ]
+        },
+        {
+          "type": "arrow",
+          "direction": "left"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "dir-east",
+  "name": "إرشادية: اتجاه شرق",
+  "scheme": "green",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "شرق",
+          "height": 12
+        },
+        {
+          "type": "chip",
+          "scheme": "white",
+          "items": [
+            {
+              "type": "text",
+              "text": "E",
+              "height": 11
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

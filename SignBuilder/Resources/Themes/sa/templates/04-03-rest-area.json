@@ -1,0 +1,42 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "rest-area",
+  "name": "خدمات: استراحة",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/rest-area",
+          "height": 22,
+          "box": {}
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "استراحة",
+              "height": 13
+            },
+            {
+              "type": "text",
+              "text": "Rest Area",
+              "height": 10.7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "text": "5 كم",
+      "height": 12
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "kafd",
+  "name": "داخل المدن: مركز الملك عبدالله المالي",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "مركز الملك عبدالله المالي",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "KAFD",
+              "height": 9.8
+            }
+          ]
+        },
+        {
+          "type": "arrow",
+          "direction": "up"
+        }
+      ]
+    }
+  ]
+}

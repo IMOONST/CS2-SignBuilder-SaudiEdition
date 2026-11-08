@@ -1,0 +1,17 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "travel-time",
+  "name": "لوحات إلكترونية: زمن الرحلة",
+  "board": "led",
+  "items": [
+    {
+      "type": "led",
+      "lines": [
+        "المطار 15 دقيقة",
+        "AIRPORT 15 MIN"
+      ],
+      "height": 10
+    }
+  ]
+}

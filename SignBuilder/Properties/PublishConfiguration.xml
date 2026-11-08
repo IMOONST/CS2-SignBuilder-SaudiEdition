@@ -1,70 +1,205 @@
-﻿<Publish>
-	<ModId Value="165726" />
-	<DisplayName Value="Sign Builder" />
-	<ShortDescription Value="Design road signs in game and place them on gantries, posts, or any surface" />
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Publish>
+	<!--No ModId: this is a NEW mod. Paradox Mods assigns the id on the first publish (PublishNewMod) and the toolchain
+	writes it here. Never put the original Sign Builder id (165726) back: it would try to overwrite Andy Smith's mod.-->
+	<DisplayName Value="Sign Builder: Saudi Edition" />
+	<ShortDescription Value="Extended Sign Builder: new tools (sign manager, road pick, live Your Speed signs, weather LED glow), reworked Arabic text, and a Saudi theme with 130+ templates." />
 	<LongDescription>
-# Sign Builder
-**Design, edit, and build road signs in game and put them on your roads.**
+# Sign Builder: Saudi Edition
 
-## Features
-- Sign designer
-- Gantry editor
-- Place signs on gantries, posts, or any surface
-- Themes: United States, Canada, United Kingdom, Australia, China, Switzerland, Germany, France, Italy, Japan, Nordic, and Russia.
+**Design Saudi road signs in game, in Arabic and English, and place them on gantries, posts or any surface.**
 
-## Designer
-- Live, to-scale preview with templates for multiple countries.
-- Parts: text, route shields, arrows, lane diagrams (exits, forks, roundabouts), LED text,
-dividers, exit tabs, and more.
-- LED message boards with dot-matrix lettering that glows at night
-- Fonts, colors, and spacing from each country's sign style; save your own templates
+An extended edition of **Sign Builder** by **Andy Smith** (MIT license). It is not just a translation: it adds new tools the original does not have, reworks how text is laid out on signs, and brings a complete Saudi theme. Every feature of the original is kept, and the interface is in English or Arabic, so it works for any player.
 
-## Placement
-- Place gantries across roads: double or single truss, curved or straight tube, span or
-cantilever, signs on both sides
-- Arrange signs over lanes and add lights
-- Roadside signs on posts, or the sign as a prop on any surface
-- Edit placed signs and gantries
+## What's new compared to the original Sign Builder
+**New tools**
+- Sign manager: all signs in the city in one searchable list.
+- Pick a road: street, district and speed limit read from the map, with live {street}, {district} and {speed} placeholders.
+- "Your Speed" signs that react to real passing traffic.
+- LED glow that follows night, fog and rain.
+- Template packs: export and import your designs.
+- Line spacing and part spacing controls.
+- Interface language option (Auto / Arabic / English), applied instantly.
+- Delete a sign straight from its info panel.
 
-## Sharing
-- Placed signs are normal objects saved with your city; the city rebuilds them on any PC
-with Sign Builder.
-- Themes are plain files: make your own, or publish theme packs on Paradox Mods (template
-included on GitHub)
-- Safe: The mod can be removed without any save corruption, signs will remain as unrendered gray blobs you can delete.
+**Improvements**
+- Reworked text layout for right-to-left scripts: connected Arabic letters, correct order in lines that mix Arabic, Latin and numbers, no overlap between scripts, no unwanted line breaks, extra room above and below Arabic lines.
+- Five Arabic fonts added to the font list.
+- A new theme, new route shields and a new symbol library (below), all made for this edition.
+- Fully independent from the original (own id, files, settings, sign data and styles), so both can be installed side by side.
 
-# How to Use
-1. Click the Sign Builder button in the top-left toolbar.
-2. Pick a template from the library, or start from scratch. Click a part in the preview to edit it, or use Add part to add text, route shields, arrows, lane diagrams and more.
-3. Choose how to place the sign:
-    - **Gantry**: click a road to place a gantry across it. Click other roads alongside to widen the span, add more signs, move them over lanes, set the height and the posts' distance from the road, then click Build.
-    - **Roadside**: a sign on posts beside the road. Rotate it with right-drag, raise or lower it with Ctrl + mouse wheel, and move it closer to or farther from the road with Alt + mouse wheel.
-    - **Prop**: just the sign, on any surface or the side of an elevated road.
-4. To change a placed sign or gantry, click it and choose Edit, Move or Duplicate.
+## Saudi and Arabic features
+- **Correct Arabic on signs**: connected letters and right-to-left order, including lines that mix Arabic, English and numbers.
+- **Arabic fonts**, per sign part: Cairo, Cairo Black, Tajawal, Tajawal ExtraBold and Amiri.
+- **"Saudi Arabia" theme with 130+ ready templates** in 10 categories: guide signs between cities, expressways, city streets, services, tourist, regulatory, warning, road works, LED message boards and "Your Speed" signs.
+- **Saudi route shields**: primary (map) shield, secondary, branch, speed limit roundel and stop sign, with Arabic-Indic digits.
+- **Saudi symbol library** (56 pictograms): camels, mosques, fuel, speed bumps, services, warnings and more.
+- **Spacing controls**: line spacing and spacing between sign parts.
+- **Full Arabic interface**: language option Auto / Arabic / English, applied at once.
 
-## Tips
-- Hold Shift for bigger steps or Ctrl for finer steps on the nudge buttons.
-- Save your own designs to the template library to reuse them.
-- Turn on Lights to add a light below each sign; it switches on at dusk.
+## New tools in this edition
+- **Sign manager**: every sign placed in the city in one list: search, jump to a sign, delete it.
+- **Pick a road**: click a road to fill in its street name, district and speed limit, with {street}, {district} and {speed} placeholders and template suggestions for the road class.
+- **"Your Speed" signs**: switch between a happy and a sad face based on the real speed of passing traffic.
+- **Smarter LED glow**: LED boards glow stronger at night and in fog and rain.
+- **Template export and import**: share your designs as pack files.
+- **Delete a placed sign** right from its info panel.
+
+## Original Sign Builder features (all kept)
+- Live, to-scale designer: text, route shields, arrows, lane diagrams, LED text, dividers, symbols and more.
+- Gantries across roads: double or single truss, straight or curved tube, span or cantilever, signs on both sides.
+- Roadside signs on posts, or the sign as a prop on any surface, with lights that switch on at dusk.
+- Other themes: United States, Canada, United Kingdom, Australia, China, Switzerland, Germany, France, Italy, Japan, Netherlands, Poland, Nordic and Russia.
+- Edit, move and duplicate placed signs and gantries; save your own templates.
+
+## How it works
+**1. Open the designer.** Click the Sign Builder button in the top-left toolbar (or set a shortcut in Options → Sign Builder: Saudi Edition → Keys).
+
+**2. Start from a template.** Choose the theme "Saudi Arabia" (السعودية), pick a category, then a template. Or start from scratch.
+
+**3. Edit the sign.** Click any part in the live preview to edit it:
+- type Arabic and English text: Arabic is joined and ordered right to left by itself;
+- choose a font per part (Cairo, Tajawal, Amiri…);
+- add shields, arrows, symbols from the Saudi library, lane diagrams or LED text;
+- adjust Line spacing and Spacing between parts (in %) when a sign looks crowded.
+
+**4. Fill it from the map (optional).** In "From the map", press "Pick a road" and click a road: use its street name, district name or speed limit, or insert {street}, {district} and {speed} so each copy of the sign shows the road it stands on. Right click or Esc cancels.
+
+**5. Place it.** Choose how:
+- **Gantry**: drag across the road; choose the structure (truss, tube, span, cantilever) and arrange the signs on it.
+- **Roadside**: on posts next to the road.
+- **Prop**: the sign alone, on any surface.
+
+**6. Change it later.** Click a placed sign: Edit, Move, Duplicate or Delete. The Sign manager (its toolbar button) lists every sign in the city.
+
+**7. "Your Speed" signs.** Place a template from the "Your Speed" category beside a road: it shows a happy face while passing cars respect the limit and a sad face when they speed.
+
+**8. Share templates.** Save your designs as templates; Export writes all of them into one pack file (Export folder), Import adds every pack in the Import folder.
+
+Options page: interface language, keys, and cleanup of unused sign structures.
+
+## Notes
+- This is a separate mod from the original Sign Builder (its own id, files, settings and sign data), so the two can be installed side by side. Signs made with one are not shown by the other.
+- Removing the mod does not corrupt your save; its signs remain as gray shapes you can delete.
+
+## Credits and licenses
+- Original mod: **Sign Builder** by **Andy Smith**, https://github.com/andyjsmith/CS2-SignBuilder, MIT license. Huge thanks for the original work.
+- Arabic fonts Cairo, Tajawal and Amiri: SIL Open Font License (OFL).
+- Pictograms from Material Design Icons (Apache 2.0), the camel from game-icons.net (CC BY 3.0), and Temaki and Maki (CC0). Details in CREDITS.txt inside the mod.
+
+---
+
+# بناء اللوحات: النسخة السعودية
+
+**صمّم لوحات الطرق السعودية داخل اللعبة بالعربي والإنجليزي، وركّبها على الجسور والأعمدة وجوانب الطرق.**
+
+نسخة مطوّرة من مود **Sign Builder** للمطوّر **Andy Smith** (رخصة MIT). مو مجرد تعريب: فيها أدوات جديدة ما هي موجودة في الأصلي، وإعادة بناء لطريقة كتابة النصوص على اللوحات، ونمط سعودي متكامل. كل ميزات الأصلي باقية، والواجهة بالعربي أو الإنجليزي، فتناسب أي لاعب.
+
+## وش الجديد مقارنة بـ Sign Builder الأصلي
+**أدوات جديدة**
+- مدير اللوحات: كل لوحات المدينة في قائمة وحدة مع بحث.
+- اختيار الطريق: اسم الشارع والحي وحد السرعة من الخريطة، مع المتغيرات {street} و {district} و {speed}.
+- لوحات "سرعتك" تتفاعل مع سرعة السيارات المارّة فعلاً.
+- توهّج LED يتغير حسب الليل والضباب والمطر.
+- حزم القوالب: تصدير واستيراد تصاميمك.
+- التحكم في تباعد الأسطر والتباعد بين الأجزاء.
+- خيار لغة الواجهة (تلقائي / العربية / الإنجليزية) يتطبق فوراً.
+- حذف اللوحة مباشرة من لوحة معلوماتها.
+
+**تحسينات**
+- إعادة بناء طريقة كتابة النصوص من اليمين لليسار: حروف عربية متصلة، وترتيب صحيح في السطور اللي تجمع العربي والإنجليزي والأرقام، بدون تداخل بين اللغتين، وبدون انقسام السطر بالغلط، ومسافة إضافية فوق وتحت السطر العربي.
+- خمسة خطوط عربية مضافة لقائمة الخطوط.
+- نمط جديد ودروع طرق جديدة ومكتبة رموز جديدة (بالأسفل)، كلها مصنوعة لهذي النسخة.
+- مستقل تماماً عن الأصلي (معرّف وملفات وإعدادات وبيانات لوحات وتنسيقات خاصة فيه)، فتقدر تثبّت الاثنين مع بعض.
+
+## الميزات السعودية والعربية
+- **كتابة عربية صحيحة على اللوحات**: حروف متصلة واتجاه من اليمين لليسار، حتى في السطور اللي تجمع العربي والإنجليزي والأرقام.
+- **خطوط عربية** لكل جزء من اللوحة: Cairo و Cairo Black و Tajawal و Tajawal ExtraBold و Amiri.
+- **نمط "السعودية" بأكثر من 130 قالباً جاهزاً** في 10 فئات: إرشادية بين المدن، طرق سريعة، شوارع المدن، خدمات، سياحية، تنظيمية، تحذيرية، أعمال طرق، لوحات رسائل إلكترونية (LED)، ولوحات "سرعتك".
+- **دروع الطرق السعودية**: الطريق الرئيسي (الخريطة)، الثانوي، الفرعي، دائرة حد السرعة، وعلامة قف، بالأرقام العربية.
+- **مكتبة رموز سعودية** (56 رمزاً): الجمال، المساجد، الوقود، المطبات، الخدمات، التحذيرات وغيرها.
+- **التحكم في المسافات**: تباعد الأسطر والتباعد بين أجزاء اللوحة.
+- **واجهة عربية كاملة**: خيار اللغة تلقائي / العربية / الإنجليزية ويتطبق فوراً.
+
+## أدوات جديدة في هذه النسخة
+- **مدير اللوحات**: كل اللوحات المركّبة في المدينة في قائمة وحدة: بحث، انتقال للوحة، حذف.
+- **اختيار الطريق**: تضغط على طريق فيعبّي اسم الشارع والحي وحد السرعة، مع المتغيرات {street} و {district} و {speed} واقتراح قوالب تناسب نوع الطريق.
+- **لوحات "سرعتك"**: تتحول بين وجه مبتسم ووجه حزين حسب سرعة السيارات المارّة فعلاً.
+- **إضاءة LED أذكى**: توهّج اللوحات الإلكترونية يقوى في الليل والضباب والمطر.
+- **تصدير واستيراد القوالب**: شارك تصاميمك كملفات حزم.
+- **حذف اللوحة** مباشرة من لوحة معلوماتها.
+
+## ميزات Sign Builder الأصلية (باقية كلها)
+- مصمّم بمعاينة حيّة وبمقاس حقيقي: نصوص، دروع طرق، أسهم، مخططات حارات، نص LED، فواصل، رموز وغيرها.
+- جسور اللوحات فوق الطرق: جمالون مزدوج أو مفرد، أنبوب مستقيم أو منحني، ممتد أو كابولي، ولوحات على الجهتين.
+- لوحات جانبية على أعمدة، أو اللوحة كقطعة مستقلة على أي سطح، مع إضاءة تشتغل عند الغروب.
+- أنماط دول أخرى: أمريكا، كندا، بريطانيا، أستراليا، الصين، سويسرا، ألمانيا، فرنسا، إيطاليا، اليابان، هولندا، بولندا، دول الشمال، وروسيا.
+- تعديل ونقل ونسخ اللوحات والجسور بعد تركيبها، وحفظ قوالبك الخاصة.
+
+## طريقة العمل
+**1. افتح المصمّم.** اضغط زر Sign Builder في شريط الأدوات أعلى اليسار (أو حدد اختصار من الإعدادات ← Sign Builder: Saudi Edition ← المفاتيح).
+
+**2. ابدأ من قالب.** اختر النمط "السعودية"، ثم الفئة، ثم القالب. أو ابدأ من الصفر.
+
+**3. عدّل اللوحة.** اضغط على أي جزء في المعاينة لتعديله:
+- اكتب النص بالعربي والإنجليزي: العربي يتصل ويترتب من اليمين لليسار تلقائياً؛
+- اختر خط لكل جزء (Cairo، Tajawal، Amiri…)؛
+- أضف دروع وأسهم ورموز من المكتبة السعودية أو مخططات حارات أو نص LED؛
+- عدّل "تباعد الأسطر" و"التباعد بين الأجزاء" (بالنسبة المئوية) إذا اللوحة مزدحمة.
+
+**4. عبّيها من الخريطة (اختياري).** في قسم "من الخريطة" اضغط "اختر طريقاً" ثم اضغط على طريق: استخدم اسم الشارع أو الحي أو حد السرعة، أو أدرج {street} و {district} و {speed} عشان كل نسخة من اللوحة تعرض بيانات الطريق اللي هي عليه. الزر الأيمن أو Esc يلغي.
+
+**5. ركّبها.** اختر الطريقة:
+- **جسر لوحات**: اسحب فوق الطريق، واختر الهيكل (جمالون، أنبوب، ممتد، كابولي) ورتّب اللوحات عليه.
+- **جانب الطريق**: على أعمدة جنب الطريق.
+- **قطعة مستقلة**: اللوحة لحالها على أي سطح.
+
+**6. عدّلها بعدين.** اضغط على اللوحة المركّبة: تعديل، نقل، نسخ، أو حذف. ومدير اللوحات (من زره في شريط الأدوات) يعرض كل لوحات المدينة.
+
+**7. لوحات "سرعتك".** ركّب قالب من فئة "سرعتك" جنب الطريق: يعرض وجه مبتسم لما السيارات ملتزمة بالسرعة، ووجه حزين لما تتجاوزها.
+
+**8. شارك القوالب.** احفظ تصاميمك كقوالب؛ "تصدير" يحفظها كلها في ملف حزمة واحد (مجلد Export)، و"استيراد" يضيف كل الحزم اللي في مجلد Import.
+
+صفحة الإعدادات: لغة الواجهة، المفاتيح، وتنظيف هياكل اللوحات غير المستخدمة.
+
+## ملاحظات
+- هذا مود منفصل عن Sign Builder الأصلي (معرّفه وملفاته وإعداداته وبيانات لوحاته خاصة فيه)، فتقدر تثبّت الاثنين مع بعض. اللوحات المصنوعة بواحد ما تظهر في الثاني.
+- إزالة المود ما تخرّب ملف الحفظ؛ لوحاته تبقى كأشكال رمادية تقدر تحذفها.
+
+## الشكر والتراخيص
+- المود الأصلي: **Sign Builder** من تطوير **Andy Smith**، https://github.com/andyjsmith/CS2-SignBuilder، برخصة MIT. شكراً جزيلاً له على هذا العمل الرائع.
+- الخطوط العربية Cairo و Tajawal و Amiri برخصة SIL Open Font License (OFL).
+- رموز من Material Design Icons (Apache 2.0)، ورمز الجمل من game-icons.net (CC BY 3.0)، ورموز من Temaki و Maki (CC0). التفاصيل في ملف CREDITS.txt داخل المود.
 	</LongDescription>
+	<!--New thumbnail made for this edition (1024x1024). The original is kept as Thumbnail-original.png (not published).-->
 	<Thumbnail Value="Properties/Thumbnail.png" />
-	<Screenshot Value="Properties/Screenshot1.png" />
-	<Screenshot Value="Properties/Screenshot2.png" />
-	<Screenshot Value="Properties/Screenshot3.png" />
-	<Screenshot Value="Properties/Screenshot4.png" />
-	<Screenshot Value="Properties/Screenshot5.png" />
-	<Screenshot Value="Properties/Screenshot6.png" />
-	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/sign-builder.1947897/" />
-	<ModVersion Value="1.0.2" />
+	<!--New screenshots, saved by the user from the game (see README-PUBLISH.md). The old Screenshot1-6.png files in
+	this folder are the original mod's and are deliberately NOT referenced; the new ones use the names below.-->
+	<Screenshot Value="Properties/SA-Screenshot1.png" />
+	<Screenshot Value="Properties/SA-Screenshot2.png" />
+	<Screenshot Value="Properties/SA-Screenshot3.png" />
+	<Screenshot Value="Properties/SA-Screenshot4.png" />
+	<Screenshot Value="Properties/SA-Screenshot5.png" />
+	<Screenshot Value="Properties/SA-Screenshot6.png" />
+	<Tag Value="Code Mod" />
+	<ExternalLink Type="github" Url="https://github.com/IMOONST/CS2-SignBuilder-SaudiEdition" />
+	<ModVersion Value="1.0.0" />
 	<GameVersion Value="1.6.*" />
 	<ChangeLog>
-Performance:
-- Fix large FPS drop in big cities once a sign with lights or LED lettering was placed. Switching sign lights at dusk no longer checks every object in the city.
+1.0.0 - First release / الإصدار الأول
 
-Changes:
-- LED lettering now stays lit day and night, like the game's neon signs. Sign lights still turn on at dusk.
-- Added optional keybinding for opening Sign Builder.
+- New tools not in the original: sign manager, road pick, "Your Speed" signs, weather-aware LED glow, template packs, spacing controls, language option.
+- Reworked right-to-left text layout: correct Arabic on signs, mixed Arabic/English lines without overlap. Cairo, Tajawal and Amiri fonts.
+- "Saudi Arabia" theme with 130+ templates, Saudi route shields and a Saudi symbol library.
+- Sign manager, pick a road to fill names and speed, "Your Speed" signs, LED glow by night and weather, template export and import.
+- Separate from the original Sign Builder: both can be installed together.
+- Based on Sign Builder by Andy Smith (MIT).
+
+- أدوات جديدة ما هي في الأصلي: مدير اللوحات، اختيار الطريق، لوحات "سرعتك"، توهّج LED حسب الجو، حزم القوالب، التحكم في المسافات، وخيار اللغة.
+- إعادة بناء الكتابة من اليمين لليسار: عربي صحيح على اللوحات، وسطور عربي وإنجليزي بدون تداخل. خطوط Cairo و Tajawal و Amiri.
+- نمط "السعودية" بأكثر من 130 قالباً، دروع الطرق السعودية، ومكتبة رموز سعودية.
+- مدير اللوحات، اختيار الطريق لتعبئة الاسم والسرعة، لوحات "سرعتك"، إضاءة LED حسب الليل والطقس، تصدير واستيراد القوالب.
+- منفصل عن Sign Builder الأصلي: تقدر تثبّت الاثنين مع بعض.
 	</ChangeLog>
-	<ExternalLink Type="github" Url="https://github.com/andyjsmith/CS2-SignBuilder" />
 	<AccessLevel Value="Public" />
 </Publish>

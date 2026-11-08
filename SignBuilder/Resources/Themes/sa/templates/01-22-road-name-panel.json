@@ -1,0 +1,120 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "road-name-panel",
+  "name": "إرشادية: اسم الطريق مع الوجهات",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "shield",
+          "network": "SAP",
+          "number": "٤٠",
+          "height": 16
+        },
+        {
+          "type": "shield",
+          "network": "SAP",
+          "number": "٦٥",
+          "height": 16
+        },
+        {
+          "type": "symbol",
+          "symbol": "sa/fuel",
+          "height": 16,
+          "box": {}
+        },
+        {
+          "type": "symbol",
+          "symbol": "sa/rest-area",
+          "height": 16,
+          "box": {}
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "arrow",
+          "direction": "up",
+          "height": 20
+        },
+        {
+          "type": "panel",
+          "scheme": "green",
+          "align": "center",
+          "items": [
+            {
+              "type": "column",
+              "align": "center",
+              "items": [
+                {
+                  "type": "text",
+                  "text": "طريق الأمير سلمان بن عبدالعزيز",
+                  "height": 11
+                },
+                {
+                  "type": "text",
+                  "text": "PRINCE SALMAN BIN ABDULAZIZ ROAD",
+                  "height": 9
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "items": [
+                {
+                  "type": "text",
+                  "text": "(WEST)",
+                  "height": 9
+                },
+                {
+                  "type": "text",
+                  "text": "(غرب)",
+                  "height": 9
+                }
+              ],
+              "justify": "between"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "QASSIM",
+          "height": 11
+        },
+        {
+          "type": "text",
+          "text": "القصيم",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "AL MADINAH",
+          "height": 11
+        },
+        {
+          "type": "text",
+          "text": "المدينة المنورة",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    }
+  ]
+}

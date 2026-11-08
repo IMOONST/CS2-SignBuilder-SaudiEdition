@@ -1,0 +1,26 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "souq",
+  "name": "سياحية: سوق الزل",
+  "scheme": "clay",
+  "arabicFont": "Amiri",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "سوق الزل",
+          "height": 14
+        },
+        {
+          "type": "text",
+          "text": "Souq Al Zal",
+          "height": 11.5
+        }
+      ]
+    }
+  ]
+}

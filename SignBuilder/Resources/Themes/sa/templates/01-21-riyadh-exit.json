@@ -1,0 +1,133 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "riyadh-exit",
+  "name": "إرشادية: مخرج علوي (طراز الرياض)",
+  "scheme": "blue",
+  "support": "curved/cantilever",
+  "items": [
+    {
+      "type": "tab",
+      "align": "right",
+      "items": [
+        {
+          "type": "text",
+          "text": "مخرج EXIT",
+          "height": 11
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "shield",
+          "network": "SAP",
+          "number": "٤٠",
+          "height": 18
+        },
+        {
+          "type": "chip",
+          "scheme": "green",
+          "items": [
+            {
+              "type": "text",
+              "text": "شمال N",
+              "height": 9
+            }
+          ]
+        },
+        {
+          "type": "shield",
+          "network": "SAS",
+          "number": "٥",
+          "height": 18
+        },
+        {
+          "type": "symbol",
+          "symbol": "sa/airport",
+          "height": 18,
+          "box": {}
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "shield",
+          "network": "SAP",
+          "number": "٤٠",
+          "height": 16
+        },
+        {
+          "type": "shield",
+          "network": "SAB",
+          "number": "٢٢٢",
+          "height": 16
+        },
+        {
+          "type": "shield",
+          "network": "SAS",
+          "number": "٦٥",
+          "height": 16
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "AR RIYADH",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "الرياض",
+          "height": 14
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "panel",
+      "scheme": "white",
+      "align": "center",
+      "items": [
+        {
+          "type": "column",
+          "align": "center",
+          "items": [
+            {
+              "type": "text",
+              "text": "وسط الدمام",
+              "height": 11
+            },
+            {
+              "type": "text",
+              "text": "DAMMAM CENTER",
+              "height": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "1 KM",
+          "height": 10
+        },
+        {
+          "type": "text",
+          "text": "1 كم",
+          "height": 10
+        }
+      ],
+      "justify": "between"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "sign-phone",
+  "name": "خدمات: لوحة هاتف",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/phone",
+      "height": 34,
+      "color": "#000000",
+      "box": {
+        "background": "#ffffff",
+        "border": false
+      }
+    }
+  ]
+}

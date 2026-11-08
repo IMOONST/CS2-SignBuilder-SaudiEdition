@@ -1,0 +1,14 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "no-overtaking",
+  "name": "تنظيمية: ممنوع التجاوز",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/no-overtaking",
+      "height": 62
+    }
+  ]
+}

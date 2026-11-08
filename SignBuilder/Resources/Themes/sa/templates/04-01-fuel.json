@@ -1,0 +1,42 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "fuel",
+  "name": "خدمات: محطة وقود",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/fuel",
+          "height": 22,
+          "box": {}
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "محطة وقود",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "Petrol Station",
+              "height": 9.8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "text": "2 كم",
+      "height": 12
+    }
+  ]
+}

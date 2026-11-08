@@ -1,0 +1,17 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "seatbelt-led",
+  "name": "لوحات إلكترونية: حزام الأمان",
+  "board": "led",
+  "items": [
+    {
+      "type": "led",
+      "lines": [
+        "اربط حزام الأمان",
+        "FASTEN SEAT BELT"
+      ],
+      "height": 10
+    }
+  ]
+}

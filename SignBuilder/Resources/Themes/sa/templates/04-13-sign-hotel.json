@@ -1,0 +1,20 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "sign-hotel",
+  "name": "خدمات: لوحة فندق",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/hotel",
+      "height": 34,
+      "color": "#000000",
+      "box": {
+        "background": "#ffffff",
+        "border": false
+      }
+    }
+  ]
+}

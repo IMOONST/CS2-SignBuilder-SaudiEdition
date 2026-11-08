@@ -1,0 +1,28 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "sign-hospital",
+  "name": "خدمات: لوحة مستشفى",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/hospital",
+      "height": 34,
+      "color": "#000000",
+      "box": {
+        "background": "#ffffff",
+        "border": false
+      }
+    },
+    {
+      "type": "text",
+      "text": "500 م",
+      "height": 12,
+      "margin": {
+        "top": 6
+      }
+    }
+  ]
+}

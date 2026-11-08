@@ -1,0 +1,15 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "route-branch",
+  "name": "إرشادية: طريق فرعي",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "shield",
+      "network": "SAB",
+      "number": "٢٢٢٢",
+      "height": 36
+    }
+  ]
+}

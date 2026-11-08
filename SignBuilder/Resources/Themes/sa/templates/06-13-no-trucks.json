@@ -1,0 +1,19 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "no-trucks",
+  "name": "تنظيمية: ممنوع الشاحنات",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/no-trucks",
+      "height": 62
+    },
+    {
+      "type": "text",
+      "text": "ممنوع دخول الشاحنات",
+      "height": 11
+    }
+  ]
+}

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace SignBuilder.Assemblies
+namespace SignBuilderSA.Assemblies
 {
     /// <summary>
     /// The outline of a sign face as rectangles (UV space, 0..1, origin bottom-left), read from the baked

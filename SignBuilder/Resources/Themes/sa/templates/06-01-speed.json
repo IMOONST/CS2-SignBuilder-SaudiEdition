@@ -1,0 +1,25 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "speed",
+  "name": "تنظيمية: حد السرعة",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "shield",
+      "network": "SPD",
+      "number": "120",
+      "height": 62
+    },
+    {
+      "type": "text",
+      "text": "السرعة القصوى",
+      "height": 11
+    },
+    {
+      "type": "text",
+      "text": "MAX SPEED",
+      "height": 9
+    }
+  ]
+}

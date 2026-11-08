@@ -10,11 +10,11 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
-using SignBuilder.Core;
-using SignBuilder.Geometry;
-using SignBuilder.Tools;
+using SignBuilderSA.Core;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Assemblies
+namespace SignBuilderSA.Assemblies
 {
     /// <summary>
     /// Turns generated meshes into real game props (GeometryAsset -> RenderPrefab -> StaticObjectPrefab)
@@ -92,7 +92,7 @@ namespace SignBuilder.Assemblies
         public StaticObjectPrefab Register(string name, GeometryAsset geometry, SurfaceAsset[] surfaces, Bounds3 bounds, int indexCount, int vertexCount,
             (GeometryAsset geometry, int indexCount, int vertexCount)? lod = null, float[] lightSpots = null, int[] glowMeshes = null)
         {
-            if (name.StartsWith("SignBuilder_A_")) Core.AssetNames.Add(name);
+            if (name.StartsWith("SignBuilderSA_A_")) Core.AssetNames.Add(name);
             if (m_PrefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), name), out var existing)) return existing as StaticObjectPrefab;
             var renderPrefab = ScriptableObject.CreateInstance<RenderPrefab>();
             renderPrefab.name = name + "_Mesh";
@@ -153,6 +153,8 @@ namespace SignBuilder.Assemblies
             {
                 throw new InvalidOperationException($"PrefabSystem.AddPrefab failed for {name}");
             }
+            // LED lettering glows brighter at night and in fog, rain or dust (SignLightSystem scales its emissive light).
+            if (glowMeshes != null && glowMeshes.Length > 0) Systems.SignLightSystem.TrackGlow(objectPrefab);
             return objectPrefab;
         }
 
@@ -177,7 +179,7 @@ namespace SignBuilder.Assemblies
         }
 
         private static EffectPrefab s_SignLight;
-        private const string kSignLightName = "SignBuilder_SignLight3";
+        private const string kSignLightName = "SignBuilderSA_SignLight3";
 
         /// <summary>
         /// The light every sign fixture uses: a warm-white spot light, on when it gets dark (SignLightSystem). Created once and registered

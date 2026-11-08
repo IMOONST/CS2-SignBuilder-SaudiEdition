@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Game.SceneFlow;
 using Newtonsoft.Json.Linq;
-using SignBuilder.Assemblies;
-using SignBuilder.Core;
-using SignBuilder.Systems;
-using SignBuilder.Tools;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Core;
+using SignBuilderSA.Systems;
+using SignBuilderSA.Tools;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace SignBuilder.Tests
+namespace SignBuilderSA.Tests
 {
     internal sealed partial class SpikeRunner
     {
@@ -90,7 +90,7 @@ namespace SignBuilder.Tests
         {
             ui.TestReport = null;
             GameManager.instance.userInterface.view.View.ExecuteScript(
-                "try { engine.trigger('SignBuilder.testReport', JSON.stringify((function () { " + script + " })())); } catch (e) { engine.trigger('SignBuilder.testReport', 'ERROR ' + e); }");
+                "try { engine.trigger('SignBuilderSA.testReport', JSON.stringify((function () { " + script + " })())); } catch (e) { engine.trigger('SignBuilderSA.testReport', 'ERROR ' + e); }");
             for (var i = 0; i < 60 && ui.TestReport == null; i++) yield return null;
             SpikeReport.Set(key, ui.TestReport ?? "no report");
         }
@@ -109,12 +109,12 @@ namespace SignBuilder.Tests
             ui.OpenForEdit(new AssemblyRecord { Designs = new List<JObject> { SymbolDesign(2) } }, "new");
             yield return new WaitForSecondsRealtime(3f);
             // The boxed snowflake: its settings.
-            Run("window.__signBuilderSelect('0.0');");
+            Run("window.__signBuilderSASelect('0.0');");
             yield return new WaitForSecondsRealtime(1.5f);
             SpikeReport.Screenshot("sym_designer_symbol.png");
             yield return Ask(ui, "var t = document.body.textContent; return { symbolButton: t.indexOf('Snowflake') >= 0, display: t.indexOf('In a box') >= 0, boxBackground: t.indexOf('Box background') >= 0, borderColor: t.indexOf('Border color') >= 0 };", "sym.designer.symbolOptions");
             // The picker: symbols by category, then the theme's arrows.
-            Run("window.__signBuilderPickSymbol();");
+            Run("window.__signBuilderSAPickSymbol();");
             yield return new WaitForSecondsRealtime(1.5f);
             SpikeReport.Screenshot("sym_picker_symbols.png");
             yield return Ask(ui, "var t = document.body.textContent; return { open: t.indexOf('Choose a symbol') >= 0, roadConditions: t.indexOf('Road conditions') >= 0, services: t.indexOf('Services') >= 0, arrowsStandard: t.indexOf('Arrows: Standard') >= 0, arrowsLane: t.indexOf('Arrows: Lane') >= 0, arrowsWide: t.indexOf('Arrows: Wide') >= 0 };", "sym.picker.categories");
@@ -125,11 +125,11 @@ namespace SignBuilder.Tests
             // Picking one turns the part into that arrow.
             Run("var c = document.querySelector('[title=\"Standard: hook-right\"]'); if (c) c.dispatchEvent(new MouseEvent('click', { bubbles: true }));");
             yield return new WaitForSecondsRealtime(1.5f);
-            yield return Ask(ui, "return window.__signBuilderDesign.items[0].items[0];", "sym.picker.pickedArrow");
+            yield return Ask(ui, "return window.__signBuilderSADesign.items[0].items[0];", "sym.picker.pickedArrow");
             // Another library's arrows in the picker (the UK's lane arrows), picked onto the EV symbol.
-            Run("window.__signBuilderSelect('0.1');");
+            Run("window.__signBuilderSASelect('0.1');");
             yield return new WaitForSecondsRealtime(1f);
-            Run("window.__signBuilderPickSymbol();");
+            Run("window.__signBuilderSAPickSymbol();");
             yield return new WaitForSecondsRealtime(1.5f);
             Run(ClickText + "clickText(\"This theme's\");");
             yield return new WaitForSecondsRealtime(1f);
@@ -142,9 +142,9 @@ namespace SignBuilder.Tests
             yield return Ask(ui, "return { cells: document.querySelectorAll('[title^=\"Lane: \"]').length };", "sym.picker.ukLaneArrows");
             Run("var c = document.querySelector('[title=\"Lane: turn-left\"]'); if (c) c.dispatchEvent(new MouseEvent('click', { bubbles: true }));");
             yield return new WaitForSecondsRealtime(1.5f);
-            yield return Ask(ui, "return window.__signBuilderDesign.items[0].items[1];", "sym.picker.ukPicked");
+            yield return Ask(ui, "return window.__signBuilderSADesign.items[0].items[1];", "sym.picker.ukPicked");
             // The borrowed UK arrow: "Arrows from" shows the UK library.
-            Run("window.__signBuilderSelect('1.5');");
+            Run("window.__signBuilderSASelect('1.5');");
             yield return new WaitForSecondsRealtime(1.5f);
             SpikeReport.Screenshot("sym_designer_borrowed.png");
             yield return Ask(ui, "var t = document.body.textContent; return { arrowsFrom: t.indexOf('Arrows from') >= 0, uk: t.indexOf('TSRGD') >= 0 };", "sym.designer.borrowed");

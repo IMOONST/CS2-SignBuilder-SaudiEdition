@@ -1,0 +1,30 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "dir-south",
+  "name": "إرشادية: اتجاه جنوب",
+  "scheme": "green",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "جنوب",
+          "height": 12
+        },
+        {
+          "type": "chip",
+          "scheme": "white",
+          "items": [
+            {
+              "type": "text",
+              "text": "S",
+              "height": 11
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

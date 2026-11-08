@@ -1,0 +1,19 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "curve-right",
+  "name": "تحذيرية: منعطف خطر لليمين",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/warn-curve-right",
+      "height": 66
+    },
+    {
+      "type": "text",
+      "text": "منعطف خطر لليمين",
+      "height": 11
+    }
+  ]
+}

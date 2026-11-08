@@ -1,0 +1,25 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "civil-defense",
+  "name": "داخل المدن: الدفاع المدني",
+  "scheme": "blue",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "الدفاع المدني",
+          "height": 13
+        },
+        {
+          "type": "text",
+          "text": "Civil Defense",
+          "height": 10.7
+        }
+      ]
+    }
+  ]
+}

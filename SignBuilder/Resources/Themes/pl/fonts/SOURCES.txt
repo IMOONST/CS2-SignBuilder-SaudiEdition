@@ -1,4 +1,4 @@
 The Polish road sign typeface (Marek Sigmund, 1975) has no freely redistributable version that Sign Builder can
 ship, so this theme uses the game's own Noto Sans. To use a digital version of it you have a license for (for
-example "Drogowskaz" or "Tablica Drogowa"), put it in ModsData/SignBuilder/Themes/pl/fonts/Drogowskaz.ttf; it
+example "Drogowskaz" or "Tablica Drogowa"), put it in ModsData/SignBuilderSA/Themes/pl/fonts/Drogowskaz.ttf; it
 then appears as "Drogowskaz" in the Font list.

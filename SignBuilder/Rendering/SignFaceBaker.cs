@@ -14,7 +14,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using Object = UnityEngine.Object;
 
-namespace SignBuilder.Rendering
+namespace SignBuilderSA.Rendering
 {
     /// <summary>A sign face baked to a texture, with its physical size.</summary>
     public sealed class BakedFace
@@ -44,7 +44,7 @@ namespace SignBuilder.Rendering
     /// </summary>
     public sealed class SignFaceBaker : IDisposable
     {
-        private const string kHost = "signbuilder";
+        private const string kHost = "signbuildersa";
         private const int kViewWidth = 2048;
         private const int kViewHeight = 1024;
         private const float kMetersPerInch = 0.0254f;
@@ -302,7 +302,7 @@ namespace SignBuilder.Rendering
             m_UISystem.AddHostLocation(Core.Themes.DataHost, Core.SignBuilderRuntime.DataDir, shouldWatch: false);
             foreach (var (host, dir) in Core.Themes.ModHosts) m_UISystem.AddHostLocation(host, dir, shouldWatch: false);
 
-            var go = new GameObject("SignBuilder.SignFaceBakerCamera");
+            var go = new GameObject("SignBuilderSA.SignFaceBakerCamera");
             Object.DontDestroyOnLoad(go);
             m_DummyCamera = go.AddComponent<Camera>();
             m_DummyCamera.enabled = false;
@@ -410,7 +410,7 @@ namespace SignBuilder.Rendering
             {
                 Buffer.BlockCopy(pixels, ((b.y + y) * width + b.x) * 4, cropped, y * b.width * 4, b.width * 4);
             }
-            var tex = new Texture2D(b.width, b.height, TextureFormat.RGBA32, mipChain: true) { name = "SignBuilder.Face", wrapMode = TextureWrapMode.Clamp };
+            var tex = new Texture2D(b.width, b.height, TextureFormat.RGBA32, mipChain: true) { name = "SignBuilderSA.Face", wrapMode = TextureWrapMode.Clamp };
             tex.SetPixelData(cropped, 0);
             tex.Apply(updateMipmaps: true);
             return tex;
@@ -426,7 +426,7 @@ namespace SignBuilder.Rendering
             try
             {
                 var info = JObject.Parse(File.ReadAllText(meta));
-                var tex = new Texture2D(2, 2, TextureFormat.RGBA32, mipChain: true) { name = "SignBuilder.Face", wrapMode = TextureWrapMode.Clamp };
+                var tex = new Texture2D(2, 2, TextureFormat.RGBA32, mipChain: true) { name = "SignBuilderSA.Face", wrapMode = TextureWrapMode.Clamp };
                 if (!tex.LoadImage(File.ReadAllBytes(png))) return null;
                 // LoadImage switches the texture to ARGB32, which SurfaceAsset saves but cannot load back.
                 var face = Assemblies.SurfaceFactory.Savable(tex);

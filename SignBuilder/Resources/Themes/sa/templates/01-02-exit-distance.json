@@ -1,0 +1,42 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "exit-distance",
+  "name": "إرشادية: المخرج بعد 1 كم",
+  "scheme": "green",
+  "support": "ground",
+  "items": [
+    {
+      "type": "tab",
+      "align": "right",
+      "items": [
+        {
+          "type": "text",
+          "text": "مخرج 14 EXIT",
+          "height": 10
+        }
+      ]
+    },
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "القصيم",
+          "height": 14
+        },
+        {
+          "type": "text",
+          "text": "Al Qassim",
+          "height": 11.5
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "text": "1 كم",
+      "height": 12
+    }
+  ]
+}

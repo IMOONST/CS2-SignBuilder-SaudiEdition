@@ -1,0 +1,24 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "roundabout-ahead",
+  "name": "تحذيرية: دوار أمامك",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/warn-roundabout",
+      "height": 66
+    },
+    {
+      "type": "text",
+      "text": "دوار أمامك",
+      "height": 11
+    },
+    {
+      "type": "text",
+      "text": "ROUNDABOUT AHEAD",
+      "height": 9
+    }
+  ]
+}

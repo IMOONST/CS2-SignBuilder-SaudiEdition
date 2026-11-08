@@ -1,0 +1,58 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "junction",
+  "name": "إرشادية: تفرع أمامك",
+  "scheme": "green",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "diagram",
+          "shape": "fork",
+          "height": 50
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "column",
+              "align": "start",
+              "items": [
+                {
+                  "type": "text",
+                  "text": "الطائف",
+                  "height": 12
+                },
+                {
+                  "type": "text",
+                  "text": "Taif",
+                  "height": 9.8
+                }
+              ]
+            },
+            {
+              "type": "column",
+              "align": "start",
+              "items": [
+                {
+                  "type": "text",
+                  "text": "الباحة",
+                  "height": 12
+                },
+                {
+                  "type": "text",
+                  "text": "Al Baha",
+                  "height": 9.8
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

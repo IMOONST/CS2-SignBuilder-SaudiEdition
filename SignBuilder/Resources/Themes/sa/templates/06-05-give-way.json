@@ -1,0 +1,19 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "give-way",
+  "name": "تنظيمية: أفسح الطريق",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/give-way",
+      "height": 62
+    },
+    {
+      "type": "text",
+      "text": "أفسح الطريق",
+      "height": 11
+    }
+  ]
+}

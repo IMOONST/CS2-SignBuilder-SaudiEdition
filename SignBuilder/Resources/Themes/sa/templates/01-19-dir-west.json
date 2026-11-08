@@ -1,0 +1,30 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "dir-west",
+  "name": "إرشادية: اتجاه غرب",
+  "scheme": "green",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "غرب",
+          "height": 12
+        },
+        {
+          "type": "chip",
+          "scheme": "white",
+          "items": [
+            {
+              "type": "text",
+              "text": "W",
+              "height": 11
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "turn-right-only",
+  "name": "تنظيمية: اتجاه إجباري لليمين",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/turn-right-only",
+      "height": 62
+    }
+  ]
+}

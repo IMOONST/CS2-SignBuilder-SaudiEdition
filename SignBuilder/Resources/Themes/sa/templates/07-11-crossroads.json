@@ -1,0 +1,24 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "crossroads",
+  "name": "تحذيرية: تقاطع طرق",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/warn-crossroads",
+      "height": 66
+    },
+    {
+      "type": "text",
+      "text": "تقاطع طرق",
+      "height": 11
+    },
+    {
+      "type": "text",
+      "text": "CROSSROADS",
+      "height": 9
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { t } from "./l10n";
 import { getModule } from "cs2/modding";
 import { AutoNavigationScope } from "cs2/input";
 import { ReactNode, useState } from "react";
@@ -59,7 +60,7 @@ export const Dialog = (props: {
           {/* Controls in the title bar must not start a drag. */}
           <div className={styles.dialogHeaderControls} onMouseDown={(e) => e.stopPropagation()}>{props.header}</div>
           <div className={styles.dialogHeaderSpace} />
-          <div className={styles.dialogClose} title="Close" onMouseDown={(e) => e.stopPropagation()} onClick={props.onClose} />
+          <div className={styles.dialogClose} title={t("Close")} onMouseDown={(e) => e.stopPropagation()} onClick={props.onClose} />
         </div>
         {props.children}
         </AutoNavigationScope>

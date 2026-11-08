@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Game.SceneFlow;
 using Newtonsoft.Json.Linq;
-using SignBuilder.Assemblies;
-using SignBuilder.Core;
-using SignBuilder.Systems;
-using SignBuilder.Tools;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Core;
+using SignBuilderSA.Systems;
+using SignBuilderSA.Tools;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace SignBuilder.Tests
+namespace SignBuilderSA.Tests
 {
     internal sealed partial class SpikeRunner
     {
@@ -22,12 +22,12 @@ namespace SignBuilder.Tests
             "(function(){if(window.__sbLeak)return;var c=window.__sbLeak={renders:0,images:0,frames:0};" +
             "var raf=window.requestAnimationFrame;window.requestAnimationFrame=function(f){c.frames++;return raf.call(window,f);};" +
             "try{var d=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,'src');Object.defineProperty(HTMLImageElement.prototype,'src'," +
-            "{configurable:true,get:d.get,set:function(v){if(String(v).indexOf('signbuilder')>=0)c.images++;d.set.call(this,v);}});}catch(e){c.imageHook=String(e);}})();";
+            "{configurable:true,get:d.get,set:function(v){if(String(v).indexOf('signbuildersa')>=0)c.images++;d.set.call(this,v);}});}catch(e){c.imageHook=String(e);}})();";
         private const string kWrapRender =
             "(function(){var R=window.SignRenderer;if(!R||R.__sbCounted)return;var o=R.render;R.render=function(){window.__sbLeak.renders++;return o.apply(this,arguments);};R.__sbCounted=true;})();";
         private const string kResetCounters = "(function(){var c=window.__sbLeak;if(c){c.renders=0;c.images=0;c.frames=0;}})();";
         private const string kReport =
-            "engine.trigger('SignBuilder.testReport',JSON.stringify(Object.assign({wrapped:!!(window.SignRenderer&&window.SignRenderer.__sbCounted)},window.__sbLeak||{missing:true})));";
+            "engine.trigger('SignBuilderSA.testReport',JSON.stringify(Object.assign({wrapped:!!(window.SignRenderer&&window.SignRenderer.__sbCounted)},window.__sbLeak||{missing:true})));";
 
         /// <summary>
         /// Mode "leak-e2e": whether anything of Sign Builder keeps running once its panel is closed. Frame times and
@@ -53,7 +53,7 @@ namespace SignBuilder.Tests
                 page.ExecuteScript(kResetCounters);
                 baker.ScriptRuns = 0;
                 baker.DrawnFrames = 0;
-                Debug.Log($"[SignBuilder leak-e2e] begin {name}");
+                Debug.Log($"[SignBuilderSA leak-e2e] begin {name}");
                 var times = new List<float>();
                 var native0 = Profiler.GetTotalAllocatedMemoryLong();
                 var mono0 = Profiler.GetMonoUsedSizeLong();
@@ -64,7 +64,7 @@ namespace SignBuilder.Tests
                     yield return null;
                     times.Add(Time.unscaledDeltaTime * 1000f);
                 }
-                Debug.Log($"[SignBuilder leak-e2e] end {name}");
+                Debug.Log($"[SignBuilderSA leak-e2e] end {name}");
                 ui.TestReport = null;
                 page.ExecuteScript(kReport);
                 for (var i = 0; i < 30 && ui.TestReport == null; i++) yield return null;

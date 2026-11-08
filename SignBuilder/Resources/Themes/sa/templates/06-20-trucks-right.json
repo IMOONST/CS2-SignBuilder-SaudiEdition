@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "trucks-right",
+  "name": "تنظيمية: الشاحنات المسار الأيمن",
+  "scheme": "blue",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/truck",
+          "height": 12
+        },
+        {
+          "type": "column",
+          "align": "center",
+          "items": [
+            {
+              "type": "text",
+              "text": "الشاحنات المسار الأيمن",
+              "height": 11
+            },
+            {
+              "type": "text",
+              "text": "Trucks Keep Right",
+              "height": 9
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "no-right",
+  "name": "تنظيمية: ممنوع الانعطاف يميناً",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/no-right-turn",
+      "height": 62
+    }
+  ]
+}

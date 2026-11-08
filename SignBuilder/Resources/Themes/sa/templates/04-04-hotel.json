@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "hotel",
+  "name": "خدمات: فندق",
+  "scheme": "blue",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/hotel",
+          "height": 22,
+          "box": {}
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "فندق",
+              "height": 13
+            },
+            {
+              "type": "text",
+              "text": "Hotel",
+              "height": 10.7
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

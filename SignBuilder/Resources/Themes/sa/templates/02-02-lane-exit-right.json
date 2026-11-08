@@ -1,0 +1,42 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "lane-exit-right",
+  "name": "طرق سريعة: مسار المخرج يمين",
+  "scheme": "green",
+  "support": "doubleTruss/span",
+  "items": [
+    {
+      "type": "tab",
+      "align": "right",
+      "items": [
+        {
+          "type": "text",
+          "text": "مخرج 9 EXIT",
+          "height": 11
+        }
+      ]
+    },
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "حي الملقا",
+          "height": 16
+        },
+        {
+          "type": "text",
+          "text": "Al Malqa Dist.",
+          "height": 13.1
+        }
+      ]
+    },
+    {
+      "type": "arrow",
+      "direction": "up-right",
+      "height": 24
+    }
+  ]
+}

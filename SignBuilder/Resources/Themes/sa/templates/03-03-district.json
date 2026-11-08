@@ -1,0 +1,26 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "district",
+  "name": "داخل المدن: اسم الحي",
+  "scheme": "white",
+  "arabicFont": "Tajawal",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "حي العليا",
+          "height": 13
+        },
+        {
+          "type": "text",
+          "text": "Al Olaya District",
+          "height": 10.7
+        }
+      ]
+    }
+  ]
+}

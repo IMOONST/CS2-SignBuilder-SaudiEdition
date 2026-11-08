@@ -1,0 +1,51 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "exit-guide",
+  "name": "إرشادية: دليل المخرج",
+  "scheme": "green",
+  "support": "ground",
+  "items": [
+    {
+      "type": "tab",
+      "align": "right",
+      "items": [
+        {
+          "type": "text",
+          "text": "مخرج 12 EXIT",
+          "height": 10
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "shield",
+          "network": "SA",
+          "number": "40"
+        },
+        {
+          "type": "column",
+          "align": "end",
+          "items": [
+            {
+              "type": "text",
+              "text": "الرياض",
+              "height": 14
+            },
+            {
+              "type": "text",
+              "text": "Riyadh",
+              "height": 11.5
+            }
+          ]
+        },
+        {
+          "type": "arrow",
+          "direction": "up-right"
+        }
+      ]
+    }
+  ]
+}

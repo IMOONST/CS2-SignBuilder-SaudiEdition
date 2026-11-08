@@ -3,12 +3,12 @@ using Colossal.IO.AssetDatabase;
 using Colossal.Serialization.Entities;
 using Game;
 using Game.Prefabs;
-using SignBuilder.Core;
-using SignBuilder.Geometry;
-using SignBuilder.Assemblies;
-using SignBuilder.Tools;
+using SignBuilderSA.Core;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Tests
+namespace SignBuilderSA.Tests
 {
     /// <summary>
     /// Fresh-boot reload test: a save holding our gantries references prefabs that only exist once
@@ -23,7 +23,7 @@ namespace SignBuilder.Tests
         public static readonly List<StaticObjectPrefab> Created = new();
         public static string Log = "";
 
-        private static readonly string[] kSpikePrefabs = { "SignBuilder_truss", "SignBuilder_trussAlt", "SignBuilder_monotube", "SignBuilder_cantilever", "SignBuilder_perfTruss" };
+        private static readonly string[] kSpikePrefabs = { "SignBuilderSA_truss", "SignBuilderSA_trussAlt", "SignBuilderSA_monotube", "SignBuilderSA_cantilever", "SignBuilderSA_perfTruss" };
 
         protected override void OnUpdate()
         {
@@ -40,7 +40,7 @@ namespace SignBuilder.Tests
                 Log += $"preload: donor={pole?.name}; ";
                 if (pole == null) return;
                 ILocalAssetDatabase db = AssetDatabase.user;
-                var folder = "ImportedData/SignBuilder";
+                var folder = "ImportedData/SignBuilderSA";
                 try
                 {
                     db = AssetDatabase<SignBuilderCache>.instance;

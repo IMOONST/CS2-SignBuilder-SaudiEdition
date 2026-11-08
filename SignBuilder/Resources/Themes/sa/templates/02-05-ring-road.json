@@ -1,0 +1,42 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "ring-road",
+  "name": "طرق سريعة: الطريق الدائري",
+  "scheme": "green",
+  "support": "doubleTruss/span",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "الطريق الدائري الشمالي",
+          "height": 15
+        },
+        {
+          "type": "text",
+          "text": "Northern Ring Rd",
+          "height": 12.3
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "arrow",
+          "direction": "down",
+          "height": 22
+        },
+        {
+          "type": "arrow",
+          "direction": "down",
+          "height": 22
+        }
+      ],
+      "justify": "between"
+    }
+  ]
+}

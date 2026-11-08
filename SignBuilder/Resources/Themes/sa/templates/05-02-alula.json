@@ -1,0 +1,80 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "alula",
+  "name": "سياحية: العلا",
+  "scheme": "sand",
+  "arabicFont": "Amiri",
+  "support": "ground",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "العلا",
+          "height": 15
+        },
+        {
+          "type": "text",
+          "text": "AlUla",
+          "height": 12.3
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Hegra",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "22 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "الحِجر",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Elephant Rock",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "11 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "جبل الفيل",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    }
+  ]
+}

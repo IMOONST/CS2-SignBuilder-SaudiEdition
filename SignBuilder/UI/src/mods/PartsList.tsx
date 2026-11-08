@@ -1,3 +1,4 @@
+import { t } from "./l10n";
 import { useRef, useState } from "react";
 import { Design, DropPosition, describe, getItem, moveTo, outline } from "./designModel";
 import { DuplicateIcon, TrashIcon } from "./Icons";
@@ -127,8 +128,8 @@ export const PartsList = (props: {
               {describe(item, props.labels)}
               {item.items && item.items.length === 0 && <span className={styles.hintInline}> drop parts here</span>}
             </div>
-            <RowButton className={styles.rowCopy} title="Duplicate this part" onClick={() => props.onDuplicate(path)}><DuplicateIcon /></RowButton>
-            <RowButton className={styles.rowDelete} title="Delete this part" onClick={() => props.onDelete(path)}><TrashIcon /></RowButton>
+            <RowButton className={styles.rowCopy} title={t("Duplicate this part")} onClick={() => props.onDuplicate(path)}><DuplicateIcon /></RowButton>
+            <RowButton className={styles.rowDelete} title={t("Delete this part")} onClick={() => props.onDelete(path)}><TrashIcon /></RowButton>
           </div>
         );
       })}

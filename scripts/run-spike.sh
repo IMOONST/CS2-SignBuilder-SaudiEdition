@@ -23,18 +23,18 @@ if tasklist | grep -qi cities2.exe; then
   exit 1
 fi
 
-if [[ ! -d "$user_dir/Mods/SignBuilder/Resources/Spike" ]]; then
+if [[ ! -d "$user_dir/Mods/SignBuilderSA/Resources/Spike" ]]; then
   echo "The installed Sign Builder is a release build; build it with -p:SignBuilderTests=true first." >&2
   exit 1
 fi
 
-mkdir -p "$user_dir/ModsData/SignBuilder"
-printf '%s' "$mode" > "$user_dir/ModsData/SignBuilder/spike.flag"
+mkdir -p "$user_dir/ModsData/SignBuilderSA"
+printf '%s' "$mode" > "$user_dir/ModsData/SignBuilderSA/spike.flag"
 extra=""
 [[ "$mode" == "debug" || "$mode" == "uitest" || "$mode" == *e2e* ]] && extra=" -uiDeveloperMode"
 # Without a save id, load the test save (its id is recorded by the previous run): "continue" would load whatever
 # was played last, and the harness refuses to run in any city but the test one.
-guid_file="$user_dir/ModsData/SignBuilder/test-save.guid"
+guid_file="$user_dir/ModsData/SignBuilderSA/test-save.guid"
 [[ -z "$save" && -f "$guid_file" ]] && save="$(cat "$guid_file")"
 if [[ -n "$save" ]]; then
   printf -- '-startGame=%s -noSplash%s' "$save" "$extra" > "$user_dir/runOnce.txt"
@@ -65,4 +65,4 @@ if tasklist | grep -qi cities2.exe; then
   echo "Still running after 10 minutes: killing Cities2.exe."
   taskkill //IM Cities2.exe //F >/dev/null 2>&1 || true
 fi
-echo "Game exited. Results: $user_dir/ModsData/SignBuilder/spike"
+echo "Game exited. Results: $user_dir/ModsData/SignBuilderSA/spike"

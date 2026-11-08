@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "boulevard",
+  "name": "سياحية: بوليفارد رياض سيتي",
+  "scheme": "brown",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "بوليفارد رياض سيتي",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "Boulevard Riyadh City",
+              "height": 9.8
+            }
+          ]
+        },
+        {
+          "type": "arrow",
+          "direction": "right"
+        }
+      ]
+    }
+  ]
+}

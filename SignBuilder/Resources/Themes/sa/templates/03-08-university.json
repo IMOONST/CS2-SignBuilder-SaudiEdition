@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "university",
+  "name": "داخل المدن: الجامعة",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "جامعة الأميرة نورة",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "Princess Nourah University",
+              "height": 9.8
+            }
+          ]
+        },
+        {
+          "type": "arrow",
+          "direction": "up-right"
+        }
+      ]
+    }
+  ]
+}

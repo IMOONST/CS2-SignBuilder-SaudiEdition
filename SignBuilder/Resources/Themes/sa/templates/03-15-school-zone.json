@@ -1,0 +1,46 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "school-zone",
+  "name": "داخل المدن: منطقة مدارس",
+  "scheme": "yellow",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/warn-children",
+          "height": 26
+        },
+        {
+          "type": "column",
+          "align": "center",
+          "items": [
+            {
+              "type": "text",
+              "text": "منطقة مدارس",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "خفف السرعة",
+              "height": 11
+            },
+            {
+              "type": "text",
+              "text": "SCHOOL ZONE",
+              "height": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "shield",
+      "network": "SPD",
+      "number": "30",
+      "height": 24
+    }
+  ]
+}

@@ -7,14 +7,14 @@ using Game.SceneFlow;
 using Game.UI;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SignBuilder.Assemblies;
-using SignBuilder.Core;
-using SignBuilder.Tools;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Core;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Systems
+namespace SignBuilderSA.Systems
 {
     /// <summary>
-    /// Bridges the React editor (UI/src/mods) and the C# side. Binding group = mod id "SignBuilder".
+    /// Bridges the React editor (UI/src/mods) and the C# side. Binding group = mod id "SignBuilderSA".
     /// Values: editorOpen, templates, editingDesign, toolStatus, toolMode (off|posts|pickRoad|arrange),
     /// placeInfo, arrangeInfo, replacing.
     /// Triggers: setEditorOpen, startPosts, startGantry, adjust, arrange, savePosts, cancelTool,
@@ -22,7 +22,7 @@ namespace SignBuilder.Systems
     /// </summary>
     public partial class SignBuilderUISystem : UISystemBase
     {
-        public const string Group = "SignBuilder";
+        public const string Group = "SignBuilderSA";
 
         private ValueBinding<bool> m_EditorOpen;
         private ValueBinding<string> m_Templates;
@@ -104,7 +104,7 @@ namespace SignBuilder.Systems
             catch (Exception e)
             {
                 Mod.log.Warn(e, "Sign Builder UI action failed");
-                SetStatus("Something went wrong: " + e.Message);
+                SetStatus("حدث خطأ: " + e.Message);
             }
             if (watch.ElapsedMilliseconds > 250) Mod.log.Info($"UI action (SignBuilderUISystem.cs line {line}) took {watch.ElapsedMilliseconds} ms");
         }
@@ -131,7 +131,7 @@ namespace SignBuilder.Systems
             base.OnGameLoadingComplete(purpose, mode);
             // The editor preview loads renderer.js/css and fonts from the mod folder through this host.
             var ui = GameManager.instance.userInterface.view.uiSystem;
-            ui.AddHostLocation("signbuilder", SignBuilderRuntime.ResourcesDir, shouldWatch: false);
+            ui.AddHostLocation("signbuildersa", SignBuilderRuntime.ResourcesDir, shouldWatch: false);
             Directory.CreateDirectory(SignBuilderRuntime.DataDir);
             ui.AddHostLocation(Themes.DataHost, SignBuilderRuntime.DataDir, shouldWatch: false);
             foreach (var (host, dir) in Themes.ModHosts) ui.AddHostLocation(host, dir, shouldWatch: false);
@@ -234,7 +234,7 @@ namespace SignBuilder.Systems
         {
             Directory.CreateDirectory(UserTemplatesDir);
             var design = Formats.StampDesign((JObject)payload["design"]);
-            var name = (string)payload["name"] ?? "My sign";
+            var name = (string)payload["name"] ?? "لوحتي";
             design["name"] = name;
             var path = UserPath((string)payload["id"]);
             if (path == null)
@@ -245,7 +245,7 @@ namespace SignBuilder.Systems
             }
             File.WriteAllText(path, design.ToString(Formatting.Indented));
             m_Templates.Update(LoadTemplates());
-            SetStatus($"Saved template \"{name}\".");
+            SetStatus($"تم حفظ القالب \"{name}\".");
         }
 
         public void RenameTemplate(string id, string name)

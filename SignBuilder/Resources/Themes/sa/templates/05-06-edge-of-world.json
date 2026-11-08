@@ -1,0 +1,31 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "edge-of-world",
+  "name": "سياحية: حافة العالم",
+  "scheme": "sand",
+  "support": "ground",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "حافة العالم",
+          "height": 14
+        },
+        {
+          "type": "text",
+          "text": "Edge of the World",
+          "height": 11.5
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "text": "45 كم",
+      "height": 12
+    }
+  ]
+}

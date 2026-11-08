@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SignBuilder.Core;
+using SignBuilderSA.Core;
 
-namespace SignBuilder.Assemblies
+namespace SignBuilderSA.Assemblies
 {
     /// <summary>
     /// A placed sign assembly (support + sign faces) baked into one game prop. Saves reference the
@@ -16,7 +16,7 @@ namespace SignBuilder.Assemblies
     public sealed class AssemblyRecord
     {
         public string Id;
-        public string PrefabName => "SignBuilder_A_" + Id;
+        public string PrefabName => "SignBuilderSA_A_" + Id;
         public string Support;
         public bool Reverse;
         /// <summary>The signs on this structure, left to right as seen by approaching traffic.</summary>
@@ -28,6 +28,19 @@ namespace SignBuilder.Assemblies
         public float[] SignCenters;
         /// <summary>Where and how it was placed (road snapshot or free position, lane, shift), for Save in place.</summary>
         public PlacementContext Context;
+        /// <summary>
+        /// Speed feedback signs: the id of the record built for the other state (see <see cref="SpeedFeedback"/>), whose
+        /// prefab <see cref="Systems.SpeedFeedbackSystem"/> swaps in while traffic passes too fast. Null otherwise.
+        /// </summary>
+        public string FeedbackAltId;
+        /// <summary>On such an alternate-state record: the id of the structure it belongs to. Null on every other record.</summary>
+        public string FeedbackOf;
+
+        [JsonIgnore]
+        public bool IsFeedbackAlternate => !string.IsNullOrEmpty(FeedbackOf);
+
+        [JsonIgnore]
+        public string FeedbackAltPrefabName => string.IsNullOrEmpty(FeedbackAltId) ? null : "SignBuilderSA_A_" + FeedbackAltId;
 
         [JsonIgnore]
         public UnityEngine.Vector3[] Centers
@@ -47,6 +60,7 @@ namespace SignBuilder.Assemblies
             ["SupportSpec"] = SupportSpec == null ? null : JObject.FromObject(SupportSpec), ["SignCenters"] = SignCenters == null ? null : new JArray(SignCenters),
             // Sign size, back-side signs and lights come from the options.
             ["Context"] = Context == null ? null : JObject.FromObject(Context),
+            ["FeedbackAltId"] = FeedbackAltId, ["FeedbackOf"] = FeedbackOf,
         };
 
         public static AssemblyRecord FromPortable(JObject json) => json.ToObject<AssemblyRecord>();
@@ -70,7 +84,7 @@ namespace SignBuilder.Assemblies
         public DateTime Created;
     }
 
-    /// <summary>All assemblies ever built, persisted as ModsData/SignBuilder/assemblies.json.</summary>
+    /// <summary>All assemblies ever built, persisted as ModsData/SignBuilderSA/assemblies.json.</summary>
     public static class AssemblyLibrary
     {
         private static Dictionary<string, AssemblyRecord> s_Records;
@@ -93,8 +107,29 @@ namespace SignBuilder.Assemblies
             return id != null && s_Records.TryGetValue(id, out var r) ? r : null;
         }
 
-        public static AssemblyRecord FromPrefabName(string prefabName) =>
-            prefabName != null && prefabName.StartsWith("SignBuilder_A_") ? Get(prefabName.Substring("SignBuilder_A_".Length)) : null;
+        /// <summary>
+        /// The structure a prefab shows. A speed feedback sign's alternate-state prefab resolves to its structure's main
+        /// record, so editing, info panels and the sign list always see the structure as the player designed it.
+        /// </summary>
+        public static AssemblyRecord FromPrefabName(string prefabName) => Primary(ExactFromPrefabName(prefabName));
+
+        /// <summary>The record of exactly this prefab (an alternate-state record stays itself).</summary>
+        public static AssemblyRecord ExactFromPrefabName(string prefabName) =>
+            prefabName != null && prefabName.StartsWith("SignBuilderSA_A_") ? Get(prefabName.Substring("SignBuilderSA_A_".Length)) : null;
+
+        /// <summary>The main record of an alternate-state record (itself for any other, or if its main is gone).</summary>
+        public static AssemblyRecord Primary(AssemblyRecord record)
+        {
+            if (record == null || !record.IsFeedbackAlternate) return record;
+            return Get(record.FeedbackOf) ?? RetiredById(record.FeedbackOf) ?? record;
+        }
+
+        /// <summary>A structure's alternate-state record, if it has one stored (or retired this session).</summary>
+        public static AssemblyRecord AlternateOf(AssemblyRecord record) =>
+            record == null || string.IsNullOrEmpty(record.FeedbackAltId) ? null : Get(record.FeedbackAltId) ?? RetiredById(record.FeedbackAltId);
+
+        /// <summary>A record removed this session, by id.</summary>
+        public static AssemblyRecord RetiredById(string id) => id == null ? null : s_Retired.Values.FirstOrDefault(r => r.Id == id);
 
         /// <summary>
         /// A record removed from the library this session. Its prefab stays registered (and its assets on disk) until

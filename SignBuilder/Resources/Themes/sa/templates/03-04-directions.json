@@ -1,0 +1,58 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "directions",
+  "name": "داخل المدن: اتجاهات المدينة",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "وسط المدينة Downtown",
+          "height": 12
+        },
+        {
+          "type": "arrow",
+          "direction": "up",
+          "height": 16
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "الجامعة University",
+          "height": 12
+        },
+        {
+          "type": "arrow",
+          "direction": "right",
+          "height": 16
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "البوليفارد Boulevard",
+          "height": 12
+        },
+        {
+          "type": "arrow",
+          "direction": "left",
+          "height": 16
+        }
+      ],
+      "justify": "between"
+    }
+  ]
+}

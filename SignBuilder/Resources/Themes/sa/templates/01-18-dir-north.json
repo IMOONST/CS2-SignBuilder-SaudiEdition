@@ -1,0 +1,30 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "dir-north",
+  "name": "إرشادية: اتجاه شمال",
+  "scheme": "green",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "شمال",
+          "height": 12
+        },
+        {
+          "type": "chip",
+          "scheme": "white",
+          "items": [
+            {
+              "type": "text",
+              "text": "N",
+              "height": 11
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

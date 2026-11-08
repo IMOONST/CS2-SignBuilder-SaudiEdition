@@ -48,7 +48,8 @@
     theme.fontsLoaded = true;
     var css = "";
     (theme.def.fonts || []).forEach(function (f) {
-      if (!f.file || loadedFamilies[f.family]) return;
+      // Shared Arabic fonts are "lazy": added the first time a sign uses them (ensureFamily).
+      if (!f.file || f.lazy || loadedFamilies[f.family]) return;
       loadedFamilies[f.family] = true;
       var url = /^[a-z]+:\/\//.test(f.file) ? f.file : theme.base + f.file;
       css += '@font-face { font-family: "' + f.family + '"; src: url("' + url + '"); }\n';
@@ -57,6 +58,172 @@
     var style = document.createElement("style");
     style.textContent = css;
     document.head.appendChild(style);
+  }
+
+  // One family's @font-face, added on first use (for lazy fonts such as the shared Arabic ones).
+  function ensureFamily(family) {
+    if (!family || loadedFamilies[family] || !T || !T.fonts) return;
+    var f = T.fonts[family];
+    if (!f || !f.file) return; // a family the game provides (e.g. Noto Sans Arabic)
+    loadedFamilies[family] = true;
+    var url = /^[a-z]+:\/\//.test(f.file) ? f.file : T.base + f.file;
+    var style = document.createElement("style");
+    style.textContent = '@font-face { font-family: "' + f.family + '"; src: url("' + url + '"); }\n';
+    document.head.appendChild(style);
+  }
+
+  // ---------------------------------------------------------------- Arabic and right-to-left text
+  // The game's UI engine shapes Arabic itself (joined letters, lam-alef): text is passed through in logical
+  // order, never reversed or pre-shaped. What it needs from us: a font chain that has Arabic letters, and the
+  // paragraph direction, taken from the first strong character like dir="auto" (so "WEST مشعل" stays
+  // WEST-first and "مخرج 12" reads right to left with the number in place).
+  var ARABIC = "Cairo"; // the sign's Arabic font, set per design in useTheme
+  var GAME_ARABIC = "Noto Sans Arabic";
+  var RTL_CHAR = /[֐-ࣿיִ-﷿ﹰ-﻿]/;
+  var LTR_CHAR = /[A-Za-zÀ-ɏͰ-ϿЀ-ӿ]/;
+
+  function hasRtl(text) { return RTL_CHAR.test(String(text || "")); }
+
+  function firstStrongIsRtl(text) {
+    var s = String(text || "");
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charAt(i);
+      if (RTL_CHAR.test(c)) return true;
+      if (LTR_CHAR.test(c)) return false;
+    }
+    return false;
+  }
+
+  // CSS font-family list: the part's font, then the sign's Arabic font, then the game's Arabic font.
+  function fontStack(family) {
+    var list = [];
+    [family, ARABIC, GAME_ARABIC].forEach(function (f) {
+      if (f && list.indexOf(f) < 0) list.push(f);
+    });
+    return list.map(quoted).join(", ");
+  }
+
+  // ---- Mixed lines (Arabic with Latin words or numbers) ----
+  // The game's UI engine draws a line of one script well, but measures and clips a single box that mixes Arabic,
+  // digits and Latin (an exit tab "مخرج 12 EXIT" came out as "مخرج"). So mixed lines are split into runs of one
+  // kind, put in visual order here with the Unicode bidi rules applied at run level (UAX #9: W/N/I rules, L2
+  // reordering, mirrored brackets), and laid out as a row of boxes: the engine only ever sees single-script runs.
+  var DIGIT = /[0-9٠-٩۰-۹]/;
+  var MIRROR = { "(": ")", ")": "(", "[": "]", "]": "[", "{": "}", "}": "{", "<": ">", ">": "<", "«": "»", "»": "«" };
+
+  function charKind(c) {
+    if (RTL_CHAR.test(c)) return "R";
+    if (LTR_CHAR.test(c)) return "L";
+    if (DIGIT.test(c)) return "EN";
+    return "N";
+  }
+
+  function isMixed(text) {
+    if (!hasRtl(text)) return false;
+    for (var i = 0; i < text.length; i++) {
+      var k = charKind(text.charAt(i));
+      if (k === "L" || k === "EN") return true;
+    }
+    return false;
+  }
+
+  // Runs in visual (left-to-right) order: [{ text, kind: "R"|"L"|"EN"|"N", level }].
+  function bidiRuns(text) {
+    var runs = [];
+    for (var i = 0; i < text.length; i++) {
+      var c = text.charAt(i), k = charKind(c);
+      var last = runs[runs.length - 1];
+      if (last && last.kind === k) last.text += c;
+      else runs.push({ text: c, kind: k });
+    }
+    // Keep words of one script together: "وسط المدينة" and "City Centre" are one run each, "1,250" is one number.
+    for (var j = 1; j < runs.length - 1; j++) {
+      var a = runs[j - 1], n = runs[j], b = runs[j + 1];
+      var joinWords = n.kind === "N" && /^\s+$/.test(n.text) && a.kind === b.kind && (a.kind === "R" || a.kind === "L");
+      var joinNumber = n.kind === "N" && /^[.,٫٬]$/.test(n.text) && a.kind === "EN" && b.kind === "EN";
+      if (joinWords || joinNumber) {
+        a.text += n.text + b.text;
+        runs.splice(j, 2);
+        j--;
+      }
+    }
+
+    var base = firstStrongIsRtl(text) ? 1 : 0;
+    var lastStrong = base ? "R" : "L";
+    runs.forEach(function (r) {
+      if (r.kind === "R") { r.level = 1; lastStrong = "R"; }
+      else if (r.kind === "L") { r.level = base ? 2 : 0; lastStrong = "L"; }
+      else if (r.kind === "EN") r.level = (base || lastStrong === "R") ? 2 : 0;
+    });
+    // Neutrals take the direction of the runs around them when both agree (numbers count as R in R context),
+    // otherwise the paragraph's.
+    function side(r) {
+      if (!r) return base ? "R" : "L";
+      if (r.kind === "EN") return r.level ? "R" : "L";
+      return r.kind;
+    }
+    for (var x = 0; x < runs.length; x++) {
+      if (runs[x].kind !== "N") continue;
+      var p = x - 1; while (p >= 0 && runs[p].kind === "N") p--;
+      var q = x + 1; while (q < runs.length && runs[q].kind === "N") q++;
+      var before = side(runs[p]), after = side(runs[q]);
+      runs[x].level = before === after ? (before === "R" ? 1 : (base ? 2 : 0)) : base;
+    }
+
+    // L2: from the highest level down to 1, reverse every sequence of runs at or above it.
+    var max = 0;
+    runs.forEach(function (r) { max = Math.max(max, r.level); });
+    for (var lv = max; lv >= 1; lv--) {
+      for (var s = 0; s < runs.length; s++) {
+        if (runs[s].level < lv) continue;
+        var e = s;
+        while (e + 1 < runs.length && runs[e + 1].level >= lv) e++;
+        var seg = runs.slice(s, e + 1).reverse();
+        for (var t = 0; t < seg.length; t++) runs[s + t] = seg[t];
+        s = e;
+      }
+    }
+    // Brackets in right-to-left context are mirrored.
+    runs.forEach(function (r) {
+      if (r.kind === "N" && r.level % 2 === 1) r.text = r.text.replace(/[()\[\]{}<>«»]/g, function (ch) { return MIRROR[ch]; });
+    });
+    return runs;
+  }
+
+  // Every line with Arabic is laid out as a row of single-script runs (see bidiRuns): the engine wraps a single box
+  // at spaces and hyphens even with white-space: nowrap, and places fallback-font glyphs off the baseline. Each run
+  // is one line high with its own font size, and is moved by the difference of its font's offset to the line's, the
+  // same metrics a plain text box uses, so both scripts sit on one baseline without relying on flex baseline.
+  function setMixedText(e, text, h, family, m) {
+    if (!hasRtl(text)) {
+      e.textContent = text;
+      return;
+    }
+    var arabicPart = T.fonts[family] && T.fonts[family].arabic;
+    var am = arabicPart ? m : metrics(ARABIC);
+    e.style.display = "flex";
+    e.style.flexDirection = "row";
+    e.style.flexWrap = "nowrap";
+    e.style.alignItems = "flex-start";
+    e.style.direction = "ltr";
+    e.style.unicodeBidi = "normal";
+    bidiRuns(text).forEach(function (run) {
+      var span = document.createElement("div");
+      span.style.whiteSpace = "pre";
+      span.style.flexShrink = "0";
+      span.style.height = px(h);
+      span.style.lineHeight = px(h);
+      if (run.kind === "R") {
+        span.style.direction = "rtl";
+        span.style.fontFamily = fontStack(arabicPart ? family : ARABIC);
+        span.style.fontWeight = am.weight;
+        span.style.fontSize = px(h * am.scale);
+        span.style.position = "relative";
+        span.style.top = px(h * (am.offset - m.offset));
+      }
+      span.textContent = run.text;
+      e.appendChild(span);
+    });
   }
 
   function useTheme(doc) {
@@ -68,6 +235,10 @@
     for (var k in BASE_DEFAULTS) DEFAULTS[k] = BASE_DEFAULTS[k];
     var d = T.def.defaults || {};
     for (var j in d) DEFAULTS[j] = d[j];
+    ARABIC = (doc && doc.arabicFont) || DEFAULTS.arabicFont || "Cairo";
+    // The sign's own spacing, in percent of the theme's: between lines (and stacked parts), and between parts in a row.
+    if (doc && doc.lineSpacing != null) DEFAULTS.lineGap = DEFAULTS.lineGap * doc.lineSpacing / 100;
+    if (doc && doc.partSpacing != null) DEFAULTS.itemGap = DEFAULTS.itemGap * doc.partSpacing / 100;
     // Designs made with Sign Builder 1.0 (format 1) keep its arrows: the theme's own "arrow" and the basic library.
     legacy = ((doc && doc.formatVersion) || 1) < 2;
     // Designs are measured in the theme's units: inches, or millimeters for metric countries.
@@ -153,8 +324,10 @@
   // <tracking>: extra space between letters, in hundredths of the letter height (negative tightens).
   function textBox(text, h, family, color, tracking) {
     var m = metrics(family);
+    ensureFamily(family);
+    if (hasRtl(text)) ensureFamily(ARABIC);
     var e = el("div", "sb-text", {
-      fontFamily: quoted(family), fontWeight: m.weight, fontSize: px(h * m.scale), lineHeight: px(h), height: px(h), top: px(h * m.offset), color: color,
+      fontFamily: fontStack(family), fontWeight: m.weight, fontSize: px(h * m.scale), lineHeight: px(h), height: px(h), top: px(h * m.offset), color: color,
     });
     if (tracking) {
       // Letter spacing also follows the last letter: take it back so the text stays centered.
@@ -162,9 +335,19 @@
       e.sbMarginRight = -h * tracking / 100;
       e.style.marginRight = px(e.sbMarginRight);
     }
-    e.textContent = text;
+    setMixedText(e, String(text == null ? "" : text), h, family, m);
+    // Arabic letters reach well above and below the Latin capital height a line is measured by (dots, descenders
+    // of ي ر و م, the tall ل ك ط): give the line that much room so it never runs into the line under or over it.
+    if (hasRtl(text)) {
+      // Explicit: the game's UI engine may size boxes border-box, which would swallow the padding.
+      e.style.boxSizing = "content-box";
+      e.style.paddingTop = px(h * ARABIC_ROOM.above);
+      e.style.paddingBottom = px(h * ARABIC_ROOM.below);
+    }
     return e;
   }
+
+  var ARABIC_ROOM = { above: 0.12, below: 0.32 };
 
   function renderText(item, ctx) {
     var h = item.height || DEFAULTS.textHeight;
@@ -191,6 +374,14 @@
 
   // LED lettering: one dot per lit pixel of each letter, <h> tall (7 dots), in <color>. Unknown characters are blank.
   function ledText(text, h, color) {
+    // The 5x7 dot font has Latin letters only: Arabic is drawn in the sign's Arabic font, LED-colored, and
+    // stays lit in the glow pass like the dots.
+    if (hasRtl(text)) {
+      var a = textBox(text, h, ARABIC, color);
+      a.className += " sb-led-text";
+      if (glowOnly) a.style.visibility = "visible";
+      return a;
+    }
     var chars = String(text).toUpperCase().split("");
     var pitch = h / 7, dot = pitch * 0.8;
     var d = [];
@@ -251,6 +442,8 @@
     var wide = (String(item.number || "").length >= 3 && def.wide) || 1;
     if (wide > 1 && def.onWide) over(def.onWide);
     var font = (wide > 1 && def.wideFont) || def.font || ctx.font;
+    // A plate may use a shared font (an Arabic word on a stop sign), which loads on first use.
+    ensureFamily(font);
     var shape = def.shape || (def.img ? "img" : "rect");
     // Three-character numbers are drawn smaller on artwork that has no wide version (it is stretched, not widened).
     var nh = h * (def.num || 0.6) * (wide > 1 && def.img && !def.wideImg ? 0.9 : 1);

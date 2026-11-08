@@ -5,14 +5,14 @@ using System.Linq;
 using Colossal.Mathematics;
 using Game.Prefabs;
 using Newtonsoft.Json.Linq;
-using SignBuilder.Core;
-using SignBuilder.Rendering;
+using SignBuilderSA.Core;
+using SignBuilderSA.Rendering;
 using Unity.Mathematics;
 using UnityEngine;
-using SignBuilder.Geometry;
-using SignBuilder.Tools;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Assemblies
+namespace SignBuilderSA.Assemblies
 {
     /// <summary>Where and how an assembly sits in the world.</summary>
     public struct AssemblyPlacement
@@ -450,8 +450,21 @@ namespace SignBuilder.Assemblies
             yield return BakeAll(designs, f => faces = f);
             if (faces == null || faces.Count == 0)
             {
-                onError($"Could not render the sign: {SignBuilderRuntime.Baker.LastError}");
+                onError($"تعذر رسم اللوحة: {SignBuilderRuntime.Baker.LastError}");
                 yield break;
+            }
+            // Speed feedback signs: the other state's faces too (a failure leaves the sign showing one state only).
+            List<JObject> altDesigns = null;
+            List<BakedFace> altFaces = null;
+            if (SpeedFeedback.IsFeedback(designs))
+            {
+                altDesigns = SpeedFeedback.Alternate(designs);
+                yield return BakeAll(altDesigns, f => altFaces = f);
+                if (altFaces == null || altFaces.Count != faces.Count)
+                {
+                    Mod.log.Warn($"Speed feedback sign: could not render its other state ({SignBuilderRuntime.Baker.LastError})");
+                    altFaces = null;
+                }
             }
 
             AssemblyRecord record;
@@ -470,12 +483,14 @@ namespace SignBuilder.Assemblies
                     Context = context,
                     Created = DateTime.UtcNow,
                 };
+                if (altFaces != null) record.FeedbackAltId = AlternateId(record.Id);
                 CreateAssets(record, placement.Support, faces);
+                if (altFaces != null) CreateAlternate(record, placement.Support, altDesigns, altFaces);
             }
             catch (Exception e)
             {
                 Mod.log.Error(e, "Building a sign assembly failed");
-                onError("Building the sign failed: " + e.Message);
+                onError("فشل إنشاء اللوحة: " + e.Message);
                 yield break;
             }
 
@@ -551,6 +566,7 @@ namespace SignBuilder.Assemblies
             AssemblyLibrary.Add(record);
             Core.AssetNames.Add(record.PrefabName); // again, now that the record (and its legend) is stored
             AssemblyBootstrapSystem.TrackNewPrefab(prefab);
+            if (SpeedFeedback.IsFeedback(record.Designs)) Systems.SpeedFeedbackSystem.TrackPrefab(prefab);
         }
 
         /// <summary>Every light fixture's position and aim in assembly space (signs on the back are turned around).</summary>
@@ -591,10 +607,30 @@ namespace SignBuilder.Assemblies
                 onDone(false);
                 yield break;
             }
+            // A speed feedback structure brings its other state along (built from its own designs, so saves only ever
+            // need the main record). An alternate-state record from a save is rebuilt like any other.
+            List<JObject> altDesigns = null;
+            List<BakedFace> altFaces = null;
+            if (!record.IsFeedbackAlternate && SpeedFeedback.IsFeedback(record.Designs))
+            {
+                if (string.IsNullOrEmpty(record.FeedbackAltId)) record.FeedbackAltId = AlternateId(record.Id);
+                var registered = new RuntimePrefabs().PrefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), record.FeedbackAltPrefabName), out _);
+                if (!registered)
+                {
+                    altDesigns = SpeedFeedback.Alternate(record.Designs);
+                    yield return BakeAll(altDesigns, f => altFaces = f);
+                    if (altFaces == null || altFaces.Count != faces.Count)
+                    {
+                        Mod.log.Warn($"{record.PrefabName}: could not render its other speed feedback state ({SignBuilderRuntime.Baker.LastError})");
+                        altFaces = null;
+                    }
+                }
+            }
             try
             {
                 var support = GantryFactory.FromSpec(record.SupportSpec);
                 CreateAssets(record, support, faces);
+                if (altFaces != null) CreateAlternate(record, support, altDesigns, altFaces);
                 UnityEngine.Object.Destroy(support);
             }
             catch (Exception e)
@@ -604,6 +640,39 @@ namespace SignBuilder.Assemblies
                 yield break;
             }
             onDone(true);
+        }
+
+        /// <summary>The record id of a speed feedback structure's other state.</summary>
+        public static string AlternateId(string mainId) => mainId + "-alt";
+
+        /// <summary>
+        /// Builds a speed feedback structure's other state: a second prefab with the same support and sign positions,
+        /// its own record (linked both ways) and its faces from <paramref name="altDesigns"/>. Failures are logged; the
+        /// structure then keeps showing its main state.
+        /// </summary>
+        private static void CreateAlternate(AssemblyRecord main, Mesh support, List<JObject> altDesigns, List<BakedFace> altFaces)
+        {
+            try
+            {
+                var alt = new AssemblyRecord
+                {
+                    Id = main.FeedbackAltId ?? AlternateId(main.Id),
+                    Support = main.Support,
+                    Reverse = main.Reverse,
+                    Designs = altDesigns.Select(Formats.StampDesign).ToList(),
+                    SupportSpec = main.SupportSpec,
+                    SignCenters = main.SignCenters,
+                    Context = main.Context,
+                    Created = main.Created,
+                    FeedbackOf = main.Id,
+                };
+                main.FeedbackAltId = alt.Id;
+                CreateAssets(alt, support, altFaces);
+            }
+            catch (Exception e)
+            {
+                Mod.log.Error(e, $"Building the other speed feedback state of {main.PrefabName} failed");
+            }
         }
 
         /// <summary>
@@ -651,7 +720,7 @@ namespace SignBuilder.Assemblies
                 UnityEngine.Object.Destroy(panel);
             }
 
-            var mesh = new Mesh { name = "SignBuilder.Assembly", indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 };
+            var mesh = new Mesh { name = "SignBuilderSA.Assembly", indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 };
             mesh.SetVertices(vertices);
             mesh.SetNormals(normals);
             mesh.SetUVs(0, uvs);

@@ -1,0 +1,11 @@
+Saudi symbol library: pictogram sources and licenses
+
+Material Design Icons (Pictogrammers) - Apache License 2.0 - https://github.com/Templarian/MaterialDesign
+  walk, human-male-child, car-traction-control, traffic-cone, car-back, truck, bullhorn, gas-station, mosque, airplane,
+  bed, silverware-fork-knife, table-picnic, police-badge, train, camera, phone, wrench, coffee, car-light-high, palm-tree,
+  car-side, bus-side
+game-icons.net - CC BY 3.0 - https://game-icons.net (camel, by the game-icons.net contributors)
+Temaki (Rapid Editor / OpenStreetMap) - CC0 1.0 - https://github.com/rapideditor/temaki (speed_bump)
+Maki (Mapbox) - CC0 1.0 - https://github.com/mapbox/maki (campsite)
+
+Sign frames (triangles, rings, discs, octagon) and the remaining symbols are original drawings of this mod.

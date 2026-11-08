@@ -1,0 +1,84 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "distances-west",
+  "name": "إرشادية: المسافات (الطريق الغربي)",
+  "scheme": "green",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Taif",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "85 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "الطائف",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Jeddah",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "160 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "جدة",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Yanbu",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "490 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "ينبع",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    }
+  ]
+}

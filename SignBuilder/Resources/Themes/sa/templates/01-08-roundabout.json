@@ -1,0 +1,41 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "roundabout",
+  "name": "إرشادية: دوار أمامك",
+  "scheme": "green",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "diagram",
+          "shape": "roundabout",
+          "height": 54
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "الخرج Al Kharj",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "المطار Airport",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "وسط المدينة Downtown",
+              "height": 12
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

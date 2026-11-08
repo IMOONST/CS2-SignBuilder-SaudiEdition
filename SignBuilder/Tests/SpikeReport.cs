@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
-using SignBuilder.Core;
-using SignBuilder.Geometry;
-using SignBuilder.Assemblies;
-using SignBuilder.Tools;
+using SignBuilderSA.Core;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Tests
+namespace SignBuilderSA.Tests
 {
     /// <summary>
     /// Collects spike findings as ordered key/value pairs, mirrors them to the mod log and
-    /// rewrites ModsData/SignBuilder/spike/results.json after every test, so a crash late in
+    /// rewrites ModsData/SignBuilderSA/spike/results.json after every test, so a crash late in
     /// the run never loses earlier results.
     /// </summary>
     internal static class SpikeReport
     {
         private static readonly List<KeyValuePair<string, string>> s_Entries = new();
 
-        public static string OutputDir => Path.Combine(Application.persistentDataPath, "ModsData", "SignBuilder", "spike");
+        public static string OutputDir => Path.Combine(Application.persistentDataPath, "ModsData", "SignBuilderSA", "spike");
 
         public static void Set(string key, object value)
         {

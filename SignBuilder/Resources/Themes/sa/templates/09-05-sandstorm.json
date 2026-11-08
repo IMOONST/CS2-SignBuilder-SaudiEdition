@@ -1,0 +1,17 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "sandstorm",
+  "name": "لوحات إلكترونية: عاصفة رملية",
+  "board": "led",
+  "items": [
+    {
+      "type": "led",
+      "lines": [
+        "عاصفة رملية - رؤية محدودة",
+        "SANDSTORM - LOW VISIBILITY"
+      ],
+      "height": 10
+    }
+  ]
+}

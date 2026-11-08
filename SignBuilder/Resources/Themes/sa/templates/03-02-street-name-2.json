@@ -1,0 +1,26 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "street-name-2",
+  "name": "داخل المدن: اسم شارع فرعي",
+  "scheme": "blue",
+  "arabicFont": "Tajawal",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "شارع التحلية",
+          "height": 13
+        },
+        {
+          "type": "text",
+          "text": "Tahlia St",
+          "height": 10.7
+        }
+      ]
+    }
+  ]
+}

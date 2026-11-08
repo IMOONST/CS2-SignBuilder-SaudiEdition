@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "restaurant",
+  "name": "خدمات: مطعم",
+  "scheme": "blue",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/restaurant",
+          "height": 22,
+          "box": {}
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "مطعم",
+              "height": 13
+            },
+            {
+              "type": "text",
+              "text": "Restaurant",
+              "height": 10.7
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -19,15 +19,15 @@ using Game.UI.Menu;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
-using SignBuilder.Core;
-using SignBuilder.Geometry;
-using SignBuilder.Assemblies;
-using SignBuilder.Tools;
+using SignBuilderSA.Core;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Tests
+namespace SignBuilderSA.Tests
 {
     /// <summary>
-    /// Automated spike harness, run 7 ("batched"). Only runs when ModsData/SignBuilder/spike.flag
+    /// Automated spike harness, run 7 ("batched"). Only runs when ModsData/SignBuilderSA/spike.flag
     /// exists, and deletes that flag immediately so a normal launch afterwards is unaffected.
     ///
     /// Every feature is its own test: a failure or exception is recorded and the run moves on.
@@ -37,7 +37,7 @@ namespace SignBuilder.Tests
     internal sealed partial class SpikeRunner : MonoBehaviour
     {
         private const float kWatchdogSeconds = 540f;
-        private const string kSaveName = "SignBuilder_SpikeSave";
+        private const string kSaveName = "SignBuilderSA_SpikeSave";
 
         private string m_ResourcesDir;
         private float m_StartTime;
@@ -47,7 +47,7 @@ namespace SignBuilder.Tests
 
         private RuntimePrefabs m_Runtime;
 
-        public static string FlagPath => Path.Combine(Application.persistentDataPath, "ModsData", "SignBuilder", "spike.flag");
+        public static string FlagPath => Path.Combine(Application.persistentDataPath, "ModsData", "SignBuilderSA", "spike.flag");
 
         public static void StartIfFlagged(string modDir)
         {
@@ -55,7 +55,7 @@ namespace SignBuilder.Tests
             var mode = File.ReadAllText(FlagPath).Trim();
             File.Delete(FlagPath);
 
-            var go = new GameObject("SignBuilder.SpikeRunner");
+            var go = new GameObject("SignBuilderSA.SpikeRunner");
             DontDestroyOnLoad(go);
             var runner = go.AddComponent<SpikeRunner>();
             runner.m_ResourcesDir = Path.Combine(modDir, "Resources");

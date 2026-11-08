@@ -1,0 +1,24 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "narrows",
+  "name": "تحذيرية: الطريق يضيق",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/warn-narrows",
+      "height": 66
+    },
+    {
+      "type": "text",
+      "text": "الطريق يضيق",
+      "height": 11
+    },
+    {
+      "type": "text",
+      "text": "ROAD NARROWS",
+      "height": 9
+    }
+  ]
+}

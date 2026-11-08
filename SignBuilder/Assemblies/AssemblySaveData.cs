@@ -10,13 +10,13 @@ using Game.Prefabs;
 using Game.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SignBuilder.Core;
+using SignBuilderSA.Core;
 using Unity.Collections;
 using Unity.Entities;
-using SignBuilder.Geometry;
-using SignBuilder.Tools;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Assemblies
+namespace SignBuilderSA.Assemblies
 {
     /// <summary>
     /// Carries one assembly's recipe (designs, support spec, sign positions) inside the save, so a city
@@ -33,7 +33,9 @@ namespace SignBuilder.Assemblies
         {
             writer.Write(kVersion);
             var name = PrefabName.ToString();
-            var record = AssemblyLibrary.FromPrefabName(name) ?? AssemblyLibrary.Retired(name) ?? AssemblyRestoreSystem.Unresolved(name);
+            // Exactly this prefab's recipe: an alternate-state prefab (speed feedback) keeps its own, so objects saved with it
+            // still find it on load.
+            var record = AssemblyLibrary.ExactFromPrefabName(name) ?? AssemblyLibrary.Retired(name) ?? AssemblyRestoreSystem.Unresolved(name);
             writer.Write(record == null ? "" : record.ToPortable().ToString(Formatting.None));
         }
 
@@ -74,6 +76,8 @@ namespace SignBuilder.Assemblies
 
         protected override void OnUpdate()
         {
+            // Speed feedback signs are saved showing their main state, so the save only refers to main structures.
+            Systems.SpeedFeedbackSystem.RestoreMainStates(EntityManager);
             var names = new HashSet<string>();
             using (var refs = m_Objects.ToComponentDataArray<PrefabRef>(Allocator.Temp))
             {
@@ -84,7 +88,7 @@ namespace SignBuilder.Assemblies
                     var name = PrefabNameOf(EntityManager, m_PrefabSystem, r.m_Prefab);
                     // Assemblies removed from the library this session, or that could not be rebuilt here, keep their
                     // recipe, so re-saving never loses them.
-                    if (name != null && (AssemblyLibrary.FromPrefabName(name) != null || AssemblyLibrary.Retired(name) != null
+                    if (name != null && (AssemblyLibrary.ExactFromPrefabName(name) != null || AssemblyLibrary.Retired(name) != null
                         || AssemblyRestoreSystem.Unresolved(name) != null)) names.Add(name);
                 }
             }

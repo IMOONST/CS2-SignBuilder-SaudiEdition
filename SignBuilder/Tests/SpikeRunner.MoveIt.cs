@@ -11,23 +11,23 @@ using Game.Prefabs;
 using Game.SceneFlow;
 using Game.UI;
 using Game.UI.Menu;
-using SignBuilder.Assemblies;
-using SignBuilder.Core;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Core;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace SignBuilder.Tests
+namespace SignBuilderSA.Tests
 {
     internal sealed partial class SpikeRunner
     {
-        private const string kMoveItSave = "SignBuilder_MoveIt";
+        private const string kMoveItSave = "SignBuilderSA_MoveIt";
         private static string MoveItSignsFile => Path.Combine(SignBuilderRuntime.DataDir, "moveit_signs.txt");
 
         /// <summary>
         /// Mode "movesave": places signs and changes them the way Move It does when it moves a prop (new position,
-        /// Elevation added or removed, detached, Updated), then saves "SignBuilder_MoveIt" and quits. Mode "moveload"
+        /// Elevation added or removed, detached, Updated), then saves "SignBuilderSA_MoveIt" and quits. Mode "moveload"
         /// (a fresh boot into that save) then watches each sign for 30 seconds. Reproduces "a sign moved with Move It
         /// shows for a second after loading, then disappears".
         /// </summary>
@@ -142,7 +142,7 @@ namespace SignBuilder.Tests
                     return $"{p.label} {t.x} {t.y} {t.z}";
                 })));
             var menu = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<MenuUISystem>();
-            var preview = ScreenCaptureHelper.CreateRenderTarget("SignBuilder-MoveIt", 680, 383);
+            var preview = ScreenCaptureHelper.CreateRenderTarget("SignBuilderSA-MoveIt", 680, 383);
             ScreenCaptureHelper.CaptureScreenshot(Camera.main, preview, new MenuHelpers.SaveGamePreviewSettings());
             var task = GameManager.instance.Save(kMoveItSave, menu.GetSaveInfo(autoSave: false), AssetDatabase.user, preview);
             while (!task.IsCompleted) yield return null;

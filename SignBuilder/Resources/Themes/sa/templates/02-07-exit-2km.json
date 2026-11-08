@@ -1,0 +1,42 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "exit-2km",
+  "name": "طرق سريعة: المخرج بعد 2 كم",
+  "scheme": "green",
+  "support": "curved/cantilever",
+  "items": [
+    {
+      "type": "tab",
+      "align": "right",
+      "items": [
+        {
+          "type": "text",
+          "text": "مخرج 18 EXIT",
+          "height": 11
+        }
+      ]
+    },
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "جامعة الملك سعود",
+          "height": 14
+        },
+        {
+          "type": "text",
+          "text": "King Saud University",
+          "height": 11.5
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "text": "2 كم",
+      "height": 13
+    }
+  ]
+}

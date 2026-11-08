@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "diriyah",
+  "name": "سياحية: الدرعية التاريخية",
+  "scheme": "clay",
+  "arabicFont": "Amiri",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "حي الطريف - الدرعية",
+              "height": 13
+            },
+            {
+              "type": "text",
+              "text": "At-Turaif, Diriyah",
+              "height": 10.7
+            }
+          ]
+        },
+        {
+          "type": "arrow",
+          "direction": "up-right"
+        }
+      ]
+    }
+  ]
+}

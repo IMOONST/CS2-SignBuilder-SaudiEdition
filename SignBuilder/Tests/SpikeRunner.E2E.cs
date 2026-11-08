@@ -13,17 +13,17 @@ using Game.SceneFlow;
 using Game.UI;
 using Game.UI.Menu;
 using Newtonsoft.Json.Linq;
-using SignBuilder.Assemblies;
-using SignBuilder.Core;
-using SignBuilder.Systems;
-using SignBuilder.Tools;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Core;
+using SignBuilderSA.Systems;
+using SignBuilderSA.Tools;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
-using SignBuilder.Geometry;
+using SignBuilderSA.Geometry;
 
-namespace SignBuilder.Tests
+namespace SignBuilderSA.Tests
 {
     /// <summary>
     /// End-to-end run of the real feature code: every structure type and span, the gantry arrangement flow,
@@ -31,7 +31,7 @@ namespace SignBuilder.Tests
     /// </summary>
     internal sealed partial class SpikeRunner
     {
-        private const string kE2ESave = "SignBuilder_E2E";
+        private const string kE2ESave = "SignBuilderSA_E2E";
 
         private static readonly (string type, string span, bool left, string template)[] kPlacements =
         {
@@ -623,7 +623,7 @@ namespace SignBuilder.Tests
             {
                 var path = type == "none" ? null : PathOf(design, type);
                 if (type != "none" && path == null) continue;
-                page.ExecuteScript($"window.__signBuilderSelect && window.__signBuilderSelect({(path == null ? "null" : "\"" + path + "\"")});");
+                page.ExecuteScript($"window.__signBuilderSASelect && window.__signBuilderSASelect({(path == null ? "null" : "\"" + path + "\"")});");
                 yield return Watch(1.2f);
                 results.Add($"{type}={worst:F0}");
             }
@@ -887,7 +887,7 @@ namespace SignBuilder.Tests
         private static string UITemplates(SignBuilderUISystem ui) => ui.TemplatesJson;
 
         /// <summary>
-        /// The designer with a long sign loaded. With ModsData/SignBuilder/ui-wait.flag present the run pauses here so a
+        /// The designer with a long sign loaded. With ModsData/SignBuilderSA/ui-wait.flag present the run pauses here so a
         /// DevTools script can click around (spike/shot-NAME.flag screenshots, spike/ui-done.flag continues).
         /// </summary>
         private IEnumerator TestDesignerPause(SignBuilderUISystem ui)
@@ -967,7 +967,7 @@ namespace SignBuilder.Tests
         private IEnumerator TestSaveForReload()
         {
             var menu = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<MenuUISystem>();
-            var preview = ScreenCaptureHelper.CreateRenderTarget("SignBuilder-E2E", 680, 383);
+            var preview = ScreenCaptureHelper.CreateRenderTarget("SignBuilderSA-E2E", 680, 383);
             ScreenCaptureHelper.CaptureScreenshot(Camera.main, preview, new MenuHelpers.SaveGamePreviewSettings());
             var task = GameManager.instance.Save(kE2ESave, menu.GetSaveInfo(autoSave: false), AssetDatabase.user, preview);
             while (!task.IsCompleted) yield return null;
@@ -1027,7 +1027,7 @@ namespace SignBuilder.Tests
             yield return new WaitForSecondsRealtime(3f);
             SpikeReport.Set("reload.restored", $"objects={AssemblyRestoreSystem.LastRestored} failedAssemblies={AssemblyRestoreSystem.LastFailed}");
             var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-            var expectedFile = Path.Combine(Application.persistentDataPath, "ModsData", "SignBuilder", "e2e_expected.txt");
+            var expectedFile = Path.Combine(Application.persistentDataPath, "ModsData", "SignBuilderSA", "e2e_expected.txt");
             var expected = File.Exists(expectedFile) ? File.ReadAllLines(expectedFile) : Array.Empty<string>();
             SpikeReport.Set("reload.expected", expected.Length);
             var first = Entity.Null;

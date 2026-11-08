@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "emergency",
+  "name": "خدمات: رقم الطوارئ",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/phone",
+          "height": 20,
+          "box": {}
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "الطوارئ 911",
+              "height": 13
+            },
+            {
+              "type": "text",
+              "text": "Emergency 911",
+              "height": 10.7
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

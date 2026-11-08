@@ -1,0 +1,24 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "no-entry",
+  "name": "تنظيمية: ممنوع الدخول",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/no-entry",
+      "height": 62
+    },
+    {
+      "type": "text",
+      "text": "ممنوع الدخول",
+      "height": 11
+    },
+    {
+      "type": "text",
+      "text": "NO ENTRY",
+      "height": 9
+    }
+  ]
+}

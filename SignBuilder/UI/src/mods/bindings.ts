@@ -1,7 +1,7 @@
 import { bindValue, trigger } from "cs2/api";
 import mod from "mod.json";
 
-// C# side: SignBuilder.Systems.SignBuilderUISystem (binding group = mod id).
+// C# side: SignBuilderSA.Systems.SignBuilderUISystem (binding group = mod id).
 const group = mod.id;
 
 export const editorOpen$ = bindValue<boolean>(group, "editorOpen", false);
@@ -41,10 +41,11 @@ export const saveTemplate = (name: string, design: object, id?: string) => trigg
 export const renameTemplate = (id: string, name: string) => trigger(group, "renameTemplate", id, name);
 export const deleteTemplate = (id: string) => trigger(group, "deleteTemplate", id);
 export const openTemplatesFolder = () => trigger(group, "openTemplatesFolder");
-/** Opens ModsData/SignBuilder/Themes, where players add their own themes. */
+/** Opens ModsData/SignBuilderSA/Themes, where players add their own themes. */
 export const openThemesFolder = () => trigger(group, "openThemesFolder");
 
 /** Selected-object panel actions on a placed structure. */
 export const editSelected = () => trigger(group, "editSelected");
 export const moveSelected = () => trigger(group, "moveSelected");
 export const duplicateSelected = () => trigger(group, "duplicateSelected");
+export const deleteSelected = () => trigger(group, "deleteSelected");

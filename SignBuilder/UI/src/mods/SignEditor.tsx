@@ -1,3 +1,6 @@
+import { t, tf } from "./l10n";
+import { useLanguage } from "./language";
+import { cancelPickRoad } from "./roadPick";
 import { useValue } from "cs2/api";
 import { BackConsumer } from "cs2/input";
 import { useEffect, useMemo, useState } from "react";
@@ -22,7 +25,7 @@ type Context =
 
 type Question = { message: string; confirm: string; onConfirm: () => void };
 
-const LOSE_GANTRY = "Close without building? The gantry and its changes will be lost.";
+const loseGantry = () => t("Close without building? The gantry and its changes will be lost.");
 
 /**
  * Sign Builder's UI root. The designer edits one sign; from there it goes on roadside posts (placement bar) or
@@ -30,6 +33,7 @@ const LOSE_GANTRY = "Close without building? The gantry and its changes will be 
  * Escape closes the dialog like the game's own; unsaved changes are asked about first.
  */
 export const SignEditor = () => {
+  useLanguage();
   const open = useValue(editorOpen$);
   const templatesJson = useValue(templates$);
   const editing = useValue(editingDesign$);
@@ -63,7 +67,7 @@ export const SignEditor = () => {
   };
   const settle = () => setBaseline(JSON.stringify(design));
   /** Runs <then> now, or once the player confirms when there is something to lose. */
-  const guard = (unsaved: boolean, message: string, then: () => void, confirm = "Discard") => {
+  const guard = (unsaved: boolean, message: string, then: () => void, confirm = t("Discard")) => {
     if (!unsaved) then();
     else setQuestion({ message, confirm, onConfirm: () => { setQuestion(null); then(); } });
   };
@@ -97,7 +101,7 @@ export const SignEditor = () => {
   if (!open) return null;
   const close = () => { setQuestion(null); cancelTool(); setEditorOpen(false); };
   const overlay = question && (
-    <Confirm message={question.message} confirm={question.confirm} cancel="Keep editing" onConfirm={question.onConfirm} onCancel={() => setQuestion(null)} />
+    <Confirm message={question.message} confirm={question.confirm} cancel={t("Keep editing")} onConfirm={question.onConfirm} onCancel={() => setQuestion(null)} />
   );
   // Escape works like the game's own dialogs: it closes this one (or dismisses an open question).
   const withBack = (content: any, onBack: () => void) => (
@@ -105,70 +109,70 @@ export const SignEditor = () => {
   );
 
   if (mode === "arrange" && context.kind !== "gantrySign" && context.kind !== "gantryAdd") {
-    const closeGantry = (unsaved: boolean) => guard(unsaved, LOSE_GANTRY, close);
+    const closeGantry = (unsaved: boolean) => guard(unsaved, loseGantry(), close);
     return withBack(
       <Arrange overlay={overlay} onClose={closeGantry}
-        onCancel={(unsaved) => guard(unsaved, "Cancel this gantry? Its changes will be lost.", () => arrange({ op: "cancel" }))}
+        onCancel={(unsaved) => guard(unsaved, t("Cancel this gantry? Its changes will be lost."), () => arrange({ op: "cancel" }))}
         onEditSign={(index, d) => { load(clone(d)); setContext({ kind: "gantrySign", index }); }}
         onAddSign={() => { load(blankFor(themeOf(themes, design))); setContext({ kind: "gantryAdd" }); }} />,
       // Escape always asks (it is easy to press by accident).
-      () => guard(true, gantryUnsaved ? LOSE_GANTRY : "Close the gantry editor?", close, gantryUnsaved ? "Discard" : "Close"),
+      () => guard(true, gantryUnsaved ? loseGantry() : t("Close the gantry editor?"), close, gantryUnsaved ? t("Discard") : t("Close")),
     );
   }
   if (mode === "posts" || mode === "pickRoad") {
     return <PlacementBar status={status} onClose={close} onBack={() => cancelTool()} />;
   }
 
-  let title = "Sign Builder";
+  let title = t("Sign Builder");
   let actions: DesignerAction[];
   // Once the placed sign is saved, moved or duplicated (nothing is being replaced), it is a plain design again.
   const shown: Context = context.kind === "postsEdit" && !replacing ? { kind: "new" } : context;
   const editingPosts = shown.kind === "postsEdit";
   switch (shown.kind) {
     case "postsEdit":
-      title = "Edit roadside sign";
+      title = t("Edit roadside sign");
       actions = [
-        { label: "Save", primary: true, onSelect: () => { settle(); setLights({ placed: lights.now, now: lights.now }); savePosts(design, lights.now); } },
-        { label: "Cancel", title: "Keep the placed sign as it is",
-          onSelect: () => guard(dirty, "Discard your changes to this sign?", close) },
+        { label: t("Save"), primary: true, onSelect: () => { settle(); setLights({ placed: lights.now, now: lights.now }); savePosts(design, lights.now); } },
+        { label: t("Cancel"), title: t("Keep the placed sign as it is"),
+          onSelect: () => guard(dirty, t("Discard your changes to this sign?"), close) },
       ];
       break;
     case "gantrySign":
-      title = `Edit gantry sign ${shown.index + 1}`;
+      title = tf("Edit gantry sign {n}", { n: shown.index + 1 });
       actions = [
-        { label: "Done", primary: true, onSelect: () => { arrange({ op: "replaceSign", index: shown.index, design }); setContext({ kind: "new" }); } },
-        { label: "Cancel", onSelect: () => guard(dirty, "Discard your changes to this sign?", () => setContext({ kind: "new" })) },
+        { label: t("Done"), primary: true, onSelect: () => { arrange({ op: "replaceSign", index: shown.index, design }); setContext({ kind: "new" }); } },
+        { label: t("Cancel"), onSelect: () => guard(dirty, t("Discard your changes to this sign?"), () => setContext({ kind: "new" })) },
       ];
       break;
     case "gantryAdd":
-      title = "Add a sign to the gantry";
+      title = t("Add a sign to the gantry");
       actions = [
-        { label: "Add to gantry", primary: true, onSelect: () => { arrange({ op: "addSign", design }); setContext({ kind: "new" }); } },
-        { label: "Cancel", onSelect: () => guard(dirty, "Discard this sign?", () => setContext({ kind: "new" })) },
+        { label: t("Add to gantry"), primary: true, onSelect: () => { arrange({ op: "addSign", design }); setContext({ kind: "new" }); } },
+        { label: t("Cancel"), onSelect: () => guard(dirty, t("Discard this sign?"), () => setContext({ kind: "new" })) },
       ];
       break;
     default:
       actions = [
-        { label: "Gantry", primary: true, title: "Over the road on a truss or tube structure", onSelect: () => { settle(); startGantry([design]); } },
-        { label: "Roadside", primary: true, title: "On posts beside the road", onSelect: () => { settle(); startPosts(design); } },
-        { label: "Prop", primary: true, title: "Just the sign, no supports: on any surface or the side of an elevated road", onSelect: () => { settle(); startPosts(design, "surface"); } },
+        { label: t("Gantry"), primary: true, title: t("Over the road on a truss or tube structure"), onSelect: () => { settle(); startGantry([design]); } },
+        { label: t("Roadside"), primary: true, title: t("On posts beside the road"), onSelect: () => { settle(); startPosts(design); } },
+        { label: t("Prop"), primary: true, title: t("Just the sign, no supports: on any surface or the side of an elevated road"), onSelect: () => { settle(); startPosts(design, "surface"); } },
       ];
   }
 
   // Closing while one of a gantry's signs is open loses the whole gantry.
   const inGantry = context.kind === "gantrySign" || context.kind === "gantryAdd";
-  const requestClose = () => guard(dirty || inGantry, inGantry ? LOSE_GANTRY : "Close the Sign Builder? Your changes to this sign will be lost.", close);
-  const escape = () => (dirty || inGantry ? requestClose() : guard(true, "Close the Sign Builder?", close, "Close"));
+  const requestClose = () => guard(dirty || inGantry, inGantry ? loseGantry() : t("Close the Sign Builder? Your changes to this sign will be lost."), close);
+  const escape = () => (dirty || inGantry ? requestClose() : guard(true, t("Close the Sign Builder?"), close, t("Close")));
   return withBack(
     <Designer design={design} setDesign={setDesign} onTemplateSaved={settle}
-      onLoad={(d, then) => guard(dirty, "Load this? Your changes to the current sign will be lost.", () => { load(d); then(); })} templates={templates} themes={themes} libraries={libraries}
+      onLoad={(d, then) => guard(dirty, t("Load this? Your changes to the current sign will be lost."), () => { load(d); then(); })} templates={templates} themes={themes} libraries={libraries}
       title={title} actions={actions} onClose={requestClose} overlay={overlay}
       extra={editingPosts ? (
-        <Field label="Lights">
-          <Choice options={[{ value: "off", label: "Off" }, { value: "on", label: "On", title: "A light fixture below the sign, lit at night" }]}
+        <Field label={t("Lights")}>
+          <Choice options={[{ value: "off", label: t("Off") }, { value: "on", label: t("On"), title: t("A light fixture below the sign, lit at night") }]}
             value={lights.now ? "on" : "off"} onChange={(v) => setLights({ ...lights, now: v === "on" })} />
         </Field>
       ) : undefined} />,
-    escape,
+    () => (mode === "pickInfo" ? cancelPickRoad() : escape()),
   );
 };

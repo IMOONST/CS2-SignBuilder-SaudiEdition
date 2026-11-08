@@ -1,0 +1,84 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "distances-north",
+  "name": "إرشادية: المسافات (طريق القصيم)",
+  "scheme": "green",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Buraydah",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "320 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "بريدة",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Hail",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "610 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "حائل",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Tabuk",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "1260 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "تبوك",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    }
+  ]
+}

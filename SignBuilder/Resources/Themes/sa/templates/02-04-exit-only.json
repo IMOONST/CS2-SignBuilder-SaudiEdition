@@ -1,0 +1,49 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "exit-only",
+  "name": "طرق سريعة: للمخرج فقط",
+  "scheme": "green",
+  "support": "doubleTruss/span",
+  "items": [
+    {
+      "type": "tab",
+      "align": "right",
+      "items": [
+        {
+          "type": "text",
+          "text": "مخرج 5 EXIT",
+          "height": 11
+        }
+      ]
+    },
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "طريق الملك سلمان",
+          "height": 15
+        },
+        {
+          "type": "text",
+          "text": "King Salman Rd",
+          "height": 12.3
+        }
+      ]
+    },
+    {
+      "type": "panel",
+      "scheme": "yellow",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "للمخرج فقط EXIT ONLY",
+          "height": 10
+        }
+      ]
+    }
+  ]
+}

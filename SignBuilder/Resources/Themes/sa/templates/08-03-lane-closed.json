@@ -1,0 +1,47 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "lane-closed",
+  "name": "أعمال طرق: المسار الأيمن مغلق",
+  "scheme": "orange",
+  "support": "ground",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "المسار الأيمن مغلق",
+          "height": 13
+        },
+        {
+          "type": "text",
+          "text": "RIGHT LANE CLOSED",
+          "height": 10.7
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "arrow",
+          "direction": "up",
+          "height": 20
+        },
+        {
+          "type": "arrow",
+          "direction": "up",
+          "height": 20
+        },
+        {
+          "type": "symbol",
+          "symbol": "sa/no-entry",
+          "height": 20
+        }
+      ],
+      "justify": "even"
+    }
+  ]
+}

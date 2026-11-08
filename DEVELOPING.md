@@ -149,7 +149,7 @@ LED lettering is the renderer's own 5×7 dot-matrix font (`LED_GLYPHS`), drawn a
    with a spot `LightEffect` that is on when it gets dark (`SignLightSystem`). The object is then spawned at the placement transform.
 
 The meshes, materials and textures are saved as assets in Sign Builder's own asset database
-(`ModsData/SignBuilder/Cache`). The structure's recipe goes into the library (`ModsData/SignBuilder/assemblies.json`).
+(`ModsData/SignBuilderSA/Cache`). The structure's recipe goes into the library (`ModsData/SignBuilderSA/assemblies.json`).
 
 ## Persistence and sharing
 
@@ -199,17 +199,17 @@ The meshes, materials and textures are saved as assets in Sign Builder's own ass
 Requirements: the Cities: Skylines II modding toolchain (`CSII_TOOLPATH`) and Node.js.
 
 ```bash
-dotnet build SignBuilder/SignBuilder.csproj -c Release
+dotnet build SignBuilder/SignBuilderSA.csproj -c Release
 ```
 
-The build compiles the mod, copies `Resources` and builds the UI into the game's local `Mods/SignBuilder` folder.
+The build compiles the mod, copies `Resources` and builds the UI into the game's local `Mods/SignBuilderSA` folder.
 This is the release build: it contains no test code.
 
 For the in-game tests, build with the test harness compiled in (it defines `TESTS`, compiles `SignBuilder/Tests`,
 ships the test pages and keeps the UI's test hooks):
 
 ```bash
-dotnet build SignBuilder/SignBuilder.csproj -c Release -p:SignBuilderTests=true
+dotnet build SignBuilder/SignBuilderSA.csproj -c Release -p:SignBuilderTests=true
 ```
 
 `npm run build` in `SignBuilder/UI` rebuilds only the UI. Publishing uses the toolchain's profiles in
@@ -217,7 +217,7 @@ dotnet build SignBuilder/SignBuilder.csproj -c Release -p:SignBuilderTests=true
 
 ## Testing
 
-The in-game harness (`Tests/SpikeRunner*.cs`, test builds only) runs when `ModsData/SignBuilder/spike.flag` exists.
+The in-game harness (`Tests/SpikeRunner*.cs`, test builds only) runs when `ModsData/SignBuilderSA/spike.flag` exists.
 `scripts/run-spike.sh <mode> [save-guid]` writes the flag, launches the game through Steam (straight into a save),
 waits up to 5 minutes for it to start, and kills it after 10 minutes at most.
 
@@ -231,7 +231,7 @@ waits up to 5 minutes for it to start, and kills it after 10 minutes at most.
 | `leak-e2e` | Whether anything of Sign Builder keeps running once its panel is closed: renderer and baker counters, frame times and memory per phase. About 3 minutes |
 | `reload-e2e` | Loads the save written by `e2e` and checks that every structure came back                                                                                                                                                                                                          |
 
-Results go to `ModsData/SignBuilder/spike/results.json`, with screenshots next to it. The game's `Logs/UI.log`
+Results go to `ModsData/SignBuilderSA/spike/results.json`, with screenshots next to it. The game's `Logs/UI.log`
 shows UI errors (focus errors included). `Logs/SignBuilder.Mod.log` has Sign Builder's own log: bake timings and
 long frames.
 

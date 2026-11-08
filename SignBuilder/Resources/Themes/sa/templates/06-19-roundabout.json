@@ -1,0 +1,14 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "roundabout",
+  "name": "تنظيمية: دوار إجباري",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/roundabout-mandatory",
+      "height": 62
+    }
+  ]
+}

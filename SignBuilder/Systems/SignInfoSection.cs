@@ -2,11 +2,11 @@ using Colossal.Entities;
 using Colossal.UI.Binding;
 using Game.Prefabs;
 using Game.UI.InGame;
-using SignBuilder.Assemblies;
-using SignBuilder.Tools;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Tools;
 using Unity.Entities;
 
-namespace SignBuilder.Systems
+namespace SignBuilderSA.Systems
 {
     /// <summary>
     /// A section in the game's selected-object panel for placed Sign Builder structures, with an
@@ -18,7 +18,8 @@ namespace SignBuilder.Systems
         private SignPlacementToolSystem m_Tool;
         private AssemblyRecord m_Record;
 
-        protected override string group => nameof(SignInfoSection);
+        // Distinct from the original Sign Builder (whose section has the same class name), so both mods can be installed.
+        protected override string group => "SignBuilderSA_SignInfoSection";
 
         protected override void OnCreate()
         {
@@ -28,6 +29,19 @@ namespace SignBuilder.Systems
             AddBinding(new TriggerBinding(SignBuilderUISystem.Group, "editSelected", EditSelected));
             AddBinding(new TriggerBinding(SignBuilderUISystem.Group, "moveSelected", () => PlaceSelectedAgain(move: true)));
             AddBinding(new TriggerBinding(SignBuilderUISystem.Group, "duplicateSelected", () => PlaceSelectedAgain(move: false)));
+            AddBinding(new TriggerBinding(SignBuilderUISystem.Group, "deleteSelected", DeleteSelected));
+        }
+
+        /// <summary>
+        /// Removes the selected sign or gantry, the same way the bulldozer does (marked Deleted; the game's cleanup
+        /// takes it from there). The library record is cleaned up by AssemblyCleanup once nothing uses it.
+        /// </summary>
+        internal void DeleteSelected()
+        {
+            var entity = selectedEntity;
+            if (RecordOf(entity) == null) return;
+            m_InfoUISystem.SetSelection(Entity.Null);
+            new RuntimePrefabs().Delete(entity);
         }
 
         private AssemblyRecord RecordOf(Entity entity)

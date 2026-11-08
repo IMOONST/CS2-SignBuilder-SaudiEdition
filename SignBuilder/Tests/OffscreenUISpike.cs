@@ -7,12 +7,12 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Object = UnityEngine.Object;
-using SignBuilder.Core;
-using SignBuilder.Geometry;
-using SignBuilder.Assemblies;
-using SignBuilder.Tools;
+using SignBuilderSA.Core;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Tests
+namespace SignBuilderSA.Tests
 {
     /// <summary>
     /// Renders HTML pages with the game's Gameface (cohtml) engine into off-screen textures.
@@ -23,7 +23,7 @@ namespace SignBuilder.Tests
     /// </summary>
     internal sealed class OffscreenUISpike : IDisposable
     {
-        private const string kHost = "signbuilder";
+        private const string kHost = "signbuildersa";
 
         private readonly UISystem m_UISystem;
         private readonly UIView m_View;
@@ -40,7 +40,7 @@ namespace SignBuilder.Tests
             m_UISystem = GameManager.instance.userInterface.view.uiSystem;
             m_UISystem.AddHostLocation(kHost, resourcesDir, shouldWatch: false);
 
-            var go = new GameObject("SignBuilder.OffscreenUICamera");
+            var go = new GameObject("SignBuilderSA.OffscreenUICamera");
             Object.DontDestroyOnLoad(go);
             m_DummyCamera = go.AddComponent<Camera>();
             m_DummyCamera.enabled = false;
@@ -121,7 +121,7 @@ namespace SignBuilder.Tests
                 NativeArray<byte>.Copy(data, y * rowBytes, flipped, (rt.height - 1 - y) * rowBytes, rowBytes);
             }
 
-            var tex = new Texture2D(rt.width, rt.height, TextureFormat.RGBA32, mipChain: true) { name = "SignBuilder.SignFace" };
+            var tex = new Texture2D(rt.width, rt.height, TextureFormat.RGBA32, mipChain: true) { name = "SignBuilderSA.SignFace" };
             tex.SetPixelData(flipped, 0);
             tex.Apply(updateMipmaps: true);
 

@@ -1,0 +1,24 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "sand",
+  "name": "تحذيرية: انتبه زحف رمال",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/warn-sand",
+      "height": 66
+    },
+    {
+      "type": "text",
+      "text": "انتبه زحف رمال",
+      "height": 11
+    },
+    {
+      "type": "text",
+      "text": "SAND DRIFT",
+      "height": 9
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import { SymbolLibrary } from "./themeModel";
 
 // The same renderer that bakes in-world textures, loaded into the game's UI page so the preview is
 // pixel-identical to the sign that gets placed. Served from the mod folder by SignFaceBaker's host.
-const RENDERER_BASE = "coui://signbuilder/Renderer/";
+const RENDERER_BASE = "coui://signbuildersa/Renderer/";
 
 declare global {
   interface Window {

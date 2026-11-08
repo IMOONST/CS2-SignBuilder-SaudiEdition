@@ -1,0 +1,28 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "sign-fuel",
+  "name": "خدمات: لوحة محطة وقود",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/fuel",
+      "height": 34,
+      "color": "#000000",
+      "box": {
+        "background": "#ffffff",
+        "border": false
+      }
+    },
+    {
+      "type": "text",
+      "text": "2 كم",
+      "height": 12,
+      "margin": {
+        "top": 6
+      }
+    }
+  ]
+}

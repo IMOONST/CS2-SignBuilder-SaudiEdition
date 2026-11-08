@@ -1,0 +1,14 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "no-horn",
+  "name": "تنظيمية: ممنوع المنبه",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/no-horn",
+      "height": 62
+    }
+  ]
+}

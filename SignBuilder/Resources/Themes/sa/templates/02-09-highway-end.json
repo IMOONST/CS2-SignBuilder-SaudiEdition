@@ -1,0 +1,30 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "highway-end",
+  "name": "طرق سريعة: نهاية الطريق السريع",
+  "scheme": "green",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "نهاية الطريق السريع",
+          "height": 13
+        },
+        {
+          "type": "text",
+          "text": "Expressway Ends",
+          "height": 10.7
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "text": "1 كم",
+      "height": 12
+    }
+  ]
+}

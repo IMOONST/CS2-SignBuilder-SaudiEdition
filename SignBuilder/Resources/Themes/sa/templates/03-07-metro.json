@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "metro",
+  "name": "داخل المدن: محطة المترو",
+  "scheme": "blue",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/metro",
+          "height": 20,
+          "box": {}
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "محطة مترو قصر الحكم",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "Qasr Al Hokm Metro Stn",
+              "height": 9.8
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

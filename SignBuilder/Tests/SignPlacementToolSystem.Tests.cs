@@ -8,16 +8,16 @@ using Game.Prefabs;
 using Game.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SignBuilder.Assemblies;
-using SignBuilder.Core;
-using SignBuilder.Systems;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Core;
+using SignBuilderSA.Systems;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
-using SignBuilder.Geometry;
+using SignBuilderSA.Geometry;
 
-namespace SignBuilder.Tools
+namespace SignBuilderSA.Tools
 {
     /// <summary>Test hooks: what the in-game tests drive and inspect (test builds only).</summary>
     public partial class SignPlacementToolSystem

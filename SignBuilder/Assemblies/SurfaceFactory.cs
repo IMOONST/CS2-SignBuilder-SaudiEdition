@@ -4,7 +4,7 @@ using Colossal.IO.AssetDatabase;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace SignBuilder.Assemblies
+namespace SignBuilderSA.Assemblies
 {
     /// <summary>
     /// Creates SurfaceAssets (game materials) from our own textures, using a vanilla surface's material
@@ -54,7 +54,7 @@ namespace SignBuilder.Assemblies
             // Saved at half the face's size: enough to keep the dots sharp.
             var led = lit != null && lit.width == face.width && lit.height == face.height;
             var emissive = led ? Compressed(Downscale(Emissive(face, lit, kLedBoardGlow), 2)) : null;
-            return Create(database, folder, "SignBuilder_Face_" + key.Substring(0, Math.Min(12, key.Length)), template, Compressed(face), FaceMask(), m =>
+            return Create(database, folder, "SignBuilderSA_Face_" + key.Substring(0, Math.Min(12, key.Length)), template, Compressed(face), FaceMask(), m =>
             {
                 if (m.HasProperty("_AlphaCutoffEnable")) m.SetFloat("_AlphaCutoffEnable", 1f);
                 if (m.HasProperty("_AlphaCutoff")) m.SetFloat("_AlphaCutoff", 0.5f);
@@ -104,7 +104,7 @@ namespace SignBuilder.Assemblies
                     dst[y * w + x] = new Color32((byte)(r / n), (byte)(g / n), (byte)(b / n), (byte)(a / n));
                 }
             }
-            var tex = new Texture2D(w, h, TextureFormat.RGBA32, mipChain: true) { name = "SignBuilder.Glow", wrapMode = TextureWrapMode.Clamp };
+            var tex = new Texture2D(w, h, TextureFormat.RGBA32, mipChain: true) { name = "SignBuilderSA.Glow", wrapMode = TextureWrapMode.Clamp };
             tex.SetPixels32(dst);
             tex.Apply(updateMipmaps: true);
             return tex;
@@ -122,7 +122,7 @@ namespace SignBuilder.Assemblies
                 byte Mix(byte f, byte l) => (byte)Math.Min(255f, Math.Max(f * faceShare, l * k));
                 o[i] = new Color32(Mix(a[i].r, b[i].r), Mix(a[i].g, b[i].g), Mix(a[i].b, b[i].b), a[i].a);
             }
-            var tex = new Texture2D(face.width, face.height, TextureFormat.RGBA32, mipChain: true) { name = "SignBuilder.Glow", wrapMode = TextureWrapMode.Clamp };
+            var tex = new Texture2D(face.width, face.height, TextureFormat.RGBA32, mipChain: true) { name = "SignBuilderSA.Glow", wrapMode = TextureWrapMode.Clamp };
             tex.SetPixels32(o);
             tex.Apply(updateMipmaps: true);
             return tex;
@@ -154,7 +154,7 @@ namespace SignBuilder.Assemblies
         private static Texture2D FaceMask()
         {
             if (s_FaceMask != null) return s_FaceMask;
-            s_FaceMask = new Texture2D(4, 4, TextureFormat.RGBA32, mipChain: false, linear: true) { name = "SignBuilder.FaceMask" };
+            s_FaceMask = new Texture2D(4, 4, TextureFormat.RGBA32, mipChain: false, linear: true) { name = "SignBuilderSA.FaceMask" };
             var pixels = new Color32[16];
             for (var i = 0; i < pixels.Length; i++) pixels[i] = new Color(0f, 1f, 0f, 0.35f);
             s_FaceMask.SetPixels32(pixels);

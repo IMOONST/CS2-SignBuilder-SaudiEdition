@@ -1,0 +1,25 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "headlights",
+  "name": "خدمات: أضئ أنوار السيارة",
+  "scheme": "blue",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "أضئ أنوار السيارة",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "TURN ON LIGHTS",
+          "height": 9.8
+        }
+      ]
+    }
+  ]
+}

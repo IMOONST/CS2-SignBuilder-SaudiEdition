@@ -1,0 +1,61 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "services",
+  "name": "خدمات: خدمات الطريق",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "خدمات بعد 10 كم",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "Services in 10 km",
+          "height": 9.8
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/fuel",
+          "height": 18,
+          "box": {}
+        },
+        {
+          "type": "symbol",
+          "symbol": "sa/mosque",
+          "height": 18,
+          "box": {}
+        },
+        {
+          "type": "symbol",
+          "symbol": "sa/restaurant",
+          "height": 18,
+          "box": {}
+        },
+        {
+          "type": "symbol",
+          "symbol": "sa/hotel",
+          "height": 18,
+          "box": {}
+        },
+        {
+          "type": "symbol",
+          "symbol": "sa/phone",
+          "height": 18,
+          "box": {}
+        }
+      ]
+    }
+  ]
+}

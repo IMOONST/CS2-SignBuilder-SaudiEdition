@@ -3,18 +3,18 @@ using System.Linq;
 using Colossal;
 using Game.SceneFlow;
 using Newtonsoft.Json.Linq;
-using SignBuilder.Assemblies;
+using SignBuilderSA.Assemblies;
 
-namespace SignBuilder.Core
+namespace SignBuilderSA.Core
 {
     /// <summary>
-    /// Display names for the generated sign props ("Sign Builder sign" instead of Assets.NAME[SignBuilder_A_…]),
+    /// Display names for the generated sign props ("Sign Builder sign" instead of Assets.NAME[SignBuilderSA_A_…]),
     /// with the sign's legend as the description. Registered as a dictionary source for every locale (so locale
     /// reloads keep them) and added straight to the active dictionary when a new sign is built.
     /// </summary>
     public sealed class AssetNames : IDictionarySource
     {
-        public const string kName = "Sign Builder sign";
+        public const string kName = "لوحة من صانع اللوحات";
         private static AssetNames s_Instance;
 
         public static void Register()

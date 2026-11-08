@@ -1,144 +1,93 @@
-# Sign Builder
+# Sign Builder: Saudi Edition
 
-A Cities: Skylines II code mod for designing road signs in game and placing them standalone or on
-gantries. Signs come in themes (one per country or style): United States (MUTCD guide signs with
-Interstate, US and state shields, exit tabs and EXIT ONLY panels), Canada, Germany, United Kingdom,
-Nordic (Norway and Sweden), France, Netherlands, Italy, Switzerland, Poland, Russia, Japan, China and
-Australia.
-Players can add their own themes and templates as files, or publish them as mods.
+An extended edition of [Sign Builder](https://github.com/andyjsmith/CS2-SignBuilder) by **Andy Smith** for Cities: Skylines II: design road signs in game and place them on gantries, posts or any surface. This edition adds new tools, reworks how right-to-left text is laid out on signs, and brings a complete Saudi theme. Every feature of the original is kept.
 
-## Using it
+[العربية](#بناء-اللوحات-النسخة-السعودية)
 
-1. Click **SB** in the top-left toolbar to open the designer.
-2. Pick a theme and start from one of its templates (or a blank sign). Click any part of the preview to
-   select it (its text box takes the caret) and edit it on the right. Signs are built from a few basic
-   parts: Text, Shield, Arrow (including curved turn and split lane arrows), Divider, Row, Column, **Chip**
-   (a small colored box such as a TOLL or speed plate), **Panel** (a band across the sign's full width, at
-   the top, between parts or at the bottom, like an EXIT ONLY panel) and **Tab** (on top of the sign, like
-   an exit number plaque). Drag parts in the list to reorder them or drop them into a Row, Column, Chip,
-   Panel or Tab. **Diagram** draws the road itself for diagrammatic signs (exit left or right with lane
-   lines, fork, roundabout with chosen exits); **LED text** is a dot-matrix LED display (prices, messages), and
-   **Sign type: Message board** makes the whole sign a black LED board; LED lettering glows like the game's neon signs. A row can be spread out across the sign (lane arrows under their lanes); text, arrows and
-   dividers can take any color; text has a letter spacing setting; any part can have margins. Set the
-   colors (or custom colors), width (fit, a number of lanes, or at least a size) and alignment.
-   **Save current as template** keeps the sign as a JSON file in
-   `ModsData/SignBuilder/Templates`.
-3. **Place as:** **Roadside** puts the sign on posts, snapped beside a road or freely placed (right-drag
-   rotates); **Prop** places just the sign, no supports, on any surface or hung on the side of an elevated
-   road. While placing, Alt + mouse wheel sets the distance from the road and Ctrl + mouse wheel (or
-   Page Up / Page Down) the height; **Lights** adds a light fixture below the sign, lit at night.
-4. **Gantry** asks for a road, pins the structure there with a live preview and opens the
-   arrangement panel: a to-scale view of the lanes as drivers see them. Add signs (any theme), drag them
-   sideways (they snap to lane centers, remembered from the nearer edge: "rightmost lane", "2nd lane from
-   left"), choose the structure (double truss, single truss, curved or straight tube), Span or Cantilever
-   (post on the right or left), Swap directions, height, posts' distance from the road, sign size and
-   lights, and signs on the back for the other direction. A span crosses only the road it was placed on:
-   click other roads in the world to add them to (or remove them from) the span. **Build** makes it.
-   Esc or the close button asks before discarding anything.
-5. Click a placed sign with the normal selection tool: its panel has **Edit** (gantries reopen in the
-   arrangement panel in place, standalone signs in the designer, with their lights setting; **Save** rebuilds
-   them where they stand),
-   **Move** and **Duplicate**.
+## What's new compared to the original
+**New tools**
+- Sign manager: every sign in the city in one searchable list (jump to it, delete it).
+- Pick a road: street, district and speed limit read from the map, with live `{street}`, `{district}` and `{speed}` placeholders and template suggestions per road class.
+- "Your Speed" signs that switch between a happy and a sad face from the speed of passing traffic.
+- LED glow that follows night, fog and rain.
+- Template packs: export and import designs.
+- Line spacing and part spacing controls.
+- Interface language option (Auto / Arabic / English), applied at once.
+- Delete a sign from its info panel.
 
-Placed signs are ordinary props: they save with the city, can be bulldozed, and render through the
-game's own batching (shadows, distance culling). Saves are shareable: each structure's recipe (sign
-designs, support shape, sign positions) is stored inside the save, and a player who loads the city
-without your local sign cache gets the signs rebuilt automatically (they need Sign Builder installed).
+**Improvements**
+- Right-to-left text layout: connected Arabic letters (shaping), correct order in lines mixing Arabic, Latin and numbers (run-level bidi), no overlap between scripts, no unwanted wrapping, extra room above and below Arabic lines.
+- Arabic fonts: Cairo, Cairo Black, Tajawal, Tajawal ExtraBold, Amiri.
+- "Saudi Arabia" theme: 131 templates in 10 categories, Saudi route shields, and a 56-pictogram symbol library.
+- Full Arabic interface.
+- Fully independent from the original (own assembly, mod id, data folder, settings, prefab names, binding groups and CSS class prefix), so both can be installed side by side.
 
-## How it works
-
-| Part | Where |
-| --- | --- |
-| Sign renderer: JSON design to HTML, laid out with the design's theme | `SignBuilder/Resources/Renderer/renderer.js` |
-| Face baker: renders designs off-screen with the game's UI engine, caches PNGs | `SignBuilder/Rendering/SignFaceBaker.cs` |
-| Editor UI (React, built into the mod folder) | `SignBuilder/UI/src/mods/` |
-| UI bindings | `SignBuilder/Systems/SignBuilderUISystem.cs` |
-| Placement / pick tool | `SignBuilder/Tools/SignPlacementToolSystem.cs` |
-| Support geometry (truss, tubes, posts) | `SignBuilder/Spike/GantryFactory.cs`, `MeshBuilder.cs` |
-| Assembly build: layout, merged mesh, materials, prefab | `SignBuilder/Assemblies/AssemblyBuilder.cs` |
-| Persistence: assembly library re-registered before saves load | `SignBuilder/Assemblies/AssemblyLibrary.cs`, `AssemblyBootstrapSystem.cs` |
-| Themes and their templates | `SignBuilder/Resources/Themes/<id>/` (`theme.json`, `fonts/`, `shields/`, `templates/`) |
-
-Each placed structure becomes one prop prefab (`SignBuilder_A_<id>`): the support and sign panels
-are merged into one mesh with a steel material and one material per sign face. The meshes and
-materials are stored in a mod-owned asset database (`ModsData/SignBuilder/Cache`), and
-`ModsData/SignBuilder/assemblies.json` lists every structure so its prefab can be re-created before a
-save is deserialized. Recipes also travel in the save (`AssemblySaveData.cs`); after loading, any
-structure this PC lacks is rebuilt from its recipe and its objects (kept by the game with a missing
-prefab) are respawned in place.
+## Repository layout
+| Path | What |
+|---|---|
+| `SignBuilder/` | The mod: C# (`SignBuilderSA.csproj`), the React UI (`UI/`), the sign renderer (`Resources/Renderer/renderer.js`), themes and symbol libraries (`Resources/`). |
+| `SignBuilder/Resources/Themes/sa/` | The Saudi theme (templates and shields). |
+| `SignBuilder/Resources/Symbols/sa/` | The Saudi symbol library and its `CREDITS.txt`. |
+| `SignBuilder/Properties/` | Paradox Mods publishing files. |
+| `ThemeTemplate/` | How to make your own theme pack (from the original). |
+| `DEVELOPING.md`, `README-SignBuilder-original.md` | The original project's developer notes and full user guide. |
+| `README-PUBLISH.md` | Publishing steps for this edition. |
 
 ## Building
+Requirements: Cities: Skylines II with the official modding toolchain installed (it sets the `CSII_*` environment variables), .NET SDK, Node.js 18+.
 
-Requires the official CS2 modding toolchain (Options > Modding in game) and Node.js.
-
-```bash
-dotnet build SignBuilder/SignBuilder.csproj -c Debug
+```
+cd SignBuilder/UI
+npm install
+cd ..
+dotnet build SignBuilderSA.csproj -c Release
 ```
 
-This compiles the mod, deploys it to `Mods/SignBuilder`, copies `Resources/` and builds the UI
-module into the same folder.
+The build compiles the C# and the UI and deploys the mod to the game's local `Mods/SignBuilderSA` folder. Close the game first (it locks the files).
 
-## Testing in game
+## Credits and licenses
+- Original mod: **Sign Builder** by **Andy Smith**, https://github.com/andyjsmith/CS2-SignBuilder (MIT). Huge thanks for the original work.
+- This edition: MIT, see [LICENSE](LICENSE) (both copyright lines).
+- Arabic fonts Cairo, Tajawal and Amiri: SIL Open Font License, see `SignBuilder/Resources/Fonts/OFL-*.txt`. Other theme fonts: see the licence file next to each.
+- Pictograms: Material Design Icons (Apache 2.0), camel from game-icons.net (CC BY 3.0), Temaki and Maki (CC0). Details in `SignBuilder/Resources/Symbols/sa/CREDITS.txt`.
 
-`scripts/run-spike.sh <mode> [save-guid]` launches the game through Steam straight into a save with
-the test harness armed, waits for it to quit, and leaves results and screenshots in
-`ModsData/SignBuilder/spike`. It needs the Steam launch option
-`"<game dir>\Cities2.exe" %command%` (skips the Paradox launcher).
+---
 
-| Mode | What it does |
-| --- | --- |
-| `e2e` | Places every structure type, runs the arrangement, edit, template and theme checks, saves `SignBuilder_E2E` |
-| `reload` | Boots into the E2E save and checks the placed structures came back |
-| `reload-e2e` | Both, in one run |
-| `uitest` | Opens the editor and idles for a DevTools script |
-| `smoke` | Loads, screenshots, quits |
+# بناء اللوحات: النسخة السعودية
 
-If the requested save id is stale the harness loads the test save (`ModTest`) by name. Runs quit after
-9 minutes in game, and the script kills the game at 10 minutes, so a run is never left open.
+نسخة مطوّرة من [Sign Builder](https://github.com/andyjsmith/CS2-SignBuilder) للمطوّر **Andy Smith** للعبة Cities: Skylines II: صمّم لوحات الطرق داخل اللعبة وركّبها على الجسور والأعمدة وأي سطح. هذي النسخة تضيف أدوات جديدة، وتعيد بناء طريقة كتابة النصوص من اليمين لليسار على اللوحات، وفيها نمط سعودي متكامل. كل ميزات الأصلي باقية.
 
-## Themes
+## وش الجديد مقارنة بالأصلي
+**أدوات جديدة**
+- مدير اللوحات: كل لوحات المدينة في قائمة وحدة مع بحث وانتقال وحذف.
+- اختيار الطريق: اسم الشارع والحي وحد السرعة من الخريطة، مع المتغيرات `{street}` و `{district}` و `{speed}` واقتراح قوالب حسب نوع الطريق.
+- لوحات "سرعتك" تتحول بين وجه مبتسم وحزين حسب سرعة السيارات المارّة.
+- توهّج LED حسب الليل والضباب والمطر.
+- حزم القوالب: تصدير واستيراد التصاميم.
+- التحكم في تباعد الأسطر والتباعد بين الأجزاء.
+- خيار لغة الواجهة (تلقائي / العربية / الإنجليزية) يتطبق فوراً.
+- حذف اللوحة من لوحة معلوماتها.
 
-Making a theme, step by step (with a ready-to-copy theme pack to publish on Paradox Mods):
-[ThemeTemplate/README.md](ThemeTemplate/README.md). How the mod works inside: [DEVELOPING.md](DEVELOPING.md).
+**تحسينات**
+- كتابة من اليمين لليسار: حروف عربية متصلة، وترتيب صحيح في السطور اللي تجمع العربي والإنجليزي والأرقام، بدون تداخل ولا انقسام سطر بالغلط، ومسافة إضافية فوق وتحت السطر العربي.
+- خطوط عربية: Cairo و Cairo Black و Tajawal و Tajawal ExtraBold و Amiri.
+- نمط "السعودية": 131 قالباً في 10 فئات، دروع الطرق السعودية، ومكتبة 56 رمزاً.
+- واجهة عربية كاملة.
+- مستقل تماماً عن الأصلي، فتقدر تثبّت الاثنين مع بعض.
 
+## البناء
+تحتاج: اللعبة مع أدوات التعديل الرسمية (تضبط متغيرات `CSII_*`)، و .NET SDK، و Node.js 18 أو أحدث.
 
-A theme is a folder with `theme.json`: its name, default sizes (every built-in theme uses the same size unit,
-roughly inches of a full-size sign), fonts (file,
-label, and `scale`/`offset`: em size and vertical offset per letter height, from the font's cap height;
-no file and a `weight` uses a family the game ships, such as "Noto Sans JP"; `@us/fonts/…` borrows another
-theme's file),
-color schemes, route plates (`img` artwork, `ellipse`, colored `rect` plates with optional border and
-prefix such as "A " or "E ", or `plain` colored text), arrow shapes (`arrows`, `laneArrows`, `overheadArrows`), `presets` (ready-made
-combinations of the basic parts shown under **Add preset**, such as an EXIT ONLY panel) and a
-`templates/` folder. Built-in themes live in `SignBuilder/Resources/Themes`;
-players add theirs in `ModsData/SignBuilder/Themes/<id>`. A player folder with a built-in theme's id and
-no `theme.json` supplies extra files for it, such as fonts that cannot ship with the mod (the Nordic theme
-picks up `Tratex.ttf` or `Trafikkalfabetet.ttf` there). Switching a sign's theme in the designer keeps its
-text and sizes; plates and colors the new theme lacks fall back to its defaults.
+```
+cd SignBuilder/UI
+npm install
+cd ..
+dotnet build SignBuilderSA.csproj -c Release
+```
 
-**Publishing a theme.** Any installed mod can carry themes: put them in a `SignBuilderThemes` folder at the
-mod's root (`SignBuilderThemes/<id>/theme.json`, `fonts/`, `shields/`, `templates/`) and publish it to
-Paradox Mods. Sign Builder scans subscribed mods (`.cache/Mods/pdx_mods`) and local mods (`Mods`) for that
-folder, so players only subscribe to the theme pack. A folder with the same id in
-`ModsData/SignBuilder/Themes` overrides a published theme (handy while editing one).
+البناء يجمّع الكود والواجهة وينسخ المود لمجلد `Mods/SignBuilderSA` في اللعبة. اقفل اللعبة قبل البناء.
 
-## Credits
-
-- Roadgeek 2014 fonts by Sammi De Guzman (MIT), `Resources/Themes/us/fonts/LICENSE-roadgeek.txt`
-- Interstate and US route shield shapes from OpenStreetMap Americana (CC0)
-- Alte DIN 1451 Mittelschrift by Peter Wiegel (SIL OFL 1.1), Germany theme
-- Transport Medium, Transport Heavy and Motorway Permanent from roads.org.uk: Crown Copyright, Open
-  Government Licence v1.0, United Kingdom theme
-- D-DIN by Datto Inc. (SIL OFL 1.1), Nordic theme stand-in for Tratex / Trafikkalfabetet
-- Canada, Netherlands and Australia reuse the Roadgeek fonts; Italy reuses the Transport fonts
-- Japan, China, Russia, France and Switzerland use Noto Sans fonts that ship with the game
-- Ontario, Quebec, Trans-Canada and Japanese route plate artwork drawn for Sign Builder (CC0)
-
-## Roadmap
-
-- More themes (and per-country spacing rules); lane arrows placed automatically over the detected lanes
-
-## License
-
-MIT, see [LICENSE](LICENSE). Bundled fonts and artwork keep their own licenses: see
-[THIRD-PARTY-NOTICES.md](SignBuilder/Resources/THIRD-PARTY-NOTICES.md).
+## الشكر والتراخيص
+- المود الأصلي: **Sign Builder** من **Andy Smith**، https://github.com/andyjsmith/CS2-SignBuilder (رخصة MIT). شكراً جزيلاً له.
+- هذي النسخة: رخصة MIT، انظر [LICENSE](LICENSE).
+- الخطوط العربية Cairo و Tajawal و Amiri برخصة SIL OFL، والرموز حقوقها في `SignBuilder/Resources/Symbols/sa/CREDITS.txt`.

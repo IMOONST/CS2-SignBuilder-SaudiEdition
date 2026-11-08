@@ -1,0 +1,15 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "route-primary",
+  "name": "إرشادية: طريق رئيسي",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "shield",
+      "network": "SAP",
+      "number": "٤٠",
+      "height": 36
+    }
+  ]
+}

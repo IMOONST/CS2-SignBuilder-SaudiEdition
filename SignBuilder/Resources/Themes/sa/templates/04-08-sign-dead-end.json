@@ -1,0 +1,20 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "sign-dead-end",
+  "name": "خدمات: طريق غير نافذ",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/dead-end",
+      "height": 34,
+      "color": "#000000",
+      "box": {
+        "background": "#ffffff",
+        "border": false
+      }
+    }
+  ]
+}

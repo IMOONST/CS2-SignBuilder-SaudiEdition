@@ -1,0 +1,20 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "sign-mosque",
+  "name": "خدمات: لوحة مسجد",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/mosque",
+      "height": 34,
+      "color": "#000000",
+      "box": {
+        "background": "#ffffff",
+        "border": false
+      }
+    }
+  ]
+}

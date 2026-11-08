@@ -6,13 +6,13 @@ using Game;
 using Game.Common;
 using Game.Prefabs;
 using Game.Tools;
-using SignBuilder.Core;
+using SignBuilderSA.Core;
 using Unity.Collections;
 using Unity.Entities;
-using SignBuilder.Geometry;
-using SignBuilder.Tools;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Assemblies
+namespace SignBuilderSA.Assemblies
 {
     /// <summary>
     /// Deletes sign structures nobody uses: their library entry now, their generated mesh, face materials and textures
@@ -24,7 +24,7 @@ namespace SignBuilder.Assemblies
         /// <summary>A structure was replaced (edit saved, or moved): drop the old one once its object is gone.</summary>
         public static void AfterReplace(AssemblyRecord old)
         {
-            if (old != null) SignBuilderRuntime.Run(RemoveLater(new[] { old }));
+            if (old != null) SignBuilderRuntime.Run(RemoveLater(new[] { AssemblyLibrary.Primary(old) }));
         }
 
         /// <summary>Options button: every structure without an object in the open city.</summary>
@@ -67,9 +67,31 @@ namespace SignBuilder.Assemblies
                     if (name != null) used.Add(name);
                 }
             }
-            var unused = records.Where(r => !used.Contains(r.PrefabName)).ToList();
+            // A speed feedback structure and its other state stand or fall together: an object showing either keeps both
+            // (the object switches between them), and removing one removes the other.
+            foreach (var name in used.ToList())
+            {
+                var record = AssemblyLibrary.ExactFromPrefabName(name);
+                if (record == null) continue;
+                var main = AssemblyLibrary.Primary(record);
+                used.Add(main.PrefabName);
+                var alt = AssemblyLibrary.AlternateOf(main);
+                if (alt != null) used.Add(alt.PrefabName);
+                if (main.FeedbackAltPrefabName != null) used.Add(main.FeedbackAltPrefabName);
+            }
+            var candidates = new List<AssemblyRecord>();
+            foreach (var record in records)
+            {
+                if (record == null) continue;
+                var main = AssemblyLibrary.Primary(record);
+                if (!candidates.Contains(main)) candidates.Add(main);
+                var alt = AssemblyLibrary.AlternateOf(main);
+                if (alt != null && !candidates.Contains(alt)) candidates.Add(alt);
+            }
+            var unused = candidates.Where(r => !used.Contains(r.PrefabName)).ToList();
             foreach (var record in unused) AssemblyLibrary.Remove(record);
-            return unused.Count;
+            // Counted as structures: an alternate state is part of its structure.
+            return unused.Count(r => !r.IsFeedbackAlternate);
         }
 
         /// <summary>

@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "museum",
+  "name": "سياحية: المتحف الوطني",
+  "scheme": "brown",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "المتحف الوطني",
+              "height": 13
+            },
+            {
+              "type": "text",
+              "text": "National Museum",
+              "height": 10.7
+            }
+          ]
+        },
+        {
+          "type": "arrow",
+          "direction": "right"
+        }
+      ]
+    }
+  ]
+}

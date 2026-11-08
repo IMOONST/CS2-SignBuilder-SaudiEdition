@@ -1,4 +1,4 @@
-namespace SignBuilder.Assemblies
+namespace SignBuilderSA.Assemblies
 {
     /// <summary>
     /// A support mesh as a recipe: generator name plus its arguments (see GantryFactory.FromSpec). Small

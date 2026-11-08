@@ -1,0 +1,14 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "no-left",
+  "name": "تنظيمية: ممنوع الانعطاف يساراً",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/no-left-turn",
+      "height": 62
+    }
+  ]
+}

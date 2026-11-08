@@ -1,0 +1,19 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "no-stopping",
+  "name": "تنظيمية: ممنوع التوقف",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/no-stopping",
+      "height": 62
+    },
+    {
+      "type": "text",
+      "text": "ممنوع التوقف",
+      "height": 11
+    }
+  ]
+}

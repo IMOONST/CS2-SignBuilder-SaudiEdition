@@ -1,0 +1,42 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "lane-exit-left",
+  "name": "طرق سريعة: مسار المخرج يسار",
+  "scheme": "green",
+  "support": "doubleTruss/span",
+  "items": [
+    {
+      "type": "tab",
+      "align": "left",
+      "items": [
+        {
+          "type": "text",
+          "text": "مخرج 10 EXIT",
+          "height": 11
+        }
+      ]
+    },
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "الدرعية",
+          "height": 16
+        },
+        {
+          "type": "text",
+          "text": "Diriyah",
+          "height": 13.1
+        }
+      ]
+    },
+    {
+      "type": "arrow",
+      "direction": "up-left",
+      "height": 24
+    }
+  ]
+}

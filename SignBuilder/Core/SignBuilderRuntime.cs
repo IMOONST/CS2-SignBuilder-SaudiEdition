@@ -2,13 +2,13 @@ using System;
 using System.Collections;
 using System.IO;
 using Colossal.IO.AssetDatabase;
-using SignBuilder.Rendering;
+using SignBuilderSA.Rendering;
 using UnityEngine;
-using SignBuilder.Geometry;
-using SignBuilder.Assemblies;
-using SignBuilder.Tools;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Core
+namespace SignBuilderSA.Core
 {
     /// <summary>
     /// Process-wide services shared by the editor, placement tool and save bootstrap: the mod-owned
@@ -22,7 +22,7 @@ namespace SignBuilder.Core
 
         public static string ModDir { get; private set; }
         public static string ResourcesDir => Path.Combine(ModDir, "Resources");
-        public static string DataDir => Path.Combine(Application.persistentDataPath, "ModsData", "SignBuilder");
+        public static string DataDir => Path.Combine(Application.persistentDataPath, "ModsData", "SignBuilderSA");
 
         public static ILocalAssetDatabase Database => AssetDatabase<SignBuilderCache>.instance;
         public const string MeshFolder = "Meshes";
@@ -34,7 +34,7 @@ namespace SignBuilder.Core
             Directory.CreateDirectory(DataDir);
             if (s_Host == null)
             {
-                var go = new GameObject("SignBuilder.Runtime");
+                var go = new GameObject("SignBuilderSA.Runtime");
                 UnityEngine.Object.DontDestroyOnLoad(go);
                 s_Host = go.AddComponent<CoroutineHost>();
             }

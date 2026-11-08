@@ -9,11 +9,11 @@ using Game.Tools;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using SignBuilder.Core;
-using SignBuilder.Geometry;
-using SignBuilder.Assemblies;
+using SignBuilderSA.Core;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Assemblies;
 
-namespace SignBuilder.Tools
+namespace SignBuilderSA.Tools
 {
     /// <summary>
     /// Finds a road edge near a point, reads its geometry and car lanes, and pairs it with a parallel
@@ -219,6 +219,173 @@ namespace SignBuilder.Tools
             var left = (flags.m_Left & wall) != 0;
             var right = (flags.m_Right & wall) != 0;
             return sameWay ? new bool2(left, right) : new bool2(right, left);
+        }
+
+        // ------------------------------------------------------------------ road information (street, district, class, speed)
+
+        /// <summary>What a sign may say about the road it stands on: names, class, speed limit and lanes.</summary>
+        public sealed class RoadInfo
+        {
+            public Entity Edge;
+            /// <summary>The street (the edge's aggregate) as the game labels it; "" when unnamed.</summary>
+            public string Street = "";
+            /// <summary>The district on the chosen side of the road (or the other side); "" when outside districts.</summary>
+            public string District = "";
+            /// <summary>"highway", "major", "medium", "local" or "other" (no car lanes).</summary>
+            public string RoadClass = "other";
+            /// <summary>Speed limit in km/h (as the game's own info displays convert it: m/s × 3.6); 0 when unknown.</summary>
+            public int SpeedLimit;
+            /// <summary>Driving lanes in the road's main direction.</summary>
+            public int Lanes;
+
+            /// <summary>The speed limit as a sign shows it: the nearest multiple of 10 km/h (0 when unknown).</summary>
+            public int SignSpeed => SpeedLimit <= 0 ? 0 : Math.Max(10, (int)Math.Round(SpeedLimit / 10.0, MidpointRounding.AwayFromZero) * 10);
+
+            /// <summary>Everything the UI shows, without the nonce: equal keys mean nothing changed.</summary>
+            public string Key => $"{Street}\u0001{District}\u0001{RoadClass}\u0001{SpeedLimit}\u0001{Lanes}";
+        }
+
+        private static readonly System.Text.RegularExpressions.Regex s_LocaleId =
+            new(@"^[A-Za-z0-9_]+\.[A-Za-z0-9_.:\[\]\-]+$", System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+
+        /// <summary>
+        /// A name as the game draws it on the map. The game returns the localization id itself when the active
+        /// language has no entry for it; such ids are not names, so they read as unknown ("").
+        /// </summary>
+        private string LabelOf(Entity entity, Game.UI.NameSystem names)
+        {
+            if (entity == Entity.Null || names == null || !m_EM.Exists(entity)) return "";
+            string name;
+            try { name = names.GetRenderedLabelName(entity); }
+            catch (Exception e)
+            {
+                Mod.log.Warn(e, "Reading a road or district name failed");
+                return "";
+            }
+            name = (name ?? "").Trim();
+            return name.Length == 0 || s_LocaleId.IsMatch(name) ? "" : name;
+        }
+
+        /// <summary>
+        /// Reads the road of <paramref name="snap"/> (a real edge): its street (the aggregate the game names), the
+        /// district on the side of <paramref name="side"/> (the other side when that one has none), class, speed and
+        /// lanes. Null when the snap is not on a road edge.
+        /// </summary>
+        public RoadInfo ReadInfo(Snap snap, float3 side, Game.UI.NameSystem names)
+        {
+            if (snap == null || snap.Edge == Entity.Null || !m_EM.Exists(snap.Edge) || !m_EM.HasComponent<Edge>(snap.Edge)) return null;
+            var edge = snap.Edge;
+            var info = new RoadInfo { Edge = edge };
+
+            if (m_EM.HasComponent<Aggregated>(edge)) info.Street = LabelOf(m_EM.GetComponentData<Aggregated>(edge).m_Aggregate, names);
+
+            if (m_EM.HasComponent<Game.Areas.BorderDistrict>(edge))
+            {
+                // BorderDistrict sides are those of the edge's own direction, as is Snap.Right (the curve's tangent).
+                var border = m_EM.GetComponentData<Game.Areas.BorderDistrict>(edge);
+                var right = math.dot(side - snap.Point, snap.Right) >= 0f;
+                var first = right ? border.m_Right : border.m_Left;
+                var second = right ? border.m_Left : border.m_Right;
+                info.District = LabelOf(first, names);
+                if (info.District.Length == 0) info.District = LabelOf(second, names);
+            }
+
+            var own = snap.Lanes.Where(l => l.Carriageway == 0).ToList();
+            var main = snap.MainDirection;
+            info.Lanes = own.Count(l => l.Direction == main);
+
+            var prefab = m_EM.HasComponent<PrefabRef>(edge) ? m_EM.GetComponentData<PrefabRef>(edge).m_Prefab : Entity.Null;
+            var road = prefab != Entity.Null && m_EM.HasComponent<RoadData>(prefab) ? m_EM.GetComponentData<RoadData>(prefab) : default;
+            info.SpeedLimit = (int)math.round(LaneSpeed(edge, road.m_SpeedLimit) * 3.6f);
+            info.RoadClass = ClassOf(own.Count, info.Lanes, (road.m_Flags & Game.Prefabs.RoadFlags.UseHighwayRules) != 0, snap.PrefabName ?? "");
+            return info;
+        }
+
+        /// <summary>
+        /// The fastest car lane's current limit in m/s (policies change lanes' limits), or the road prefab's limit when
+        /// the edge has no car lanes yet.
+        /// </summary>
+        private float LaneSpeed(Entity edge, float prefabSpeed)
+        {
+            var best = 0f;
+            if (m_EM.HasBuffer<Game.Net.SubLane>(edge))
+            {
+                var subLanes = m_EM.GetBuffer<Game.Net.SubLane>(edge, true);
+                for (var i = 0; i < subLanes.Length; i++)
+                {
+                    var lane = subLanes[i].m_SubLane;
+                    if (!m_EM.HasComponent<Game.Net.CarLane>(lane)) continue;
+                    var car = m_EM.GetComponentData<Game.Net.CarLane>(lane);
+                    if ((car.m_Flags & CarLaneFlags.Unsafe) != 0) continue;
+                    best = math.max(best, car.m_SpeedLimit);
+                }
+            }
+            return best > 0f ? best : math.max(prefabSpeed, 0f);
+        }
+
+        /// <summary>
+        /// The road's class: highway rules make a highway; otherwise small/alley/gravel roads are local and the rest
+        /// go by their lanes per direction (3+ major, 2 medium, 1 local). No car lanes at all: "other".
+        /// </summary>
+        private static string ClassOf(int carLanes, int mainLanes, bool highwayRules, string prefabName)
+        {
+            if (carLanes == 0) return "other";
+            if (highwayRules) return "highway";
+            bool Has(string word) => prefabName.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0;
+            if (Has("Highway")) return "highway";
+            if (Has("Small") || Has("Alley") || Has("Gravel") || Has("Dirt")) return "local";
+            if (Has("Large")) return "major";
+            if (Has("Medium")) return "medium";
+            return mainLanes >= 3 ? "major" : mainLanes == 2 ? "medium" : "local";
+        }
+
+        /// <summary>The road edge nearest <paramref name="point"/> (horizontally) within <paramref name="maxDistance"/>, snapped there; null if none.</summary>
+        public Snap NearestRoad(float3 point, float maxDistance)
+        {
+            EdgeCandidate? best = null;
+            var bestDistance = maxDistance;
+            var bestT = 0.5f;
+            foreach (var e in RoadEdges())
+            {
+                // Bounds check first: most of the city's edges are far away.
+                var bounds = MathUtils.Bounds(e.Curve.m_Bezier.xz);
+                if (point.x < bounds.min.x - maxDistance - e.Width || point.x > bounds.max.x + maxDistance + e.Width
+                    || point.z < bounds.min.y - maxDistance - e.Width || point.z > bounds.max.y + maxDistance + e.Width) continue;
+                var distance = MathUtils.Distance(e.Curve.m_Bezier.xz, point.xz, out var t) - e.Width * 0.5f;
+                if (distance >= bestDistance) continue;
+                bestDistance = distance;
+                bestT = t;
+                best = e;
+            }
+            return best is EdgeCandidate road ? SnapAt(road, math.clamp(bestT, 0.02f, 0.98f)) : null;
+        }
+
+        /// <summary>The edges of the street <paramref name="edge"/> belongs to (just the edge when it has none), at most <paramref name="max"/>.</summary>
+        public List<Entity> StreetEdges(Entity edge, int max = 256)
+        {
+            var list = new List<Entity>();
+            if (m_EM.HasComponent<Aggregated>(edge))
+            {
+                var aggregate = m_EM.GetComponentData<Aggregated>(edge).m_Aggregate;
+                if (aggregate != Entity.Null && m_EM.HasBuffer<AggregateElement>(aggregate))
+                {
+                    var elements = m_EM.GetBuffer<AggregateElement>(aggregate, true);
+                    for (var i = 0; i < elements.Length && list.Count < max; i++)
+                    {
+                        if (m_EM.HasComponent<Curve>(elements[i].m_Edge)) list.Add(elements[i].m_Edge);
+                    }
+                }
+            }
+            if (!list.Contains(edge)) list.Add(edge);
+            return list;
+        }
+
+        /// <summary>A road edge's width (its composition's), or 8 m when unknown.</summary>
+        public float WidthOf(Entity edge)
+        {
+            if (!m_EM.HasComponent<Composition>(edge)) return 8f;
+            var composition = m_EM.GetComponentData<Composition>(edge).m_Edge;
+            return m_EM.HasComponent<NetCompositionData>(composition) ? m_EM.GetComponentData<NetCompositionData>(composition).m_Width : 8f;
         }
 
         private void AddLanes(Snap snap, Entity edge, int carriageway)

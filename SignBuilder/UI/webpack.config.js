@@ -61,7 +61,8 @@ module.exports = {
               modules: {
                 auto: true,
                 exportLocalsConvention: "camelCase",
-                localIdentName: "[local]_[hash:base64:3]",
+                // Prefixed so these class names never collide with the original Sign Builder (same source files) on the same page.
+                localIdentName: "sbsa_[local]_[hash:base64:4]",
               },
             },
           },

@@ -1,0 +1,15 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "speed-urban",
+  "name": "تنظيمية: حد السرعة داخل المدن",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "shield",
+      "network": "SPD",
+      "number": "60",
+      "height": 60
+    }
+  ]
+}

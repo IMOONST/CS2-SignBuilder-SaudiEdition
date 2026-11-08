@@ -1,0 +1,24 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "signals",
+  "name": "تحذيرية: إشارات ضوئية",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/warn-signals",
+      "height": 66
+    },
+    {
+      "type": "text",
+      "text": "إشارات ضوئية",
+      "height": 11
+    },
+    {
+      "type": "text",
+      "text": "TRAFFIC SIGNALS",
+      "height": 9
+    }
+  ]
+}

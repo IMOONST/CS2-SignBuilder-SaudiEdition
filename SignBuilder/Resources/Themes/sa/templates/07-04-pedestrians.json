@@ -1,0 +1,24 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "pedestrians",
+  "name": "تحذيرية: عبور مشاة",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/warn-pedestrian",
+      "height": 66
+    },
+    {
+      "type": "text",
+      "text": "عبور مشاة",
+      "height": 11
+    },
+    {
+      "type": "text",
+      "text": "PEDESTRIAN CROSSING",
+      "height": 9
+    }
+  ]
+}

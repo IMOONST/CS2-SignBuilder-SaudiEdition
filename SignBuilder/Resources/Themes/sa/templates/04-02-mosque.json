@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "mosque",
+  "name": "خدمات: مسجد",
+  "scheme": "blue",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/mosque",
+          "height": 22,
+          "box": {}
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "مسجد",
+              "height": 13
+            },
+            {
+              "type": "text",
+              "text": "Mosque",
+              "height": 10.7
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

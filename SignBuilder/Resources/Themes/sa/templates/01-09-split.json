@@ -1,0 +1,71 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "split",
+  "name": "إرشادية: اتجاهان",
+  "scheme": "green",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "column",
+          "align": "center",
+          "items": [
+            {
+              "type": "arrow",
+              "direction": "left"
+            },
+            {
+              "type": "column",
+              "align": "center",
+              "items": [
+                {
+                  "type": "text",
+                  "text": "جدة",
+                  "height": 12
+                },
+                {
+                  "type": "text",
+                  "text": "Jeddah",
+                  "height": 9.8
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "column",
+          "align": "center",
+          "items": [
+            {
+              "type": "arrow",
+              "direction": "right"
+            },
+            {
+              "type": "column",
+              "align": "center",
+              "items": [
+                {
+                  "type": "text",
+                  "text": "الطائف",
+                  "height": 12
+                },
+                {
+                  "type": "text",
+                  "text": "Taif",
+                  "height": 9.8
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "justify": "even"
+    }
+  ]
+}

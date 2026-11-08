@@ -1,0 +1,17 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "fog",
+  "name": "لوحات إلكترونية: ضباب",
+  "board": "led",
+  "items": [
+    {
+      "type": "led",
+      "lines": [
+        "ضباب - خفف السرعة",
+        "FOG - SLOW DOWN"
+      ],
+      "height": 10
+    }
+  ]
+}

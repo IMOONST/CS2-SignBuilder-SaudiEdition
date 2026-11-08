@@ -2,6 +2,9 @@
 
 	<PropertyGroup>
 		<Configurations>Debug;Release</Configurations>
+		<!--Sign Builder: Saudi Edition. A unique assembly name (and so deploy folder Mods/SignBuilderSA) and root namespace let it install side by side with the original Sign Builder-->
+		<AssemblyName>SignBuilderSA</AssemblyName>
+		<RootNamespace>SignBuilderSA</RootNamespace>
 	
 		<!--The file where mod information which is required for publishing mod on PDX mods are stored-->
 		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>

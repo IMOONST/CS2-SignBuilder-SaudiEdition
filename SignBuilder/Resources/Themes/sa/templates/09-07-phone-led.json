@@ -1,0 +1,17 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "phone-led",
+  "name": "لوحات إلكترونية: الجوال",
+  "board": "led",
+  "items": [
+    {
+      "type": "led",
+      "lines": [
+        "لا تنشغل بالجوال",
+        "DON'T TEXT AND DRIVE"
+      ],
+      "height": 10
+    }
+  ]
+}

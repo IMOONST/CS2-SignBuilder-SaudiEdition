@@ -3,12 +3,12 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
-using SignBuilder.Core;
-using SignBuilder.Geometry;
-using SignBuilder.Assemblies;
-using SignBuilder.Tools;
+using SignBuilderSA.Core;
+using SignBuilderSA.Geometry;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Rendering
+namespace SignBuilderSA.Rendering
 {
     /// <summary>
     /// Draws baked sign faces as thin panels with the game's default lit shader: the face on the front,
@@ -56,7 +56,7 @@ namespace SignBuilder.Rendering
             var key = (face.Texture as Texture, fixedGlow);
             if (!m_FaceMaterials.TryGetValue(key, out var material))
             {
-                material = CreateMaterial("SignBuilder.Face." + face.Key, face.Texture, Color.white, 0.35f);
+                material = CreateMaterial("SignBuilderSA.Face." + face.Key, face.Texture, Color.white, 0.35f);
                 material.SetFloat("_AlphaCutoffEnable", 1f);
                 material.SetFloat("_AlphaCutoff", 0.5f);
                 material.SetTexture("_EmissiveColorMap", face.Texture);
@@ -69,7 +69,7 @@ namespace SignBuilder.Rendering
 
         public void Draw()
         {
-            m_BackMaterial ??= CreateMaterial("SignBuilder.PanelBack", Texture2D.whiteTexture, new Color(0.62f, 0.63f, 0.64f), 0.45f);
+            m_BackMaterial ??= CreateMaterial("SignBuilderSA.PanelBack", Texture2D.whiteTexture, new Color(0.62f, 0.63f, 0.64f), 0.45f);
             foreach (var (mesh, face, matrix) in m_Panels)
             {
                 Graphics.DrawMesh(mesh, matrix, face, 0, null, 0, null, ShadowCastingMode.On, true, null, LightProbeUsage.BlendProbes);
@@ -80,7 +80,7 @@ namespace SignBuilder.Rendering
         /// <summary>A sign-face material for immediate drawing (placement preview).</summary>
         public static Material CreateFaceMaterial(Texture face, float glow)
         {
-            var material = CreateMaterial("SignBuilder.Face", face, Color.white, 0.35f);
+            var material = CreateMaterial("SignBuilderSA.Face", face, Color.white, 0.35f);
             material.SetFloat("_AlphaCutoffEnable", 1f);
             material.SetFloat("_AlphaCutoff", 0.5f);
             material.SetTexture("_EmissiveColorMap", face);

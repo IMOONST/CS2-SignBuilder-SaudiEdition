@@ -1,6 +1,6 @@
 using Newtonsoft.Json.Linq;
 
-namespace SignBuilder.Core
+namespace SignBuilderSA.Core
 {
     /// <summary>
     /// Format versions of the JSON players and theme packs keep: sign designs (in saves, templates and the library) and

@@ -1,0 +1,25 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "seatbelt",
+  "name": "تنظيمية: ربط حزام الأمان",
+  "scheme": "blue",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "ربط حزام الأمان إلزامي",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "Seat Belt Compulsory",
+          "height": 9.8
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "accident",
+  "name": "لوحات إلكترونية: حادث أمامك",
+  "board": "led",
+  "items": [
+    {
+      "type": "led",
+      "lines": [
+        "حادث أمامك",
+        "ACCIDENT AHEAD"
+      ],
+      "height": 10
+    }
+  ]
+}

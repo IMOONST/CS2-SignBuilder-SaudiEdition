@@ -1,0 +1,3 @@
+Sign Builder: Saudi Edition is a fork of Sign Builder by Andy Smith (MIT). Fonts: OFL (see Fonts/OFL-*.txt). Symbols: see Symbols/sa/CREDITS.txt.
+
+The original MIT License text is in LICENSE-SignBuilder.txt; third-party notices are in THIRD-PARTY-NOTICES.md.

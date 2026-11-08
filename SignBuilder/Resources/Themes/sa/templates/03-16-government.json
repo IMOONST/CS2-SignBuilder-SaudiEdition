@@ -1,0 +1,25 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "government",
+  "name": "داخل المدن: جهة حكومية",
+  "scheme": "blue",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "إمارة منطقة الرياض",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "Riyadh Region Principality",
+          "height": 9.8
+        }
+      ]
+    }
+  ]
+}

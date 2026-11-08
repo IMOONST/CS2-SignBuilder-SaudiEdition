@@ -1,0 +1,26 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "street-name",
+  "name": "داخل المدن: اسم الشارع",
+  "scheme": "blue",
+  "arabicFont": "Tajawal",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "طريق الملك فهد",
+          "height": 13
+        },
+        {
+          "type": "text",
+          "text": "King Fahd Rd",
+          "height": 10.7
+        }
+      ]
+    }
+  ]
+}

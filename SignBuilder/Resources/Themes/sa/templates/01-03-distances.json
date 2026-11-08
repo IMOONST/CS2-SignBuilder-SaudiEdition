@@ -1,0 +1,84 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "distances",
+  "name": "إرشادية: المسافات",
+  "scheme": "green",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Dammam",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "120 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "الدمام",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Al Ahsa",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "255 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "الأحساء",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    },
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "text",
+          "text": "Al Khobar",
+          "height": 12
+        },
+        {
+          "type": "text",
+          "text": "135 كم",
+          "height": 12,
+          "margin": {
+            "left": 10,
+            "right": 10
+          }
+        },
+        {
+          "type": "text",
+          "text": "الخبر",
+          "height": 12
+        }
+      ],
+      "justify": "between"
+    }
+  ]
+}

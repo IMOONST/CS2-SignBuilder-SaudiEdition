@@ -1,0 +1,24 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "slippery",
+  "name": "تحذيرية: طريق زلق",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/warn-slippery",
+      "height": 66
+    },
+    {
+      "type": "text",
+      "text": "طريق زلق",
+      "height": 11
+    },
+    {
+      "type": "text",
+      "text": "SLIPPERY ROAD",
+      "height": 9
+    }
+  ]
+}

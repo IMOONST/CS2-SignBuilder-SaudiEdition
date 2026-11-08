@@ -1,0 +1,46 @@
+// Sign manager panel. Gameface supports a subset of CSS: flexbox works but `gap` does not, so spacing uses margins.
+// Docked at the top, shifted right of center: the camera brings a sign to the middle of the screen, so the panel
+// must not cover it (the selected-object panel opens on the left).
+.panel { width: 640rem; transform: translateX(520rem); }
+.body { position: relative; display: flex; flex-direction: column; align-items: stretch; padding: 10rem 14rem 12rem 14rem; }
+
+.summary { display: flex; flex-direction: row; align-items: center; flex-wrap: wrap; margin-bottom: 8rem; }
+.total { font-size: 15rem; font-weight: bold; color: #fff; margin-right: 14rem; }
+.stat { display: flex; flex-direction: row; align-items: center; padding: 2rem 8rem; margin: 0 6rem 4rem 0; font-size: 13rem; color: rgba(255, 255, 255, 0.85); background-color: rgba(255, 255, 255, 0.07); border-radius: 3rem; }
+.statCount { font-weight: bold; color: #ffd400; margin-left: 6rem; }
+
+.toolbar { display: flex; flex-direction: row; align-items: center; margin-bottom: 8rem; }
+.search { flex: 1; margin-right: 10rem; }
+.search input, .search textarea { width: 100%; }
+.filters { display: flex; flex-direction: row; align-items: center; flex-wrap: nowrap; }
+.filter, .filterOn { display: flex; flex-direction: row; align-items: center; white-space: nowrap; padding: 4rem 9rem; margin-left: 4rem; font-size: 13rem; color: #fff; background-color: rgba(255, 255, 255, 0.1); border-radius: 3rem; }
+.filter:hover { background-color: rgba(255, 255, 255, 0.22); }
+.filterOn { background-color: rgba(80, 160, 255, 0.6); }
+
+.list { height: 440rem; }
+.empty { padding: 30rem 10rem; text-align: center; font-size: 14rem; color: rgba(255, 255, 255, 0.6); }
+
+.row { display: flex; flex-direction: row; align-items: center; padding: 6rem 8rem; margin: 0 6rem 3rem 0; border-radius: 4rem; background-color: rgba(255, 255, 255, 0.05); }
+.row:hover { background-color: rgba(255, 255, 255, 0.12); }
+.kind { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 64rem; margin-right: 10rem; }
+.kindIcon { width: 26rem; height: 26rem; }
+.kindLabel { font-size: 11rem; color: rgba(255, 255, 255, 0.6); margin-top: 2rem; white-space: nowrap; }
+.info { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.legend { font-size: 14rem; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.legendNone { font-size: 14rem; color: rgba(255, 255, 255, 0.45); font-style: italic; }
+.meta { display: flex; flex-direction: row; align-items: center; margin-top: 2rem; font-size: 12rem; color: rgba(255, 255, 255, 0.6); }
+.metaItem { margin-right: 12rem; white-space: nowrap; }
+.actions { display: flex; flex-direction: row; align-items: center; margin-left: 8rem; }
+.go, .del, .delArmed { padding: 4rem 10rem; margin-left: 6rem; font-size: 13rem; color: #fff; border-radius: 3rem; white-space: nowrap; }
+.go { background-color: rgba(80, 160, 255, 0.45); }
+.go:hover { background-color: rgba(80, 160, 255, 0.75); }
+.del { background-color: rgba(255, 255, 255, 0.1); color: #ff8a80; }
+.del:hover { background-color: rgba(220, 60, 60, 0.45); color: #fff; }
+.delArmed { background-color: #b23a3a; font-weight: bold; }
+.delArmed:hover { background-color: #cc4545; }
+
+.more { padding: 6rem 8rem; font-size: 12rem; color: rgba(255, 255, 255, 0.6); text-align: center; }
+
+// Toolbar button: a list icon.
+.button { position: relative; display: flex; align-items: center; justify-content: center; }
+.buttonIcon { width: 28rem; height: 28rem; }

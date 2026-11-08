@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using Colossal.Entities;
 using Game.Common;
 using Game.Net;
@@ -8,16 +10,16 @@ using Game.Prefabs;
 using Game.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SignBuilder.Assemblies;
-using SignBuilder.Core;
-using SignBuilder.Systems;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Core;
+using SignBuilderSA.Systems;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
-using SignBuilder.Geometry;
+using SignBuilderSA.Geometry;
 
-namespace SignBuilder.Tools
+namespace SignBuilderSA.Tools
 {
     /// <summary>
     /// Sign Builder's in-world tool, with three modes:
@@ -26,19 +28,34 @@ namespace SignBuilder.Tools
     /// <item>PickRoad: hover and click a road (or a free spot) to pin a gantry there.</item>
     /// <item>Arrange: the gantry is pinned and previewed live while the arrangement panel adds, drags and
     /// snaps its signs and picks the structure; Build makes it.</item>
+    /// <item>PickInfo: started from the designer (which stays open); hovering highlights a street, a click reads
+    /// its names, class and speed limit (RoadPickUISystem's roadInfo) and returns to the designer.</item>
     /// </list>
+    /// Signs may say {street}, {district} and {speed}: built on a road, they say that road's values.
     /// Free placement rotates with a right-drag and rises with Page Up / Page Down, like vanilla props.
     /// Placed structures can be edited (Save rebuilds in place), moved or duplicated.
     /// </summary>
     public partial class SignPlacementToolSystem : ToolBaseSystem
     {
-        public enum Mode { Posts, PickRoad, Arrange }
+        public enum Mode { Posts, PickRoad, Arrange, PickInfo }
 
         private ToolSystem m_ToolSystem;
         private DefaultToolSystem m_DefaultTool;
         private PrefabSystem m_PrefabSystem;
         private SignBuilderUISystem m_UI;
+        private RoadPickUISystem m_RoadPick;
+        private Game.UI.NameSystem m_Names;
+        private Game.Rendering.OverlayRenderSystem m_Overlay;
         private Mode m_Mode;
+        // The road last snapped to while placing (and which side of it the cursor was on), and what the signs' road
+        // placeholders say in the preview: set from that road, null when not on a road (placeholders show as typed).
+        private Entity m_InfoEdge;
+        private bool m_InfoRight;
+        private float3 m_InfoSide;
+        private RoadProbe.RoadInfo m_PreviewInfo;
+        // Only a sign's latest bake is used (placeholders rebake signs as the road under the cursor changes).
+        private readonly ConditionalWeakTable<JObject, StrongBox<int>> m_BakeSerials = new();
+        private int m_BakeCounter;
         private readonly List<JObject> m_Designs = new();
         private readonly List<Rendering.BakedFace> m_Faces = new();
         private readonly List<List<UnityEngine.Rect>> m_Shapes = new();
@@ -68,7 +85,7 @@ namespace SignBuilder.Tools
         private float3 m_PreviewOrigin;
         private quaternion m_PreviewRotation;
 
-        public override string toolID => "SignBuilderTool";
+        public override string toolID => "SignBuilderSATool";
         public Mode CurrentMode => m_Mode;
 
         protected override void OnCreate()
@@ -78,7 +95,12 @@ namespace SignBuilder.Tools
             m_DefaultTool = World.GetOrCreateSystemManaged<DefaultToolSystem>();
             m_PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
             m_UI = World.GetOrCreateSystemManaged<SignBuilderUISystem>();
+            m_RoadPick = World.GetOrCreateSystemManaged<RoadPickUISystem>();
+            m_Names = World.GetOrCreateSystemManaged<Game.UI.NameSystem>();
+            m_Overlay = World.GetOrCreateSystemManaged<Game.Rendering.OverlayRenderSystem>();
         }
+
+        private RoadProbe Probe() => new RoadProbe(EntityManager, m_PrefabSystem);
 
         // ------------------------------------------------------------------ starting
 
@@ -118,6 +140,25 @@ namespace SignBuilder.Tools
             Status();
         }
 
+        /// <summary>
+        /// Pick a road for its names, class and speed (the designer stays open, and a placed sign being edited stays
+        /// being edited). Refused while placing or arranging: that work would be lost.
+        /// </summary>
+        public bool BeginPickInfo()
+        {
+            if (Active && m_Mode != Mode.PickInfo) return false;
+            Activate(Mode.PickInfo);
+            return true;
+        }
+
+        /// <summary>Leaves the road pick (back to the game's default tool) without touching an edit in progress.</summary>
+        public void EndPickInfo()
+        {
+            if (!Active || m_Mode != Mode.PickInfo) return;
+            m_ToolSystem.activeTool = m_DefaultTool;
+            m_UI.SetStatus("");
+        }
+
         /// <summary>Stops the tool (back to the game's default tool) and forgets any edit in progress.</summary>
         public void Deactivate()
         {
@@ -131,11 +172,12 @@ namespace SignBuilder.Tools
 
         private void Status()
         {
-            var replacing = m_Replacing != Entity.Null ? " (replaces the original)" : "";
+            var replacing = m_Replacing != Entity.Null ? " (تستبدل الأصلية)" : "";
             m_UI.SetStatus(m_Mode switch
             {
-                Mode.Posts => (m_Options.Free ? "Click to place the sign" : "Click beside a road to place the sign") + replacing + ". Right-click to stop.",
-                Mode.PickRoad => (m_Options.Free ? "Click where the gantry should stand" : "Click a road for the gantry") + replacing + ". Right-click to stop.",
+                Mode.Posts => (m_Options.Free ? "انقر لوضع اللوحة" : "انقر بجانب طريق لوضع اللوحة") + replacing + ". انقر بالزر الأيمن للإيقاف.",
+                Mode.PickRoad => (m_Options.Free ? "انقر حيث تريد أن يقف الجسر" : "انقر طريقاً لوضع الجسر عليه") + replacing + ". انقر بالزر الأيمن للإيقاف.",
+                Mode.PickInfo => "انقر طريقاً لقراءة اسم الشارع والحي والسرعة المحددة. انقر بالزر الأيمن أو Esc للإلغاء.",
                 _ => "",
             });
         }
@@ -146,6 +188,9 @@ namespace SignBuilder.Tools
             m_Faces.Clear();
             m_Shapes.Clear();
             m_ViewBack = false;
+            // A new set of signs starts without a road: placeholders show as typed until one is hovered.
+            m_InfoEdge = Entity.Null;
+            m_PreviewInfo = null;
             foreach (var d in designs) AddSign(d, bake: false);
             for (var i = 0; i < m_Designs.Count; i++) Bake(i);
         }
@@ -163,10 +208,15 @@ namespace SignBuilder.Tools
         private void Bake(int index)
         {
             var design = m_Designs[index];
-            SignBuilderRuntime.Run(AssemblyBuilder.BakeAll(new[] { design }, faces =>
+            var serial = ++m_BakeCounter;
+            m_BakeSerials.GetValue(design, _ => new StrongBox<int>()).Value = serial;
+            // The preview says what the sign will say on the road under the cursor (or pinned).
+            var baked = m_PreviewInfo != null && RoadTokens.Has(design) ? RoadTokens.Apply(design, m_PreviewInfo) : design;
+            SignBuilderRuntime.Run(AssemblyBuilder.BakeAll(new[] { baked }, faces =>
             {
-                // The sign may have been removed or replaced meanwhile.
+                // The sign may have been removed or replaced meanwhile, or baked again since.
                 if (index >= m_Designs.Count || !ReferenceEquals(m_Designs[index], design)) return;
+                if (m_BakeSerials.TryGetValue(design, out var latest) && latest.Value != serial) return;
                 m_Faces[index] = faces?.FirstOrDefault();
                 m_Shapes[index] = m_Faces[index] == null ? null : PanelShape.Rects(m_Faces[index].Texture);
                 m_FacesVersion++;
@@ -500,6 +550,13 @@ namespace SignBuilder.Tools
         public override void InitializeRaycast()
         {
             base.InitializeRaycast();
+            if (m_Mode == Mode.PickInfo)
+            {
+                m_ToolRaycastSystem.typeMask = TypeMask.Net;
+                m_ToolRaycastSystem.netLayerMask = Layer.Road;
+                m_ToolRaycastSystem.collisionMask = CollisionMask.OnGround | CollisionMask.Overground;
+                return;
+            }
             var free = m_Options.Free || Surface;
             // Surface-mounted signs go on anything: the ground, buildings and other objects, roads and bridges.
             m_ToolRaycastSystem.typeMask = free ? TypeMask.Terrain | TypeMask.Net | (Surface ? TypeMask.StaticObjects : TypeMask.None) : TypeMask.Net;
@@ -516,7 +573,7 @@ namespace SignBuilder.Tools
             // Free placement: right-drag rotates like vanilla prop placement; a right click without a drag
             // still cancels (on release). Other cancel inputs (Escape) work as usual.
             var mouse = UnityEngine.InputSystem.Mouse.current;
-            var rotating = m_Options.Free && mouse != null;
+            var rotating = m_Options.Free && mouse != null && m_Mode != Mode.PickInfo;
             if (rotating && TrackRightDrag(mouse) && m_Mode != Mode.Arrange)
             {
                 Cancel();
@@ -538,6 +595,11 @@ namespace SignBuilder.Tools
 #if TESTS
             Hovered = hit ? entity : Entity.Null;
 #endif
+            if (m_Mode == Mode.PickInfo)
+            {
+                UpdatePickInfo(hit, entity, raycast);
+                return base.OnUpdate(inputDeps);
+            }
             RoadProbe.Snap snap = null;
             string key = null;
             // A surface-mounted sign hovering an elevated road hangs on that road's side (the edge nearer the cursor);
@@ -554,6 +616,7 @@ namespace SignBuilder.Tools
                         snap = deck;
                         m_Options.LeftSide = math.dot(raycast.m_HitPosition - deck.Point, deck.Right) < 0f;
                         key = $"deck {entity} {math.round(raycast.m_CurvePosition * 100f)} {m_Options.LeftSide}";
+                        NoteRoad(deck, raycast.m_HitPosition);
                     }
                 }
                 m_Options.Free = !onDeck;
@@ -561,17 +624,21 @@ namespace SignBuilder.Tools
                 {
                     snap = PlacementContext.FreeSnap(raycast.m_HitPosition, m_Options.Angle, m_Options);
                     key = $"free {math.round(raycast.m_HitPosition * 10f)}";
+                    NoteRoad(null, raycast.m_HitPosition);
                 }
             }
             else if (hit && m_Options.Free)
             {
                 snap = PlacementContext.FreeSnap(raycast.m_HitPosition, m_Options.Angle, m_Options);
                 key = $"free {math.round(raycast.m_HitPosition * 10f)}";
+                if (m_Mode != Mode.Arrange) NoteRoad(null, raycast.m_HitPosition);
             }
             else if (hit && EntityManager.HasComponent<Edge>(entity) && EntityManager.HasComponent<Curve>(entity))
             {
                 snap = new RoadProbe(EntityManager, m_PrefabSystem).SnapAt(entity, raycast.m_CurvePosition);
                 key = $"road {entity} {math.round(raycast.m_CurvePosition * 100f)}";
+                // The pinned gantry's road stays the one its signs talk about; roads clicked alongside do not change it.
+                if (m_Mode != Mode.Arrange && snap != null) NoteRoad(snap, raycast.m_HitPosition);
             }
 
             if (m_Mode == Mode.Arrange)
@@ -594,7 +661,7 @@ namespace SignBuilder.Tools
                 DrawPreview(snap, key);
                 if (applyAction.WasPressedThisFrame())
                 {
-                    if (m_Mode == Mode.Posts) Build(snap, "Placed. Click again to place another, or right-click to stop.");
+                    if (m_Mode == Mode.Posts) Build(snap, "تم الوضع. انقر مرة أخرى لوضع لوحة أخرى، أو انقر بالزر الأيمن للإيقاف.");
                     else
                     {
                         m_Pinned = snap;
@@ -641,7 +708,98 @@ namespace SignBuilder.Tools
         private void Cancel()
         {
             if (m_Mode == Mode.Arrange) CancelArrange();
+            else if (m_Mode == Mode.PickInfo) EndPickInfo();
             else Deactivate();
+        }
+
+        // ------------------------------------------------------------------ road information
+
+        /// <summary>Pick mode: the hovered street is highlighted; a click publishes its information and ends the pick.</summary>
+        private void UpdatePickInfo(bool hit, Entity entity, RaycastHit raycast)
+        {
+            if (!hit || !EntityManager.HasComponent<Edge>(entity) || !EntityManager.HasComponent<Curve>(entity)) return;
+            var probe = Probe();
+            var snap = probe.SnapAt(entity, raycast.m_CurvePosition);
+            if (snap == null) return; // not a road (a path, a track)
+            DrawStreet(probe, entity);
+            if (!applyAction.WasPressedThisFrame()) return;
+            var info = probe.ReadInfo(snap, raycast.m_HitPosition, m_Names);
+            if (info == null) return;
+            m_RoadPick.Publish(info, "pick", force: true);
+            EndPickInfo();
+        }
+
+        private static readonly UnityEngine.Color kStreetOutline = new(0.25f, 0.75f, 1f, 0.95f);
+        private static readonly UnityEngine.Color kStreetFill = new(0.25f, 0.75f, 1f, 0.22f);
+        private static readonly UnityEngine.Color kEdgeFill = new(0.25f, 0.75f, 1f, 0.45f);
+
+        /// <summary>Highlights the street of <paramref name="edge"/> (every piece the game names together), the hovered piece stronger.</summary>
+        private void DrawStreet(RoadProbe probe, Entity edge)
+        {
+            var buffer = m_Overlay.GetBuffer(out var dependencies);
+            dependencies.Complete();
+            foreach (var e in probe.StreetEdges(edge))
+            {
+                var curve = EntityManager.GetComponentData<Curve>(e).m_Bezier;
+                buffer.DrawCurve(kStreetOutline, e == edge ? kEdgeFill : kStreetFill, 0.35f, Game.Rendering.OverlayRenderSystem.StyleFlags.Projected,
+                    curve, probe.WidthOf(e) + 1f, new float2(1f, 1f));
+            }
+            m_Overlay.AddBufferWriter(default);
+        }
+
+        /// <summary>
+        /// Placement snapped to a road (or left roads: <paramref name="snap"/> null or not on an edge): the UI is told
+        /// which road the sign is going on, and signs with road placeholders are previewed with its values.
+        /// </summary>
+        private void NoteRoad(RoadProbe.Snap snap, float3 side)
+        {
+            var edge = snap?.Edge ?? Entity.Null;
+            if (edge != Entity.Null && !EntityManager.HasComponent<Edge>(edge)) edge = Entity.Null;
+            var right = edge != Entity.Null && math.dot(side - snap.Point, snap.Right) >= 0f;
+            if (edge == m_InfoEdge && right == m_InfoRight) return;
+            m_InfoEdge = edge;
+            m_InfoRight = right;
+            m_InfoSide = side;
+            var info = edge == Entity.Null ? null : Probe().ReadInfo(snap, side, m_Names);
+            if (info != null) m_RoadPick.Publish(info, "placement", force: false);
+            SetPreviewInfo(info);
+        }
+
+        /// <summary>The road the preview's placeholders say; signs that have placeholders are baked again when it changes.</summary>
+        private void SetPreviewInfo(RoadProbe.RoadInfo info)
+        {
+            var changed = m_PreviewInfo?.Key != info?.Key;
+            m_PreviewInfo = info;
+            if (!changed) return;
+            for (var i = 0; i < m_Designs.Count; i++)
+            {
+                if (RoadTokens.Has(m_Designs[i])) Bake(i);
+            }
+        }
+
+        /// <summary>
+        /// The road a structure built at <paramref name="snap"/> stands on: the snapped edge, or (free placement, or a
+        /// placed structure rebuilt from its record) the nearest road within 30 m. Null when there is none.
+        /// </summary>
+        private RoadProbe.RoadInfo InfoFor(RoadProbe.Snap snap)
+        {
+            if (snap == null) return null;
+            var probe = Probe();
+            if (snap.Edge != Entity.Null && EntityManager.Exists(snap.Edge) && EntityManager.HasComponent<Edge>(snap.Edge))
+            {
+                var side = snap.Edge == m_InfoEdge ? m_InfoSide : snap.Point + snap.Right;
+                return probe.ReadInfo(snap, side, m_Names);
+            }
+            var near = probe.NearestRoad(snap.Point, 30f);
+            return near == null ? null : probe.ReadInfo(near, snap.Point, m_Names);
+        }
+
+        /// <summary>The signs as built at <paramref name="snap"/>: road placeholders replaced by that road's values (or left out).</summary>
+        private List<JObject> DesignsFor(RoadProbe.Snap snap)
+        {
+            if (!m_Designs.Any(RoadTokens.Has)) return m_Designs.ToList();
+            var info = InfoFor(snap);
+            return m_Designs.Select(d => RoadTokens.Has(d) ? RoadTokens.Apply(d, info) : d).ToList();
         }
 
         private void HandleKeys()
@@ -711,7 +869,7 @@ namespace SignBuilder.Tools
                 if (watch.ElapsedMilliseconds > 100) Mod.log.Info($"Preview rebuild took {watch.ElapsedMilliseconds} ms");
             }
             if (m_PreviewMesh == null) return;
-            m_PreviewSteel ??= Rendering.SignPanelRenderer.CreateMaterial("SignBuilder.PreviewSteel", UnityEngine.Texture2D.whiteTexture, new UnityEngine.Color(0.7f, 0.72f, 0.75f), 0.4f);
+            m_PreviewSteel ??= Rendering.SignPanelRenderer.CreateMaterial("SignBuilderSA.PreviewSteel", UnityEngine.Texture2D.whiteTexture, new UnityEngine.Color(0.7f, 0.72f, 0.75f), 0.4f);
             m_PreviewFaceMaterials ??= m_Faces.Where(f => f != null).Select(f => Rendering.SignPanelRenderer.CreateFaceMaterial(f.Texture, 0.3f)).ToList();
             var matrix = UnityEngine.Matrix4x4.TRS(m_PreviewOrigin, m_PreviewRotation, UnityEngine.Vector3.one);
             UnityEngine.Graphics.DrawMesh(m_PreviewMesh, matrix, m_PreviewSteel, 0, null, 0);
@@ -727,7 +885,7 @@ namespace SignBuilder.Tools
         private void BuildPinned()
         {
             if (m_Pinned == null || m_Designs.Count == 0 || !FacesReady) return;
-            Build(m_Pinned, m_Replacing != Entity.Null ? "Saved." : "Built.", afterwards: () =>
+            Build(m_Pinned, m_Replacing != Entity.Null ? "تم الحفظ." : "تم الإنشاء.", afterwards: () =>
             {
                 m_Pinned = null;
                 Deactivate();
@@ -739,10 +897,10 @@ namespace SignBuilder.Tools
         {
             if (m_Designs.Count == 0) return;
             m_Busy = true;
-            m_UI.SetStatus("Building...");
+            m_UI.SetStatus("جارٍ الإنشاء...");
             var replacing = m_Replacing;
             var options = m_Options.Clone();
-            var designs = m_Designs.ToList();
+            var designs = DesignsFor(snap);
             SignBuilderRuntime.Run(AssemblyBuilder.Build(designs,
                 (sizes, shapes) => AssemblyBuilder.Layout(snap, sizes, options, shapes),
                 (record, placement) =>
@@ -801,6 +959,7 @@ namespace SignBuilder.Tools
             SetHidden(entity, true);
             m_Pinned = record.Context.ToSnap();
             if (m_Options.Free) m_FreePoint = m_Pinned.Point - new float3(0, m_Options.Elevation, 0);
+            if (m_Designs.Any(RoadTokens.Has)) SetPreviewInfo(InfoFor(m_Pinned));
             m_UI.OpenForEdit(record, "gantry");
             Activate(Mode.Arrange);
             return true;
@@ -824,7 +983,7 @@ namespace SignBuilder.Tools
         {
             var end = UnityEngine.Time.realtimeSinceStartup + 15f;
             while (!FacesReady && UnityEngine.Time.realtimeSinceStartup < end) yield return null;
-            Build(snap, "Saved.", afterwards: () =>
+            Build(snap, "تم الحفظ.", afterwards: () =>
             {
                 m_Replacing = Entity.Null;
                 if (closeEditor) m_UI.SetEditorOpen(false);
@@ -864,11 +1023,95 @@ namespace SignBuilder.Tools
             EntityManager.AddComponent<BatchesUpdated>(entity);
         }
 
-        /// <summary>Whether the tool is active, and in which mode: "off", "posts", "pickRoad" or "arrange".</summary>
-        public string ModeName => !Active ? "off" : m_Mode switch { Mode.Posts => "posts", Mode.PickRoad => "pickRoad", _ => "arrange" };
+        /// <summary>Whether the tool is active, and in which mode: "off", "posts", "pickRoad", "arrange" or "pickInfo".</summary>
+        public string ModeName => !Active ? "off" : m_Mode switch { Mode.Posts => "posts", Mode.PickRoad => "pickRoad", Mode.PickInfo => "pickInfo", _ => "arrange" };
 
         public override PrefabBase GetPrefab() => null;
 
         public override bool TrySetPrefab(PrefabBase prefab) => false;
+    }
+
+    /// <summary>
+    /// Road placeholders in sign designs: {street}, {district} and {speed} (any case) in text parts, LED lines and shield
+    /// numbers. Built on a road they become its street and district names and its speed limit (km/h, to the nearest
+    /// 10); a value that is not known is left out, along with the spaces it leaves doubled.
+    /// </summary>
+    public static class RoadTokens
+    {
+        private static readonly Regex s_Token = new(@"\{(street|district|speed)\}", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private static readonly Regex s_Spaces = new(@"[ \t ]{2,}", RegexOptions.CultureInvariant);
+
+        private static bool IsField(string name) => name == "text" || name == "number";
+
+        /// <summary>Whether the design (any part, at any depth) has a road placeholder.</summary>
+        public static bool Has(JObject design) => design != null && HasIn(design);
+
+        private static bool HasIn(JToken token)
+        {
+            switch (token)
+            {
+                case JObject o:
+                    foreach (var p in o.Properties())
+                    {
+                        if (IsField(p.Name) && p.Value.Type == JTokenType.String && s_Token.IsMatch((string)p.Value)) return true;
+                        if (p.Name == "lines" && p.Value is JArray lines && lines.Any(l => l.Type == JTokenType.String && s_Token.IsMatch((string)l))) return true;
+                        if (p.Value is JContainer && HasIn(p.Value)) return true;
+                    }
+                    return false;
+                case JArray a:
+                    return a.Any(HasIn);
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>A copy of <paramref name="design"/> saying <paramref name="info"/>'s values (null: every placeholder left out).</summary>
+        public static JObject Apply(JObject design, RoadProbe.RoadInfo info)
+        {
+            var copy = (JObject)design.DeepClone();
+            ApplyIn(copy, info);
+            return copy;
+        }
+
+        private static void ApplyIn(JToken token, RoadProbe.RoadInfo info)
+        {
+            switch (token)
+            {
+                case JObject o:
+                    foreach (var p in o.Properties().ToList())
+                    {
+                        if (IsField(p.Name) && p.Value.Type == JTokenType.String) p.Value = Replace((string)p.Value, info);
+                        else if (p.Name == "lines" && p.Value is JArray lines)
+                        {
+                            for (var i = 0; i < lines.Count; i++)
+                            {
+                                if (lines[i].Type == JTokenType.String) lines[i] = Replace((string)lines[i], info);
+                            }
+                        }
+                        else if (p.Value is JContainer) ApplyIn(p.Value, info);
+                    }
+                    break;
+                case JArray a:
+                    foreach (var child in a.ToList()) ApplyIn(child, info);
+                    break;
+            }
+        }
+
+        /// <summary>One string with its placeholders replaced; returned as it is when it has none.</summary>
+        public static string Replace(string text, RoadProbe.RoadInfo info)
+        {
+            if (string.IsNullOrEmpty(text) || !s_Token.IsMatch(text)) return text;
+            var replaced = s_Token.Replace(text, m =>
+            {
+                switch (m.Groups[1].Value.ToLowerInvariant())
+                {
+                    case "street": return info?.Street ?? "";
+                    case "district": return info?.District ?? "";
+                    default: return info != null && info.SignSpeed > 0 ? info.SignSpeed.ToString(System.Globalization.CultureInfo.InvariantCulture) : "";
+                }
+            });
+            // Multi-line text keeps its line breaks; spaces left doubled are collapsed and each line trimmed.
+            return string.Join("\n", replaced.Split('\n').Select(l => s_Spaces.Replace(l, " ").Trim()));
+        }
     }
 }

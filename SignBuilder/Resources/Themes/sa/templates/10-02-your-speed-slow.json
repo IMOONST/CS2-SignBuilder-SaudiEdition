@@ -1,0 +1,56 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "your-speed-slow",
+  "name": "لوحات السرعة: سرعتك - خفف السرعة",
+  "scheme": "black",
+  "support": "ground",
+  "feedback": {
+    "limit": 60,
+    "state": "slow"
+  },
+  "items": [
+    {
+      "type": "panel",
+      "scheme": "white",
+      "align": "center",
+      "items": [
+        {
+          "type": "column",
+          "align": "center",
+          "items": [
+            {
+              "type": "text",
+              "text": "سرعتك",
+              "height": 11
+            },
+            {
+              "type": "text",
+              "text": "Your Speed",
+              "height": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "shield",
+      "network": "SPD",
+      "number": "60",
+      "height": 34
+    },
+    {
+      "type": "symbol",
+      "symbol": "sa/face-sad",
+      "height": 30
+    },
+    {
+      "type": "led",
+      "lines": [
+        "SLOW DOWN"
+      ],
+      "height": 9,
+      "color": "#ffffff"
+    }
+  ]
+}

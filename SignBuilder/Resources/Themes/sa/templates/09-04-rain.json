@@ -1,0 +1,17 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "rain",
+  "name": "لوحات إلكترونية: أمطار",
+  "board": "led",
+  "items": [
+    {
+      "type": "led",
+      "lines": [
+        "أمطار - الطريق زلق",
+        "RAIN - SLIPPERY ROAD"
+      ],
+      "height": 10
+    }
+  ]
+}

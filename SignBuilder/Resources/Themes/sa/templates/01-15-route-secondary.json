@@ -1,0 +1,15 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "route-secondary",
+  "name": "إرشادية: طريق ثانوي",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "shield",
+      "network": "SAS",
+      "number": "٢٢٢",
+      "height": 36
+    }
+  ]
+}

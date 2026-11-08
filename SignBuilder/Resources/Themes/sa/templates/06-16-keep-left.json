@@ -1,0 +1,14 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "keep-left",
+  "name": "تنظيمية: الزم اليسار",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/keep-left",
+      "height": 62
+    }
+  ]
+}

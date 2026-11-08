@@ -1,0 +1,41 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "lane-ahead",
+  "name": "طرق سريعة: مسار مستمر",
+  "scheme": "green",
+  "support": "doubleTruss/span",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "shield",
+          "network": "SAG",
+          "number": "40"
+        },
+        {
+          "type": "column",
+          "align": "center",
+          "items": [
+            {
+              "type": "text",
+              "text": "الدمام",
+              "height": 16
+            },
+            {
+              "type": "text",
+              "text": "Dammam",
+              "height": 13.1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "arrow",
+      "direction": "down",
+      "height": 24
+    }
+  ]
+}

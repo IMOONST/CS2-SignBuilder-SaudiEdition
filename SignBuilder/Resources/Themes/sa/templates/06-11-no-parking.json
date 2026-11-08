@@ -1,0 +1,19 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "no-parking",
+  "name": "تنظيمية: ممنوع الوقوف",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/no-parking",
+      "height": 62
+    },
+    {
+      "type": "text",
+      "text": "ممنوع الوقوف",
+      "height": 11
+    }
+  ]
+}

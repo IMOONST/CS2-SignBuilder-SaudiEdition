@@ -1,14 +1,15 @@
+import { t } from "./l10n";
 import { Design, Item, clone } from "./designModel";
 
 // Sign themes (see Resources/Themes/<id>/theme.json): everything country-specific the editor offers.
 
-export type ThemeFont = { family: string; label?: string; hidden?: boolean };
+export type ThemeFont = { family: string; label?: string; hidden?: boolean; arabic?: boolean };
 export type ThemeShield = { label?: string; shape?: string; img?: string; bg?: string; fg?: string; border?: string; prefix?: string; default?: string };
 export type ThemeDef = {
   id: string;
   name?: string;
   description?: string;
-  defaults?: { font?: string; textHeight?: number; shieldHeight?: number; arrowHeight?: number; scheme?: string };
+  defaults?: { font?: string; arabicFont?: string; textHeight?: number; shieldHeight?: number; arrowHeight?: number; scheme?: string };
   fonts?: ThemeFont[];
   schemes?: Record<string, { bg: string; fg: string; label?: string }>;
   shields?: Record<string, ThemeShield>;
@@ -49,18 +50,18 @@ export function baseParts(theme?: Theme): { label: string; item: Item }[] {
   const small = Math.round(th * 0.75 * 10) / 10;
   const tabFont = d?.exitTab?.font;
   return [
-    { label: "Text", item: { type: "text", text: "Destination", height: th } },
-    { label: "Shield", item: { type: "shield", network: first, number: (d?.shields ?? {})[first]?.default ?? "1", height: d?.defaults?.shieldHeight } },
-    { label: "Arrow", item: { type: "arrow", direction: "up", height: d?.defaults?.arrowHeight } },
-    { label: "Symbol", item: { type: "symbol", height: d?.defaults?.shieldHeight } },
-    { label: "Diagram", item: { type: "diagram", shape: "exit-left", lanes: 2, exitLanes: 1, sharedLanes: 1, height: Math.round((d?.defaults?.arrowHeight ?? 24) * 2.2) } },
-    { label: "LED text", item: { type: "led", lines: ["ACCIDENT AHEAD"], height: small } },
-    { label: "Divider", item: { type: "divider" } },
-    { label: "Row", item: { type: "row", align: "center", items: [] } },
-    { label: "Column", item: { type: "column", align: "center", items: [] } },
-    { label: "Chip", item: { type: "chip", scheme: schemes.white ? "white" : undefined, items: [{ type: "text", text: "Text", height: small }] } },
-    { label: "Panel", item: { type: "panel", scheme: schemes.yellow ? "yellow" : schemes.white ? "white" : undefined, align: "center", items: [] } },
-    { label: "Tab", item: { type: "tab", align: "right", items: [{ type: "text", text: tabFont ? "EXIT 1" : "1", height: tabFont ? 10 : Math.round(th * 0.65 * 10) / 10, font: tabFont }] } },
+    { label: t("Text"), item: { type: "text", text: t("Destination"), height: th } },
+    { label: t("Shield"), item: { type: "shield", network: first, number: (d?.shields ?? {})[first]?.default ?? "1", height: d?.defaults?.shieldHeight } },
+    { label: t("Arrow"), item: { type: "arrow", direction: "up", height: d?.defaults?.arrowHeight } },
+    { label: t("Symbol"), item: { type: "symbol", height: d?.defaults?.shieldHeight } },
+    { label: t("Diagram"), item: { type: "diagram", shape: "exit-left", lanes: 2, exitLanes: 1, sharedLanes: 1, height: Math.round((d?.defaults?.arrowHeight ?? 24) * 2.2) } },
+    { label: t("LED text"), item: { type: "led", lines: [t("ACCIDENT AHEAD")], height: small } },
+    { label: t("Divider"), item: { type: "divider" } },
+    { label: t("Row"), item: { type: "row", align: "center", items: [] } },
+    { label: t("Column"), item: { type: "column", align: "center", items: [] } },
+    { label: t("Chip"), item: { type: "chip", scheme: schemes.white ? "white" : undefined, items: [{ type: "text", text: t("Text"), height: small }] } },
+    { label: t("Panel"), item: { type: "panel", scheme: schemes.yellow ? "yellow" : schemes.white ? "white" : undefined, align: "center", items: [] } },
+    { label: t("Tab"), item: { type: "tab", align: "right", items: [{ type: "text", text: tabFont ? "EXIT 1" : "1", height: tabFont ? 10 : Math.round(th * 0.65 * 10) / 10, font: tabFont }] } },
   ];
 }
 
@@ -71,7 +72,7 @@ export function blankFor(theme?: Theme): Design {
     formatVersion: DESIGN_FORMAT,
     theme: theme?.id ?? "us",
     scheme: d?.defaults?.scheme ?? "green",
-    items: [{ type: "text", text: "Destination", height: d?.defaults?.textHeight ?? 16 }],
+    items: [{ type: "text", text: t("Destination"), height: d?.defaults?.textHeight ?? 16 }],
   };
 }
 

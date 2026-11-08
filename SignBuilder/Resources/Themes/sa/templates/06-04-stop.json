@@ -1,0 +1,15 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "stop",
+  "name": "تنظيمية: قف",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "shield",
+      "network": "STOP",
+      "number": "قف",
+      "height": 64
+    }
+  ]
+}

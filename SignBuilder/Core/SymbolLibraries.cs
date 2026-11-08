@@ -8,20 +8,21 @@ using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace SignBuilder.Core
+namespace SignBuilderSA.Core
 {
     /// <summary>
     /// Symbol libraries: arrows (by category, each shape with the turns and mirrors it allows), road diagrams'
     /// arrowhead and symbols, shared by the themes that list them ("libraries": ["mutcd"], or "mutcd/overhead" for one
-    /// arrow category). Built-in ones ship in Resources/Symbols; mods carry theirs in a SignBuilderSymbols folder and
-    /// players add their own in ModsData/SignBuilder/Symbols (one folder per library: library.json and its SVG files).
+    /// arrow category). Built-in ones ship in Resources/Symbols; mods carry theirs in a SignBuilderSASymbols folder (or the original Sign Builder's SignBuilderSymbols) and
+    /// players add their own in ModsData/SignBuilderSA/Symbols (one folder per library: library.json and its SVG files).
     /// A library with the id of one loaded before replaces it (logged). "basic" holds the arrows of Sign Builder 1.0
     /// and is every theme's last resort.
     /// </summary>
     public static class SymbolLibraries
     {
         public const string Basic = "basic";
-        public const string ModFolder = "SignBuilderSymbols";
+        /// <summary>Folder names in a mod that hold symbol libraries: this edition's, then the original Sign Builder's (its packs keep working).</summary>
+        public static readonly string[] ModFolderNames = { "SignBuilderSASymbols", "SignBuilderSymbols" };
 
         public static string BuiltInDir => Path.Combine(SignBuilderRuntime.ResourcesDir, "Symbols");
         public static string UserDir => Path.Combine(SignBuilderRuntime.DataDir, "Symbols");
@@ -41,7 +42,7 @@ namespace SignBuilder.Core
         {
             s_Libraries = new Dictionary<string, JObject>();
             Load(BuiltInDir);
-            foreach (var dir in Themes.ModFolders(ModFolder)) Load(dir);
+            foreach (var dir in Themes.ModFolders(ModFolderNames)) Load(dir);
             Load(UserDir);
         }
 

@@ -8,15 +8,15 @@ using Game.Rendering;
 using Game.SceneFlow;
 using Game.Tools;
 using Newtonsoft.Json.Linq;
-using SignBuilder.Assemblies;
-using SignBuilder.Core;
-using SignBuilder.Systems;
-using SignBuilder.Tools;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Core;
+using SignBuilderSA.Systems;
+using SignBuilderSA.Tools;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace SignBuilder.Tests
+namespace SignBuilderSA.Tests
 {
     internal sealed partial class SpikeRunner
     {

@@ -1,0 +1,14 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "keep-right",
+  "name": "تنظيمية: الزم اليمين",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/keep-right",
+      "height": 62
+    }
+  ]
+}

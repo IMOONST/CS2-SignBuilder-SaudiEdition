@@ -31,7 +31,7 @@ ThemeTemplate/
 You don't need to build anything to make a theme:
 
 1. Copy `MyThemePack/SignBuilderThemes/example` to
-   `%USERPROFILE%\AppData\LocalLow\Colossal Order\Cities Skylines II\ModsData\SignBuilder\Themes\<your id>`.
+   `%USERPROFILE%\AppData\LocalLow\Colossal Order\Cities Skylines II\ModsData\SignBuilderSA\Themes\<your id>`.
    Sign Builder's options have **Open themes folder**, and the designer has a **Folder** button next to the
    theme list.
 2. Set `"id"` and `"name"` in `theme.json`. Ids are short and unique, such as `"pl"` or `"my-city"`.
@@ -172,7 +172,7 @@ Each file in `templates/` is one sign: the same JSON the designer saves. The eas
 
 1. Design the sign in the game with your theme.
 2. Click **Save current as template**.
-3. Copy the file from `ModsData/SignBuilder/Templates` into your theme's `templates` folder.
+3. Copy the file from `ModsData/SignBuilderSA/Templates` into your theme's `templates` folder.
 4. Give it a unique `"id"` and a `"name"`.
 
 ```json
@@ -215,7 +215,7 @@ templates `"formatVersion": 2`.
 ## 4. Symbol libraries
 
 A symbol library is a folder with a `library.json` and the SVG files of its symbols. Put one in
-`ModsData/SignBuilder/Symbols/<id>` to try it, or in a `SignBuilderSymbols` folder of your mod to publish it. A library
+`ModsData/SignBuilderSA/Symbols/<id>` to try it, or in a `SignBuilderSymbols` folder of your mod to publish it. A library
 with the id of an existing one replaces it (the log says so), so pick a unique id.
 
 ```jsonc
@@ -284,7 +284,8 @@ rebuilt (on another PC, or after "Delete unused sign structures").
 ## 5. Publishing on Paradox Mods
 
 A theme pack is a small mod. Sign Builder looks for a `SignBuilderThemes` folder in every installed mod,
-subscribed or local, so players just subscribe to your pack.
+subscribed or local, so players just subscribe to your pack. (Sign Builder: Saudi Edition also reads a `SignBuilderSAThemes`
+folder; packs made for the original `SignBuilderThemes` folder name keep working.)
 
 1. Install the modding toolchain from the game: **Options → Modding**.
 2. Rename `MyThemePack` (the folder, `.csproj`, and the namespace in `Mod.cs`) and put your theme folders in

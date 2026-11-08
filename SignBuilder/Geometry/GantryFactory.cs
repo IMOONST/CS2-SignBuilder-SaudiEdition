@@ -1,10 +1,10 @@
 using System.Linq;
 using UnityEngine;
-using SignBuilder.Core;
-using SignBuilder.Assemblies;
-using SignBuilder.Tools;
+using SignBuilderSA.Core;
+using SignBuilderSA.Assemblies;
+using SignBuilderSA.Tools;
 
-namespace SignBuilder.Geometry
+namespace SignBuilderSA.Geometry
 {
     /// <summary>
     /// Parametric gantry meshes. Local space: X runs across the road, Z along it (traffic faces -Z),
@@ -56,7 +56,7 @@ namespace SignBuilder.Geometry
                 "planarTruss" => PlanarTruss(-Arg(0) * 0.5f, Arg(0) * 0.5f, new[] { -Arg(0) * 0.5f, Arg(0) * 0.5f }, Arg(1)),
                 "planarTrussCantilever" => PlanarTruss(-Arg(0), 0.25f, new[] { 0f }, Arg(1)),
                 "ground" => GroundPosts(Arg(0), Arg(1), out _, Arg(2), a.Skip(3).ToArray()),
-                "none" => new MeshBuilder().Build("SignBuilder.NoSupport"),
+                "none" => new MeshBuilder().Build("SignBuilderSA.NoSupport"),
                 _ => Truss(Arg(0), Arg(1)),
             };
             }
@@ -120,13 +120,13 @@ namespace SignBuilder.Geometry
             {
                 b.AddTube(new Vector3(x, -ground - kFooting, 0), new Vector3(x, y1 + 0.25f, 0), 0.22f, 16);
             }
-            return b.Build("SignBuilder.PlanarTruss");
+            return b.Build("SignBuilderSA.PlanarTruss");
         }
 
-        public static Mesh Truss(float span, float ground = 0f) => TrussBeam(-span * 0.5f, span * 0.5f, new[] { -span * 0.5f, span * 0.5f }, ground, "SignBuilder.Truss");
+        public static Mesh Truss(float span, float ground = 0f) => TrussBeam(-span * 0.5f, span * 0.5f, new[] { -span * 0.5f, span * 0.5f }, ground, "SignBuilderSA.Truss");
 
         /// <summary>Truss cantilever: one column pair at X = 0, the truss reaching -X.</summary>
-        public static Mesh TrussCantilever(float armLength, float ground = 0f) => TrussBeam(-armLength, 0.3f, new[] { 0f }, ground, "SignBuilder.TrussCantilever");
+        public static Mesh TrussCantilever(float armLength, float ground = 0f) => TrussBeam(-armLength, 0.3f, new[] { 0f }, ground, "SignBuilderSA.TrussCantilever");
 
         /// <summary>A box truss from <paramref name="x0"/> to <paramref name="x1"/> on column pairs at <paramref name="columns"/>.</summary>
         private static Mesh TrussBeam(float x0, float x1, float[] columns, float ground, string name)
@@ -190,7 +190,7 @@ namespace SignBuilder.Geometry
             {
                 b.AddTube(new Vector3(x, -ground - kFooting, 0), new Vector3(x, y + 0.5f, 0), 0.36f, 20);
             }
-            return b.Build("SignBuilder.Monotube");
+            return b.Build("SignBuilderSA.Monotube");
         }
 
         public static Mesh Cantilever(float armLength, float ground = 0f)
@@ -199,7 +199,7 @@ namespace SignBuilder.Geometry
             var y = kMountHeight + s_Lift;
             b.AddTube(new Vector3(0, -ground - kFooting, 0), new Vector3(0, y + 0.6f, 0), 0.38f, 20);
             b.AddTube(new Vector3(-0.3f * Mathf.Sign(armLength), y, 0), new Vector3(armLength, y, 0), kCantileverArmRadius, 20);
-            return b.Build("SignBuilder.Cantilever");
+            return b.Build("SignBuilderSA.Cantilever");
         }
 
         public const float kCurvedPipeRadius = 0.3f;
@@ -226,7 +226,7 @@ namespace SignBuilder.Geometry
             }
             AddFlange(b, new Vector3(-half + bendRadius, height, 0), Vector3.right);
             AddFlange(b, new Vector3(half - bendRadius, height, 0), Vector3.right);
-            return b.Build("SignBuilder.CurvedSpan");
+            return b.Build("SignBuilderSA.CurvedSpan");
         }
 
         /// <summary>Curved tubular cantilever: post at X = 0 bending over into an arm that reaches -X.</summary>
@@ -240,7 +240,7 @@ namespace SignBuilder.Geometry
             AddFlange(b, new Vector3(0, 1.4f - ground, 0), Vector3.up);
             AddFlange(b, new Vector3(0, height - bendRadius, 0), Vector3.up);
             AddFlange(b, new Vector3(-bendRadius, height, 0), Vector3.right);
-            return b.Build("SignBuilder.CurvedCantilever");
+            return b.Build("SignBuilderSA.CurvedCantilever");
         }
 
         /// <summary>Roadside sign bottom height above ground (about 7 ft, MUTCD urban/expressway minimum).</summary>
@@ -276,7 +276,7 @@ namespace SignBuilder.Geometry
                 b.AddBox(center + new Vector3(0, 0, depth * 0.5f - t * 0.5f), new Vector3(flange, h, t), Quaternion.identity);
                 b.AddBox(center, new Vector3(t, h, depth - t * 2), Quaternion.identity);
             }
-            return b.Build("SignBuilder.GroundPosts");
+            return b.Build("SignBuilderSA.GroundPosts");
         }
 
         /// <summary>Appends points of a circular arc in the XY plane (angles in degrees, 0 = +X, 90 = +Y).</summary>
@@ -323,7 +323,7 @@ namespace SignBuilder.Geometry
                 b.AddTube(elbow, head, 0.035f, 8);
                 b.AddBox(head + new Vector3(0, 0.03f, -0.05f), new Vector3(0.55f, 0.1f, 0.32f), Quaternion.Euler(-25f, 0, 0));
             }
-            return b.Build("SignBuilder.SignLights");
+            return b.Build("SignBuilderSA.SignLights");
         }
 
         /// <summary>
@@ -344,7 +344,7 @@ namespace SignBuilder.Geometry
                 var center = new Vector3((r.center.x - 0.5f) * width, (r.center.y - 0.5f) * height, 0);
                 b.AddBox(center, new Vector3(r.width * width, r.height * height, kPanelThickness), Quaternion.identity, r, otherSubmesh: 1);
             }
-            return b.Build("SignBuilder.Panel");
+            return b.Build("SignBuilderSA.Panel");
         }
     }
 }

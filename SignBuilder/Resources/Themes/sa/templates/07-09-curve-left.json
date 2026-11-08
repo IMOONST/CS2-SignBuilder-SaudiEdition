@@ -1,0 +1,19 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "curve-left",
+  "name": "تحذيرية: منعطف خطر لليسار",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/warn-curve-left",
+      "height": 66
+    },
+    {
+      "type": "text",
+      "text": "منعطف خطر لليسار",
+      "height": 11
+    }
+  ]
+}

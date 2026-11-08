@@ -1,3 +1,4 @@
+import { t } from "./l10n";
 import { getModule } from "cs2/modding";
 import { Dropdown, DropdownToggle } from "cs2/ui";
 import { useEffect, useRef, useState } from "react";
@@ -149,7 +150,7 @@ export const NumberBox = (props: { value: number; onChange: (v: number) => void;
   };
   return (
     <div className={props.compact ? styles.stepperCompact : styles.stepper}>
-      <div className={styles.step} title="Shift: x10, Ctrl: x0.1" onClick={(e) => nudge(-1, e)}>-</div>
+      <div className={styles.step} title={t("Shift: x10, Ctrl: x0.1")} onClick={(e) => nudge(-1, e)}>-</div>
       <div ref={wrap} className={styles.stepValue}>
         {(() => {
           // The game's own text input keeps typed keys from reaching game hotkeys; a plain input is the fallback.
@@ -163,7 +164,7 @@ export const NumberBox = (props: { value: number; onChange: (v: number) => void;
         })()}
         {props.unit && <span>{props.unit}</span>}
       </div>
-      <div className={styles.step} title="Shift: x10, Ctrl: x0.1" onClick={(e) => nudge(1, e)}>+</div>
+      <div className={styles.step} title={t("Shift: x10, Ctrl: x0.1")} onClick={(e) => nudge(1, e)}>+</div>
     </div>
   );
 };
@@ -197,7 +198,7 @@ export const ColorRows = (props: {
     <div key={i} title={c.title ?? c.color} className={c.on ? styles.swatchOn : styles.swatch}
       style={{ backgroundColor: c.color, borderColor: c.on ? undefined : c.border }} onClick={c.onClick} />,
   ));
-  cells.push(<div key="custom" title={props.custom.title ?? "Any color"} className={props.custom.on ? styles.swatchOn : styles.swatch}
+  cells.push(<div key="custom" title={props.custom.title ?? t("Any color")} className={props.custom.on ? styles.swatchOn : styles.swatch}
     style={{ backgroundImage: "linear-gradient(90deg, #e53935, #fdd835, #43a047, #1e88e5, #8e24aa)" }} onClick={props.custom.onClick} />);
   const per = props.perRow ?? 7;
   const rows: any[][] = [];
@@ -211,5 +212,5 @@ export const Swatches = (props: {
 }) => (
   <ColorRows perRow={13}
     colors={Object.entries(props.schemes).map(([id, s]) => ({ color: s.bg, title: s.label ?? id, border: s.fg, on: !props.custom && id === props.scheme, onClick: () => props.onScheme(id) }))}
-    custom={{ on: props.custom, onClick: props.onCustom, title: "Custom colors" }} />
+    custom={{ on: props.custom, onClick: props.onCustom, title: t("Custom colors") }} />
 );

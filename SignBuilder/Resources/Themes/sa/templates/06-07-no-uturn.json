@@ -1,0 +1,14 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "no-uturn",
+  "name": "تنظيمية: ممنوع الدوران",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/no-uturn",
+      "height": 62
+    }
+  ]
+}

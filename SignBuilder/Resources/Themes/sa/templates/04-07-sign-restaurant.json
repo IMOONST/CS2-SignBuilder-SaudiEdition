@@ -1,0 +1,28 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "sign-restaurant",
+  "name": "خدمات: لوحة مطعم",
+  "scheme": "blue",
+  "support": "ground",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/restaurant",
+      "height": 34,
+      "color": "#000000",
+      "box": {
+        "background": "#ffffff",
+        "border": false
+      }
+    },
+    {
+      "type": "text",
+      "text": "1 كم",
+      "height": 12,
+      "margin": {
+        "top": 6
+      }
+    }
+  ]
+}

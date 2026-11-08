@@ -1,0 +1,25 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "highway-start",
+  "name": "طرق سريعة: بداية الطريق السريع",
+  "scheme": "green",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "بداية الطريق السريع",
+          "height": 13
+        },
+        {
+          "type": "text",
+          "text": "Expressway Begins",
+          "height": 10.7
+        }
+      ]
+    }
+  ]
+}

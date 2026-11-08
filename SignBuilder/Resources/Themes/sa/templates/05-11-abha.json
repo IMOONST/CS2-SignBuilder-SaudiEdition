@@ -1,0 +1,25 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "abha",
+  "name": "سياحية: أبها",
+  "scheme": "brown",
+  "items": [
+    {
+      "type": "column",
+      "align": "center",
+      "items": [
+        {
+          "type": "text",
+          "text": "مرحباً بكم في أبها",
+          "height": 14
+        },
+        {
+          "type": "text",
+          "text": "Welcome to Abha",
+          "height": 11.5
+        }
+      ]
+    }
+  ]
+}

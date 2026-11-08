@@ -1,0 +1,17 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "saher",
+  "name": "لوحات إلكترونية: مراقبة ساهر",
+  "board": "led",
+  "items": [
+    {
+      "type": "led",
+      "lines": [
+        "مراقبة آلية للسرعة",
+        "SPEED CAMERA"
+      ],
+      "height": 10
+    }
+  ]
+}

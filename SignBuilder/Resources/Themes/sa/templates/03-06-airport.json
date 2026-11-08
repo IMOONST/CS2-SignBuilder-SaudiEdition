@@ -1,0 +1,41 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "airport",
+  "name": "داخل المدن: المطار",
+  "scheme": "green",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/airport",
+          "height": 22,
+          "box": {}
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "مطار الملك خالد الدولي",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "King Khalid Int'l Airport",
+              "height": 9.8
+            }
+          ]
+        },
+        {
+          "type": "arrow",
+          "direction": "up"
+        }
+      ]
+    }
+  ]
+}

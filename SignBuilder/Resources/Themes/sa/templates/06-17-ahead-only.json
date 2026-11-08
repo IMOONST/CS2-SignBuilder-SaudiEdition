@@ -1,0 +1,14 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "ahead-only",
+  "name": "تنظيمية: اتجاه إجباري للأمام",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "symbol",
+      "symbol": "sa/ahead-only",
+      "height": 62
+    }
+  ]
+}

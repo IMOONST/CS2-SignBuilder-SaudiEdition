@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "red-crescent",
+  "name": "داخل المدن: الهلال الأحمر",
+  "scheme": "white",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/red-crescent",
+          "height": 22
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "الهلال الأحمر السعودي",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "Saudi Red Crescent",
+              "height": 9.8
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

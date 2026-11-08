@@ -1,0 +1,61 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "exit-diagram",
+  "name": "طرق سريعة: مخطط المخرج",
+  "scheme": "green",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "column",
+              "align": "start",
+              "items": [
+                {
+                  "type": "text",
+                  "text": "مطار الملك خالد",
+                  "height": 13
+                },
+                {
+                  "type": "text",
+                  "text": "KKIA Airport",
+                  "height": 10.7
+                }
+              ]
+            },
+            {
+              "type": "column",
+              "align": "start",
+              "items": [
+                {
+                  "type": "text",
+                  "text": "الدمام",
+                  "height": 13
+                },
+                {
+                  "type": "text",
+                  "text": "Dammam",
+                  "height": 10.7
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "diagram",
+          "shape": "exit-right",
+          "lanes": 3,
+          "exitLanes": 1,
+          "sharedLanes": 0,
+          "height": 56
+        }
+      ]
+    }
+  ]
+}

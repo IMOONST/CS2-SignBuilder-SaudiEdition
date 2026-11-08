@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "parking",
+  "name": "داخل المدن: مواقف عامة",
+  "scheme": "blue",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "symbol",
+          "symbol": "sa/parking",
+          "height": 22,
+          "box": {}
+        },
+        {
+          "type": "column",
+          "align": "start",
+          "items": [
+            {
+              "type": "text",
+              "text": "مواقف عامة",
+              "height": 12
+            },
+            {
+              "type": "text",
+              "text": "Public Parking",
+              "height": 9.8
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

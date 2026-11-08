@@ -5,7 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace SignBuilder.Core
+namespace SignBuilderSA.Core
 {
     /// <summary>A sign theme: one country's (or style's) sign system, from a folder with theme.json.</summary>
     public sealed class ThemeInfo
@@ -23,15 +23,15 @@ namespace SignBuilder.Core
     }
 
     /// <summary>
-    /// Sign themes. Built-in ones ship in Resources/Themes; players add their own in ModsData/SignBuilder/Themes
+    /// Sign themes. Built-in ones ship in Resources/Themes; players add their own in ModsData/SignBuilderSA/Themes
     /// (one folder per theme: theme.json, fonts/, shields/, templates/). A player folder with the id of a built-in
     /// theme and no theme.json only supplies files for it, such as fonts that cannot ship with the mod.
-    /// Any installed mod (from Paradox Mods or the local Mods folder) can carry themes too, in a SignBuilderThemes
-    /// folder laid out the same way: subscribing to a theme pack is all a player needs to do.
+    /// Any installed mod (from Paradox Mods or the local Mods folder) can carry themes too, in a SignBuilderSAThemes
+    /// folder (or the original Sign Builder's SignBuilderThemes folder) laid out the same way: subscribing to a theme pack is all a player needs to do.
     /// </summary>
     public static class Themes
     {
-        public const string DataHost = "signbuilderdata";
+        public const string DataHost = "signbuildersadata";
         public const string DefaultId = "us";
 
         public static string BuiltInDir => Path.Combine(SignBuilderRuntime.ResourcesDir, "Themes");
@@ -57,12 +57,14 @@ namespace SignBuilder.Core
         public static void Reload()
         {
             s_Themes = new Dictionary<string, ThemeInfo>();
-            Load(BuiltInDir, true, $"coui://signbuilder/Themes/");
+            Load(BuiltInDir, true, $"coui://signbuildersa/Themes/");
             // Mod themes before the player's own, so a local folder can override a published theme while editing it.
-            s_ModHosts = ModFolders(ModFolder).Select((dir, i) => (host: $"signbuildermod{i}", dir)).ToList();
+            s_ModHosts = ModFolders(ModFolderNames).Select((dir, i) => (host: $"signbuildersamod{i}", dir)).ToList();
             foreach (var (host, dir) in s_ModHosts) Load(dir, false, $"coui://{host}/", ModName(dir));
             Load(UserThemesDir, false, $"coui://{DataHost}/Themes/");
             foreach (var theme in s_Themes.Values) BorrowFonts(theme);
+            // After file resolution: shared fonts are coui URLs, not files in the theme's folder.
+            foreach (var theme in s_Themes.Values) SharedFonts.AddTo(theme.Def);
         }
 
         /// <summary>
@@ -90,8 +92,11 @@ namespace SignBuilder.Core
             }
         }
 
-        /// <summary>Folder name in a mod that holds Sign Builder themes.</summary>
-        public const string ModFolder = "SignBuilderThemes";
+        /// <summary>
+        /// Folder names in a mod that hold themes: this edition's, then the original Sign Builder's, so theme packs
+        /// made for Sign Builder keep working.
+        /// </summary>
+        public static readonly string[] ModFolderNames = { "SignBuilderSAThemes", "SignBuilderThemes" };
 
         private static List<(string host, string dir)> s_ModHosts = new();
 
@@ -108,8 +113,8 @@ namespace SignBuilder.Core
             }
         }
 
-        /// <summary>Folders named <paramref name="name"/> in installed mods: subscribed Paradox Mods and local mods.</summary>
-        public static IEnumerable<string> ModFolders(string name)
+        /// <summary>Folders named any of <paramref name="names"/> in installed mods: subscribed Paradox Mods and local mods.</summary>
+        public static IEnumerable<string> ModFolders(params string[] names)
         {
             var userRoot = UnityEngine.Application.persistentDataPath;
             foreach (var mods in new[] { Path.Combine(userRoot, ".cache", "Mods", "pdx_mods"), Path.Combine(userRoot, "Mods") })
@@ -119,8 +124,11 @@ namespace SignBuilder.Core
                 try { dirs = Directory.GetDirectories(mods); } catch { continue; }
                 foreach (var mod in dirs.OrderBy(d => d))
                 {
-                    var folder = Path.Combine(mod, name);
-                    if (Directory.Exists(folder)) yield return folder;
+                    foreach (var name in names)
+                    {
+                        var folder = Path.Combine(mod, name);
+                        if (Directory.Exists(folder)) yield return folder;
+                    }
                 }
             }
         }

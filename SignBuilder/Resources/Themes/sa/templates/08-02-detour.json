@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "theme": "sa",
+  "id": "detour",
+  "name": "أعمال طرق: تحويلة",
+  "scheme": "orange",
+  "support": "ground",
+  "items": [
+    {
+      "type": "row",
+      "items": [
+        {
+          "type": "column",
+          "align": "center",
+          "items": [
+            {
+              "type": "text",
+              "text": "تحويلة",
+              "height": 15
+            },
+            {
+              "type": "text",
+              "text": "DETOUR",
+              "height": 12.3
+            }
+          ]
+        },
+        {
+          "type": "arrow",
+          "direction": "right",
+          "height": 22
+        }
+      ]
+    }
+  ]
+}
