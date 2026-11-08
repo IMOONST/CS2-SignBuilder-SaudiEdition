@@ -14,7 +14,7 @@ namespace SignBuilderSA.Systems
     /// Values (group "SignBuilderSA"): language ("ar" or "en"), templateExchange (JSON result of the last export / import).
     /// Triggers: exportTemplates, importTemplates.
     /// The language is the player's choice in the options (Auto / Arabic / English); Auto is Arabic when the game's
-    /// active locale is Arabic, else when Windows is in Arabic, otherwise English. It follows setting and game locale
+    /// active locale is Arabic, otherwise English. It follows setting and game locale
     /// changes at once, and keeps the options page text (<see cref="OptionsLocalization"/>) in the same language.
     /// </summary>
     public partial class LanguageUISystem : UISystemBase
@@ -22,7 +22,6 @@ namespace SignBuilderSA.Systems
         public const string Arabic = "ar";
         public const string English = "en";
 
-        private static bool s_SystemArabic;
 
         private ValueBinding<string> m_Language;
         private ValueBinding<string> m_TemplateExchange;
@@ -41,30 +40,13 @@ namespace SignBuilderSA.Systems
             string locale = null;
             try { locale = GameManager.instance?.localizationManager?.activeLocaleId; }
             catch (Exception) { /* no active dictionary yet */ }
-            if (locale != null && locale.StartsWith("ar", StringComparison.OrdinalIgnoreCase)) return Arabic;
-            return s_SystemArabic ? Arabic : English;
-        }
-
-        /// <summary>Whether Windows (or, failing that, Unity's view of the OS) is set to Arabic.</summary>
-        private static bool DetectSystemArabic()
-        {
-            try
-            {
-                var culture = CultureInfo.CurrentUICulture;
-                if (culture != null && (culture.TwoLetterISOLanguageName == "ar" || culture.Name.StartsWith("ar", StringComparison.OrdinalIgnoreCase)))
-                    return true;
-            }
-            catch (Exception e)
-            {
-                Mod.log.Warn($"Reading the Windows language failed: {e.Message}");
-            }
-            return UnityEngine.Application.systemLanguage == UnityEngine.SystemLanguage.Arabic;
+            // Auto follows the game's language only: Windows' language does not count (pick Arabic to force it).
+            return locale != null && locale.StartsWith("ar", StringComparison.OrdinalIgnoreCase) ? Arabic : English;
         }
 
         protected override void OnCreate()
         {
             base.OnCreate();
-            s_SystemArabic = DetectSystemArabic();
             AddBinding(m_Language = new ValueBinding<string>(SignBuilderUISystem.Group, "language", Resolve()));
             AddBinding(m_TemplateExchange = new ValueBinding<string>(SignBuilderUISystem.Group, "templateExchange", ""));
             AddBinding(new TriggerBinding(SignBuilderUISystem.Group, "exportTemplates", ExportTemplates));

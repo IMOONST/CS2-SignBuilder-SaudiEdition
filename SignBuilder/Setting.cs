@@ -27,7 +27,7 @@ namespace SignBuilderSA
         /// <summary>The interface language of Sign Builder (its editor and this options page).</summary>
         public enum InterfaceLanguage
         {
-            /// <summary>Arabic when the game or Windows is in Arabic, otherwise English.</summary>
+            /// <summary>Arabic when the game is in Arabic, otherwise English.</summary>
             Auto = 0,
             Arabic = 1,
             English = 2,
@@ -109,7 +109,7 @@ namespace SignBuilderSA
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.Language)), "لغة الواجهة" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.Language)),
-                    "لغة صانع اللوحات (المحرر وهذه الصفحة). «تلقائي» يختار العربية إذا كانت لغة اللعبة أو لغة ويندوز عربية، وإلا الإنجليزية. يُطبَّق التغيير فوراً." },
+                    "لغة صانع اللوحات (المحرر وهذه الصفحة). «تلقائي» يتبع لغة اللعبة: العربية إذا كانت اللعبة بالعربية، وإلا الإنجليزية. يُطبَّق التغيير فوراً." },
                 { m_Setting.GetEnumValueLocaleID(Setting.InterfaceLanguage.Auto), "تلقائي" },
                 { m_Setting.GetEnumValueLocaleID(Setting.InterfaceLanguage.Arabic), "العربية" },
                 { m_Setting.GetEnumValueLocaleID(Setting.InterfaceLanguage.English), "English" },
@@ -165,7 +165,7 @@ namespace SignBuilderSA
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.Language)), "Interface language" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.Language)),
-                    "The language of Sign Builder (its editor and this page). Auto picks Arabic when the game or Windows is in Arabic, otherwise English. Takes effect at once." },
+                    "The language of Sign Builder (its editor and this page). Auto follows the game: Arabic when the game is in Arabic, otherwise English. Takes effect at once." },
                 { m_Setting.GetEnumValueLocaleID(Setting.InterfaceLanguage.Auto), "Auto" },
                 { m_Setting.GetEnumValueLocaleID(Setting.InterfaceLanguage.Arabic), "العربية" },
                 { m_Setting.GetEnumValueLocaleID(Setting.InterfaceLanguage.English), "English" },
