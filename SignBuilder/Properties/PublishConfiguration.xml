@@ -83,8 +83,8 @@ Options page: interface language, keys, and cleanup of unused sign structures.
 - This is a separate mod from the original Sign Builder (its own id, files, settings and sign data), so the two can be installed side by side. Signs made with one are not shown by the other.
 - Removing the mod does not corrupt your save; its signs remain as gray shapes you can delete.
 
-## Credits
-- Original mod: **Sign Builder** by **Andy Smith**, https://github.com/andyjsmith/CS2-SignBuilder
+## Original mod
+**Sign Builder** by **Andy Smith**: https://github.com/andyjsmith/CS2-SignBuilder
 
 ## Support
 
@@ -169,8 +169,8 @@ Options page: interface language, keys, and cleanup of unused sign structures.
 - هذا مود منفصل عن Sign Builder الأصلي (معرّفه وملفاته وإعداداته وبيانات لوحاته خاصة فيه)، فتقدر تثبّت الاثنين مع بعض. اللوحات المصنوعة بواحد ما تظهر في الثاني.
 - إزالة المود ما تخرّب ملف الحفظ؛ لوحاته تبقى كأشكال رمادية تقدر تحذفها.
 
-## الشكر
-- المود الأصلي: **Sign Builder** من تطوير **Andy Smith**، https://github.com/andyjsmith/CS2-SignBuilder
+## المود الأصلي
+**Sign Builder** من تطوير **Andy Smith**: https://github.com/andyjsmith/CS2-SignBuilder
 
 ## الدعم
 
