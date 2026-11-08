@@ -97,6 +97,11 @@
 		</Reference>
 	</ItemGroup>
 
+	<!--Interface languages (keyed by the English text; also imported by the UI): embedded as i18n.<code>.json-->
+	<ItemGroup>
+		<EmbeddedResource Include="i18n\*.json" LogicalName="i18n.%(Filename).json" />
+	</ItemGroup>
+
 	<!--Ship fonts, themes, the renderer and other static files next to the dll (and the test pages in test builds)-->
 	<!--The assembly version (shown on the Options page) is the ModVersion in PublishConfiguration.xml, so it is set in one place-->
 	<Target Name="VersionFromPublishConfiguration" BeforeTargets="GetAssemblyVersion">

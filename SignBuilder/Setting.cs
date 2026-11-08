@@ -27,10 +27,58 @@ namespace SignBuilderSA
         /// <summary>The interface language of Sign Builder (its editor and this options page).</summary>
         public enum InterfaceLanguage
         {
-            /// <summary>Arabic when the game is in Arabic, otherwise English.</summary>
+            /// <summary>The game's language (English when the game's language is not one of these).</summary>
             Auto = 0,
             Arabic = 1,
             English = 2,
+            /// <summary>Windows' display language (English when it is not one of these).</summary>
+            Windows = 3,
+            German = 4,
+            Spanish = 5,
+            French = 6,
+            Italian = 7,
+            Japanese = 8,
+            Korean = 9,
+            Polish = 10,
+            PortugueseBrazil = 11,
+            Russian = 12,
+            ChineseSimplified = 13,
+            ChineseTraditional = 14,
+        }
+
+        /// <summary>The interface language code of a fixed choice; null for Auto and Windows.</summary>
+        public static string CodeOf(InterfaceLanguage choice)
+        {
+            switch (choice)
+            {
+                case InterfaceLanguage.Arabic: return "ar";
+                case InterfaceLanguage.English: return "en";
+                case InterfaceLanguage.German: return "de";
+                case InterfaceLanguage.Spanish: return "es";
+                case InterfaceLanguage.French: return "fr";
+                case InterfaceLanguage.Italian: return "it";
+                case InterfaceLanguage.Japanese: return "ja";
+                case InterfaceLanguage.Korean: return "ko";
+                case InterfaceLanguage.Polish: return "pl";
+                case InterfaceLanguage.PortugueseBrazil: return "pt-BR";
+                case InterfaceLanguage.Russian: return "ru";
+                case InterfaceLanguage.ChineseSimplified: return "zh-HANS";
+                case InterfaceLanguage.ChineseTraditional: return "zh-HANT";
+                default: return null;
+            }
+        }
+
+        /// <summary>Adds the language list's entries: Auto and Windows in the page language, each language in its own.</summary>
+        internal void AddLanguageNames(Dictionary<string, string> d, string auto, string windows)
+        {
+            foreach (InterfaceLanguage choice in System.Enum.GetValues(typeof(InterfaceLanguage)))
+            {
+                string name;
+                if (choice == InterfaceLanguage.Auto) name = auto;
+                else if (choice == InterfaceLanguage.Windows) name = windows;
+                else name = UiLanguages.NativeNames[System.Array.IndexOf(UiLanguages.Codes, CodeOf(choice))];
+                d[GetEnumValueLocaleID(choice)] = name;
+            }
         }
 
         public Setting(IMod mod) : base(mod)
@@ -97,7 +145,7 @@ namespace SignBuilderSA
 
         public IEnumerable<KeyValuePair<string, string>> ReadEntries(IList<IDictionaryEntryError> errors, Dictionary<string, int> indexCounts)
         {
-            return new Dictionary<string, string>
+            var d = new Dictionary<string, string>
             {
                 { m_Setting.GetSettingsLocaleID(), "صانع اللوحات: النسخة السعودية" },
                 { m_Setting.GetOptionTabLocaleID(Setting.kSection), "الرئيسية" },
@@ -109,10 +157,7 @@ namespace SignBuilderSA
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.Language)), "لغة الواجهة" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.Language)),
-                    "لغة صانع اللوحات (المحرر وهذه الصفحة). «تلقائي» يتبع لغة اللعبة: العربية إذا كانت اللعبة بالعربية، وإلا الإنجليزية. يُطبَّق التغيير فوراً." },
-                { m_Setting.GetEnumValueLocaleID(Setting.InterfaceLanguage.Auto), "تلقائي" },
-                { m_Setting.GetEnumValueLocaleID(Setting.InterfaceLanguage.Arabic), "العربية" },
-                { m_Setting.GetEnumValueLocaleID(Setting.InterfaceLanguage.English), "English" },
+                    "لغة صانع اللوحات (المحرر وهذه الصفحة). «تلقائي» يتبع لغة اللعبة، و«لغة ويندوز» يتبع لغة جهازك، أو اختر لغة بعينها. إذا لم تكن اللغة من لغات المود تظهر الإنجليزية. يُطبَّق التغيير فوراً." },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.ToggleBinding)), "فتح أو إغلاق صانع اللوحات" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.ToggleBinding)), "يفتح صانع اللوحات أو يغلقه، مثل زره في شريط الأدوات." },
@@ -134,6 +179,8 @@ namespace SignBuilderSA
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.Version)), "الإصدار" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.Version)), "الإصدار المثبت من صانع اللوحات." },
             };
+            m_Setting.AddLanguageNames(d, "تلقائي (لغة اللعبة)", "لغة ويندوز");
+            return d;
         }
 
         public void Unload()
@@ -153,7 +200,7 @@ namespace SignBuilderSA
 
         public IEnumerable<KeyValuePair<string, string>> ReadEntries(IList<IDictionaryEntryError> errors, Dictionary<string, int> indexCounts)
         {
-            return new Dictionary<string, string>
+            var d = new Dictionary<string, string>
             {
                 { m_Setting.GetSettingsLocaleID(), "Sign Builder: Saudi Edition" },
                 { m_Setting.GetOptionTabLocaleID(Setting.kSection), "Main" },
@@ -165,10 +212,7 @@ namespace SignBuilderSA
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.Language)), "Interface language" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.Language)),
-                    "The language of Sign Builder (its editor and this page). Auto follows the game: Arabic when the game is in Arabic, otherwise English. Takes effect at once." },
-                { m_Setting.GetEnumValueLocaleID(Setting.InterfaceLanguage.Auto), "Auto" },
-                { m_Setting.GetEnumValueLocaleID(Setting.InterfaceLanguage.Arabic), "العربية" },
-                { m_Setting.GetEnumValueLocaleID(Setting.InterfaceLanguage.English), "English" },
+                    "The language of Sign Builder (its editor and this page). Auto follows the game's language, Windows language follows your computer, or pick one. A language the mod does not have shows in English. Takes effect at once." },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.ToggleBinding)), "Open or close Sign Builder" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.ToggleBinding)), "Opens or closes Sign Builder, like its toolbar button." },
@@ -190,6 +234,18 @@ namespace SignBuilderSA
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.Version)), "Version" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.Version)), "The installed version of Sign Builder." },
             };
+            m_Setting.AddLanguageNames(d, "Auto (game language)", "Windows language");
+            return d;
+        }
+
+        /// <summary>The page in <paramref name="code"/>: the English texts through <see cref="UiLanguages.Translate"/>.</summary>
+        public IEnumerable<KeyValuePair<string, string>> ReadEntries(string code)
+        {
+            var english = (Dictionary<string, string>)ReadEntries(null, null);
+            var d = new Dictionary<string, string>(english.Count);
+            foreach (var pair in english) d[pair.Key] = UiLanguages.Translate(code, pair.Value);
+            m_Setting.AddLanguageNames(d, UiLanguages.Translate(code, "Auto (game language)"), UiLanguages.Translate(code, "Windows language"));
+            return d;
         }
 
         public void Unload()
@@ -198,7 +254,7 @@ namespace SignBuilderSA
     }
 
     /// <summary>
-    /// One source per game locale that serves the options page in Sign Builder's interface language (Arabic or English,
+    /// One source per game locale that serves the options page in Sign Builder's interface language (any of the 13,
     /// see <see cref="Systems.LanguageUISystem.Resolve"/>), whatever the game's own language is.
     /// </summary>
     public class OptionsLocaleSource : IDictionarySource
@@ -223,9 +279,9 @@ namespace SignBuilderSA
         {
             var language = Systems.LanguageUISystem.Resolve();
             Served = language;
-            return language == Systems.LanguageUISystem.Arabic
-                ? m_Arabic.ReadEntries(errors, indexCounts)
-                : m_English.ReadEntries(errors, indexCounts);
+            if (language == UiLanguages.Arabic) return m_Arabic.ReadEntries(errors, indexCounts);
+            if (language == UiLanguages.English) return m_English.ReadEntries(errors, indexCounts);
+            return m_English.ReadEntries(language);
         }
 
         public void Unload()

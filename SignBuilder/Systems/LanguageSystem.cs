@@ -30,18 +30,13 @@ namespace SignBuilderSA.Systems
         private bool m_Refreshing;
 
         /// <summary>
-        /// The interface language now: "ar" or "en". Safe to call at any time (before the settings load it is Auto).
+        /// The interface language now: one of <see cref="UiLanguages.Codes"/>. Safe to call at any time (before the settings load it is Auto).
         /// </summary>
         public static string Resolve()
         {
             var choice = Mod.Settings != null ? Mod.Settings.Language : Setting.InterfaceLanguage.Auto;
-            if (choice == Setting.InterfaceLanguage.Arabic) return Arabic;
-            if (choice == Setting.InterfaceLanguage.English) return English;
-            string locale = null;
-            try { locale = GameManager.instance?.localizationManager?.activeLocaleId; }
-            catch (Exception) { /* no active dictionary yet */ }
-            // Auto follows the game's language only: Windows' language does not count (pick Arabic to force it).
-            return locale != null && locale.StartsWith("ar", StringComparison.OrdinalIgnoreCase) ? Arabic : English;
+            if (choice == Setting.InterfaceLanguage.Windows) return UiLanguages.Windows();
+            return Setting.CodeOf(choice) ?? UiLanguages.Game();
         }
 
         protected override void OnCreate()
