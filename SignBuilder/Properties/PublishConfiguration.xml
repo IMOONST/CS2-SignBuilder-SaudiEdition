@@ -176,7 +176,7 @@ Options page: interface language, keys, and cleanup of unused sign structures.
 	<!--New screenshots, saved by the user from the game (see README-PUBLISH.md). The old Screenshot1-6.png files in
 	this folder are the original mod's and are deliberately NOT referenced; the new ones use the names below.-->
 	<Screenshot Value="Properties/SA-Screenshot1.png" />
-	<Screenshot Value="Properties/SA-Screenshot2.png" />
+	<Screenshot Value="Properties/SA-Screenshot2.jpg" />
 	<Screenshot Value="Properties/SA-Screenshot3.png" />
 	<Screenshot Value="Properties/SA-Screenshot4.png" />
 	<Screenshot Value="Properties/SA-Screenshot5.png" />
@@ -185,7 +185,6 @@ Options page: interface language, keys, and cleanup of unused sign structures.
 	<Screenshot Value="Properties/SA-Screenshot8.png" />
 	<Screenshot Value="Properties/SA-Screenshot9.png" />
 	<Screenshot Value="Properties/SA-Screenshot10.png" />
-	<Screenshot Value="Properties/SA-Screenshot11.png" />
 	<Tag Value="Code Mod" />
 	<ExternalLink Type="github" Url="https://github.com/IMOONST/CS2-SignBuilder-SaudiEdition" />
 	<ModVersion Value="1.0.0" />
